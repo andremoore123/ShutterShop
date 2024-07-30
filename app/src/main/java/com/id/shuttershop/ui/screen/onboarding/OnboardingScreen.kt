@@ -16,6 +16,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
@@ -42,8 +46,19 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
+    viewModel: OnboardViewModel = hiltViewModel(),
     navigateAfterOnboard: () -> Unit = {},
 ) {
+    val isOnboardShowed by viewModel.isShowOnboardState.collectAsState()
+    LaunchedEffect(key1 = isOnboardShowed) {
+        viewModel.fetchShowOnboard()
+        if (isOnboardShowed) {
+            navigateAfterOnboard()
+        } else {
+            viewModel.onBoardShowed()
+        }
+    }
+
     val onBoardList = onBoardingItems
     val pagerState = rememberPagerState(pageCount = {
         onBoardList.size

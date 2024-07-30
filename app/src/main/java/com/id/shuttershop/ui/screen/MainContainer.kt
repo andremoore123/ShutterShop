@@ -3,6 +3,7 @@ package com.id.shuttershop.ui.screen;
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.id.shuttershop.ui.navigation.MainRoute
@@ -18,6 +19,7 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
 @Composable
 fun MainContainer(
     modifier: Modifier = Modifier,
+    viewModel: MainContainerViewModel = hiltViewModel(),
 ) {
     val mainNavController = rememberNavController()
 
