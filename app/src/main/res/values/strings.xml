@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">ShutterShop</string>
+
+    <!--  Onboard String  -->
+    <string name="onboard_title_first">Welcome to \nShutterShop!</string>
+    <string name="onboard_subtitle_first">Easily find various cameras and accessories at ShutterShop.</string>
+
+    <string name="onboard_title_second">Buy Cameras \nwith Ease</string>
+    <string name="onboard_subtitle_second">Enjoy a convenient and secure shopping experience at ShutterShop.</string>
+
+    <string name="onboard_title_third">Exclusive Offers and  Discounts</string>
+    <string name="onboard_subtitle_third">Get access to exclusive offers and special discounts only at Kameraya.</string>
+
+    <!--  Button  -->
+    <string name="text_next">Next</string>
+    <string name="text_skip">Skip</string>
 </resources>
