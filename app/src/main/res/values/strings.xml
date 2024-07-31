@@ -20,4 +20,9 @@
     <string name="text_no_account">Don\'t Have an Account?</string>
     <string name="text_register_now">Register Now</string>
     <string name="text_subtitle_login">Let\'s Capture The World</string>
+    <string name="text_name">Name</string>
+    <string name="text_subtitle_register">Register and Capture</string>
+    <string name="text_register">Register</string>
+    <string name="text_login_now">Login Now</string>
+    <string name="text_have_account">Already have an account?</string>
 </resources>

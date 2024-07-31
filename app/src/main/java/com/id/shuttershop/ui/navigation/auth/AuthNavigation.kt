@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.id.shuttershop.ui.navigation.MainRoute
 import com.id.shuttershop.ui.screen.auth.login.LoginScreen
+import com.id.shuttershop.ui.screen.auth.register.RegisterScreen
 
 /**
  * Created by: andreputras.
@@ -27,7 +28,11 @@ fun NavGraphBuilder.authNavigation(navController: NavController) {
             })
         }
         composable(AuthRoute.REGISTER_SCREEN.route) {
-
+            RegisterScreen(modifier = Modifier.padding(16.dp), navigateToLogin = {
+                navController.navigate(AuthRoute.LOGIN_SCREEN.route) {
+                    popUpTo(AuthRoute.REGISTER_SCREEN.route) { inclusive = true }
+                }
+            })
         }
     }
 }
