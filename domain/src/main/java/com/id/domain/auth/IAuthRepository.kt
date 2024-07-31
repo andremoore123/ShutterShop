@@ -1,0 +1,14 @@
+package com.id.domain.auth
+
+import com.id.domain.ext.NetworkResponse
+
+/**
+ * Created by: andreputras.
+ * Date: 30/07/24
+ * Name: Andre Eka Putra Simanjuntak
+ * Email: andremoore431@gmail.com
+ */
+interface IAuthRepository {
+    suspend fun login(email: String, password: String): NetworkResponse<String>
+    suspend fun register(name: String, email: String, password: String): NetworkResponse<String>
+}

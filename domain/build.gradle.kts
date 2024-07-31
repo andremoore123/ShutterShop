@@ -40,4 +40,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // hilt
+    api(libs.hilt.android)
+    api(libs.androidx.hilt.work)
 }

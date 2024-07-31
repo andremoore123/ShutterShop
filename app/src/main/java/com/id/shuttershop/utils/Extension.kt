@@ -1,6 +1,7 @@
 package com.id.shuttershop.utils
 
-import com.id.domain.Resource
+import com.id.domain.ext.ErrorType
+import com.id.domain.ext.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
@@ -21,9 +22,9 @@ suspend fun <T> Resource<T>.onSuccess(handleResource: suspend (T) -> Unit): Reso
     return this
 }
 
-fun <T> Resource<T>.onError(handleError: (Exception) -> Unit): Resource<T> {
+fun <T> Resource<T>.onError(handleError: (ErrorType) -> Unit): Resource<T> {
     if (this is Resource.Error) {
-        handleError(error)
+        handleError(errorType)
     }
     return this
 }

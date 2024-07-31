@@ -8,4 +8,5 @@ package com.id.shuttershop.ui.navigation
  */
 sealed class MainRoute(val route: String) {
     data object SplashNavigation : MainRoute("splashNavRoute")
+    data object AuthNavigation : MainRoute("authNavRoute")
 }
