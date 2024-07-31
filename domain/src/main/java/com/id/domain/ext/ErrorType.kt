@@ -6,8 +6,8 @@ package com.id.domain.ext
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
-sealed class ErrorType {
-    data class NetworkError(val message: String) : ErrorType()
-    data class ValidationError(val message: String) : ErrorType()
-    data class UnknownError(val message: String) : ErrorType()
+sealed class ErrorType(val errorMessage: String) {
+    data class NetworkError(val message: String) : ErrorType(message)
+    data class HTTPError(val message: String) : ErrorType(message)
+    data class UnknownError(val message: String) : ErrorType(message)
 }

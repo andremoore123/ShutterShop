@@ -2,11 +2,12 @@ package com.id.shuttershop.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import com.id.domain.ext.ErrorType
 
 @Stable
 sealed class UiState<out T> {
     data object Initiate : UiState<Nothing>()
-    data class Error(val error: Exception) : UiState<Nothing>()
+    data class Error(val errorType: ErrorType) : UiState<Nothing>()
     data class Success<T>(val data: T) : UiState<T>()
     data object Loading : UiState<Nothing>()
 }
@@ -23,10 +24,10 @@ fun <T> UiState<T>.onSuccess(
 
 @Composable
 fun <T> UiState<T>.onError(
-    handleState: @Composable (error: Exception) -> Unit,
+    handleState: @Composable (errorType: ErrorType) -> Unit,
 ): UiState<T> {
     if (this is UiState.Error) {
-        handleState(error)
+        handleState(errorType)
     }
     return this
 }

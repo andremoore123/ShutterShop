@@ -24,7 +24,7 @@ suspend fun <T> Resource<T>.onSuccess(handleResource: suspend (T) -> Unit): Reso
 
 fun <T> Resource<T>.onError(handleError: (ErrorType) -> Unit): Resource<T> {
     if (this is Resource.Error) {
-        handleError(err)
+        handleError(errorType)
     }
     return this
 }
