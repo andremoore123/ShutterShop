@@ -45,12 +45,6 @@ class OnboardViewModel @Inject constructor(
             preferenceRepository.showOnBoard()
         }
     }
-    private fun logOnboardViewEvent() {
-        val params = Bundle().apply {
-            putString(AnalyticsConstants.PARAM_SCREEN_NAME, SCREEN_ONBOARDING)
-        }
-        analyticRepository.logEvent(AnalyticsConstants.EVENT_ONBOARD_VIEW, params)
-    }
 
     fun logOnboardSkipEvent() {
         val params = Bundle().apply {
