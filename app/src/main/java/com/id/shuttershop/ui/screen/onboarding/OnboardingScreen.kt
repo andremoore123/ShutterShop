@@ -31,8 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
-import com.id.shuttershop.ui.components.card.OnboardCard
-import com.id.shuttershop.ui.screen.onboarding.OnboardingItem.Companion.onBoardingItems
+import com.id.shuttershop.ui.components.card.OnBoardCard
+import com.id.shuttershop.ui.screen.onboarding.OnboardingItem.Companion.onboardingItems
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import kotlinx.coroutines.launch
 
@@ -50,7 +50,8 @@ fun OnboardingScreen(
     navigateAfterOnboard: () -> Unit = {},
 ) {
     val isOnboardShowed by viewModel.isShowOnboardState.collectAsState()
-    LaunchedEffect(key1 = isOnboardShowed) {
+
+    LaunchedEffect(key1 = isOnboardShowed, key2 = navigateAfterOnboard) {
         viewModel.fetchShowOnboard()
         if (isOnboardShowed) {
             navigateAfterOnboard()
@@ -59,7 +60,7 @@ fun OnboardingScreen(
         }
     }
 
-    val onBoardList = onBoardingItems
+    val onBoardList = onboardingItems
     val pagerState = rememberPagerState(pageCount = {
         onBoardList.size
     })
@@ -83,7 +84,7 @@ fun OnboardingScreen(
     ) {
         HorizontalPager(state = pagerState) { page ->
             val onBoardItem = onBoardList[page]
-            OnboardCard(onBoardItem = onBoardItem)
+            OnBoardCard(onBoardItem = onBoardItem)
         }
 
         Row(
@@ -124,7 +125,7 @@ fun OnboardingScreen(
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-fun ShowOnboardingScreenPreview() {
+internal fun ShowOnboardingScreenPreview() {
     ShutterShopTheme {
         OnboardingScreen()
     }

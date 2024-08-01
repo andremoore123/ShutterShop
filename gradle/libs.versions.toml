@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.0"
+detektCompose = "0.4.8"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -18,9 +19,11 @@ material = "1.12.0"
 datastorePreferencesCore = "1.1.1"
 hiltAndroid = "2.49"
 workRuntimeKtx = "2.9.0"
+detektVersion = "1.23.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+detekt-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -54,4 +57,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid"}
-
+android-detekt = {id = "io.gitlab.arturbosch.detekt", version.ref = "detektVersion"}

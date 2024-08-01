@@ -7,12 +7,8 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imeNestedScroll
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -76,20 +72,21 @@ fun LoginScreen(
     }
 
     Scaffold(
+        modifier = modifier,
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }
     ) {
         LoginContent(
-            modifier = modifier.padding(it),
+            modifier = Modifier.padding(it),
             emailValue = emailValue,
             passwordValue = passwordValue,
             onEmailChange = viewModel::onEmailValueChange,
             onPasswordChange = viewModel::onPasswordChange,
-            onLoginClicked = {
+            onLoginClick = {
                 viewModel.login(emailValue, passwordValue)
             },
-            onRegisterClicked = navigateToRegister
+            onRegisterClick = navigateToRegister
         )
     }
 }
@@ -102,8 +99,8 @@ internal fun LoginContent(
     passwordValue: String = "",
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
-    onLoginClicked: () -> Unit = {},
-    onRegisterClicked: () -> Unit = {},
+    onLoginClick: () -> Unit = {},
+    onRegisterClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -144,7 +141,7 @@ internal fun LoginContent(
         PrimaryButton(
             text = stringResource(id = R.string.text_login),
             modifier = Modifier.fillMaxWidth(),
-            onClick = onLoginClicked
+            onClick = onLoginClick
         )
         Row(
             modifier = Modifier.padding(top = 30.dp),
@@ -153,7 +150,7 @@ internal fun LoginContent(
             Text(text = stringResource(R.string.text_no_account))
             PrimaryTextButton(
                 text = stringResource(R.string.text_register_now),
-                onClick = onRegisterClicked
+                onClick = onRegisterClick
             )
         }
     }
@@ -161,7 +158,7 @@ internal fun LoginContent(
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-fun ShowLoginScreenPreview() {
+internal fun ShowLoginScreenPreview() {
     ShutterShopTheme {
         LoginContent()
     }

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.android.detekt)
     id("kotlin-kapt")
 }
 
@@ -76,6 +77,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    detektPlugins(libs.detekt.compose)
     // Work
     api(libs.androidx.work.runtime.ktx)
 
