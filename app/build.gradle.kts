@@ -17,11 +17,11 @@ android {
 
     defaultConfig {
         applicationId = "com.id.shuttershop"
-        minSdk = 24
+        minSdk = 33
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        resourceConfigurations.addAll(listOf("in", "en"))
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -133,6 +133,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":domain"))
     implementation(libs.firebase.crashlytics)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
