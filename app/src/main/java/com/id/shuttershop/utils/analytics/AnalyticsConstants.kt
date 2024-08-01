@@ -16,6 +16,11 @@ object AnalyticsConstants {
     const val EVENT_LOGIN_SUCCESS = "login_success"
     const val EVENT_LOGIN_FAILURE = "login_failure"
 
+    // Register Event Names
+    const val EVENT_REGISTER_ATTEMPT = "register_attempt"
+    const val EVENT_REGISTER_SUCCESS = "register_success"
+    const val EVENT_REGISTER_FAILURE = "register_failure"
+
     // Parameter Names
     const val PARAM_SCREEN_NAME = "screen_name"
     const val PARAM_SCREEN_INDEX = "screen_index"

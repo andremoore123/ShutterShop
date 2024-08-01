@@ -9,4 +9,5 @@ package com.id.shuttershop.utils.analytics
 object ScreenConstants {
     const val SCREEN_ONBOARDING = "onboarding_screen"
     const val SCREEN_LOGIN = "login_screen"
+    const val SCREEN_REGISTER = "register_screen"
 }

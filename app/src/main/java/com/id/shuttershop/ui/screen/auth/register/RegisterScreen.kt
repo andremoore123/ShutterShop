@@ -90,7 +90,7 @@ fun RegisterScreen(
             onEmailChange = viewModel::onEmailValueChange,
             onPasswordChange = viewModel::onPasswordChange,
             onLoginClick = {
-                viewModel.login(nameValue, emailValue, passwordValue)
+                viewModel.register(nameValue, emailValue, passwordValue)
             },
             onRegisterClick = navigateToLogin
         )
