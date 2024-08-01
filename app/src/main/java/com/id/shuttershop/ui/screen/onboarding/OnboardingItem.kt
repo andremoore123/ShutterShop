@@ -16,7 +16,7 @@ data class OnboardingItem(
     @StringRes val subTitleRes: Int,
 ) {
     companion object {
-        val onBoardingItems = listOf(
+        val onboardingItems = listOf(
             OnboardingItem(
                 R.drawable.onboard_first_img,
                 R.string.onboard_title_first,

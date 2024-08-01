@@ -50,14 +50,18 @@ fun PrimaryTextField(
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             maxLines = 1,
-            visualTransformation = if (inputType == PrimaryTextField.PASSwORD) PasswordVisualTransformation() else VisualTransformation.None
+            visualTransformation = if (inputType == PrimaryTextField.PASSwORD) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            }
         )
     }
 }
 
 @Composable
 @Preview
-fun ShowPrimaryTextFieldPreview() {
+internal fun ShowPrimaryTextFieldPreview() {
     ShutterShopTheme {
         PrimaryTextField(
             title = "Email"

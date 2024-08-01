@@ -50,7 +50,7 @@ fun MainContainer(
 
 @Composable
 @Preview
-fun ShowMainContainerPreview() {
+internal fun ShowMainContainerPreview() {
     ShutterShopTheme {
         MainContainer()
     }

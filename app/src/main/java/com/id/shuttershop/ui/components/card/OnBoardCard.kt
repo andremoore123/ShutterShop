@@ -27,12 +27,12 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
  * Email: andremoore431@gmail.com
  */
 @Composable
-fun OnboardCard(
+fun OnBoardCard(
     modifier: Modifier = Modifier,
-    onBoardItem: OnboardingItem = OnboardingItem.onBoardingItems.first(),
+    onBoardItem: OnboardingItem = OnboardingItem.onboardingItems.first(),
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
     ) {
         Image(
             painter = painterResource(id = onBoardItem.imageRes),
@@ -60,8 +60,8 @@ fun OnboardCard(
 
 @Composable
 @Preview
-fun ShowOnboardCardPreview() {
+internal fun ShowOnboardCardPreview() {
     ShutterShopTheme {
-        OnboardCard()
+        OnBoardCard()
     }
 }

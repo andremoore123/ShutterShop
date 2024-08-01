@@ -27,7 +27,7 @@ fun PrimaryButton(
 
 @Composable
 @Preview
-fun ShowPrimaryButtonPreview() {
+internal fun ShowPrimaryButtonPreview() {
     ShutterShopTheme {
         PrimaryButton(text = "Test Button")
     }

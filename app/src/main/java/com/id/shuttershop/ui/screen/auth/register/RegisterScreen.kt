@@ -76,22 +76,23 @@ fun RegisterScreen(
     }
 
     Scaffold(
+        modifier = modifier,
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }
     ) {
         RegisterContent(
-            modifier = modifier.padding(it),
+            modifier = Modifier.padding(it),
             nameValue = nameValue,
             emailValue = emailValue,
             passwordValue = passwordValue,
             onNameChange = viewModel::onNameChange,
             onEmailChange = viewModel::onEmailValueChange,
             onPasswordChange = viewModel::onPasswordChange,
-            onLoginClicked = {
+            onLoginClick = {
                 viewModel.login(nameValue, emailValue, passwordValue)
             },
-            onRegisterClicked = navigateToLogin
+            onRegisterClick = navigateToLogin
         )
     }
 }
@@ -105,8 +106,8 @@ internal fun RegisterContent(
     onNameChange: (String) -> Unit = {},
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
-    onLoginClicked: () -> Unit = {},
-    onRegisterClicked: () -> Unit = {},
+    onLoginClick: () -> Unit = {},
+    onRegisterClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -152,7 +153,7 @@ internal fun RegisterContent(
         PrimaryButton(
             text = stringResource(id = R.string.text_register),
             modifier = Modifier.fillMaxWidth(),
-            onClick = onLoginClicked
+            onClick = onLoginClick
         )
         Row(
             modifier = Modifier.padding(top = 30.dp),
@@ -161,7 +162,7 @@ internal fun RegisterContent(
             Text(text = stringResource(R.string.text_have_account))
             PrimaryTextButton(
                 text = stringResource(R.string.text_login_now),
-                onClick = onRegisterClicked
+                onClick = onRegisterClick
             )
         }
     }
@@ -169,7 +170,7 @@ internal fun RegisterContent(
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-fun ShowRegisterScreenPreview() {
+internal fun ShowRegisterScreenPreview() {
     ShutterShopTheme {
         RegisterContent()
     }
