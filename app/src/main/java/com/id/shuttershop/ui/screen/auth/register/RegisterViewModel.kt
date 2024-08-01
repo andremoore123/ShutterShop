@@ -1,16 +1,19 @@
 package com.id.shuttershop.ui.screen.auth.register
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.auth.RegisterUseCase
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.analytics.AnalyticsConstants
+import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_REGISTER
 import com.id.shuttershop.utils.handleUpdateUiState
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -27,6 +30,7 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val savedStateHandle: SavedStateHandle,
+    private val analyticRepository: IAnalyticRepository,
 ) : ViewModel() {
     val emailValue = savedStateHandle.getStateFlow(EMAIL, "")
     val nameValue = savedStateHandle.getStateFlow(NAME, "")
@@ -37,17 +41,45 @@ class RegisterViewModel @Inject constructor(
     val registerUiState = _registerUiState.asStateFlow()
 
 
-    fun login(name: String, email: String, password: String) {
+    fun register(name: String, email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             with(_registerUiState) {
                 handleUpdateUiState(UiState.Loading)
+                logRegisterAttempt(email)
                 registerUseCase(name, email, password).onSuccess {
+                    logRegisterSuccess(email)
                     handleUpdateUiState(UiState.Success(it))
                 }.onError { error ->
+                    logRegisterFailure(email, error.errorMessage)
                     handleUpdateUiState(UiState.Error(error))
                 }
             }
         }
+    }
+
+    private fun logRegisterAttempt(email: String) {
+        val params = Bundle().apply {
+            putString(AnalyticsConstants.PARAM_SCREEN_NAME, SCREEN_REGISTER)
+            putString(AnalyticsConstants.PARAM_EMAIL, email)
+        }
+        analyticRepository.logEvent(AnalyticsConstants.EVENT_REGISTER_ATTEMPT, params)
+    }
+
+    private fun logRegisterSuccess(email: String) {
+        val params = Bundle().apply {
+            putString(AnalyticsConstants.PARAM_SCREEN_NAME, SCREEN_REGISTER)
+            putString(AnalyticsConstants.PARAM_EMAIL, email)
+        }
+        analyticRepository.logEvent(AnalyticsConstants.EVENT_REGISTER_SUCCESS, params)
+    }
+
+    private fun logRegisterFailure(email: String, errorMessage: String) {
+        val params = Bundle().apply {
+            putString(AnalyticsConstants.PARAM_SCREEN_NAME, SCREEN_REGISTER)
+            putString(AnalyticsConstants.PARAM_EMAIL, email)
+            putString(AnalyticsConstants.PARAM_ERROR_MESSAGE, errorMessage)
+        }
+        analyticRepository.logEvent(AnalyticsConstants.EVENT_REGISTER_FAILURE, params)
     }
 
     fun onMessageValueChange(value: String) {

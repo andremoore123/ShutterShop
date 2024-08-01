@@ -1,9 +1,13 @@
 package com.id.shuttershop.ui.screen.onboarding
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.preference.IPreferenceRepository
+import com.id.shuttershop.utils.analytics.AnalyticsConstants
+import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_ONBOARDING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardViewModel @Inject constructor(
     private val preferenceRepository: IPreferenceRepository,
+    private val analyticRepository: IAnalyticRepository,
 ) : ViewModel() {
     private val _isShowOnboardState = MutableStateFlow(false)
     val isShowOnboardState = _isShowOnboardState.asStateFlow()
@@ -40,4 +45,21 @@ class OnboardViewModel @Inject constructor(
             preferenceRepository.showOnBoard()
         }
     }
+
+    fun logOnboardSkipEvent() {
+        val params = Bundle().apply {
+            putString(AnalyticsConstants.PARAM_SCREEN_NAME, SCREEN_ONBOARDING)
+        }
+        analyticRepository.logEvent(AnalyticsConstants.EVENT_ONBOARD_SKIP, params)
+    }
+
+    fun logOnboardNextEvent(screenIndex: Int) {
+        val params = Bundle().apply {
+            putString(AnalyticsConstants.PARAM_SCREEN_NAME, SCREEN_ONBOARDING)
+            putInt(AnalyticsConstants.PARAM_SCREEN_INDEX, screenIndex)
+        }
+        analyticRepository.logEvent(AnalyticsConstants.EVENT_ONBOARD_NEXT, params)
+    }
+
+
 }

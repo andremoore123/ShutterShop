@@ -55,8 +55,6 @@ fun OnboardingScreen(
         viewModel.fetchShowOnboard()
         if (isOnboardShowed) {
             navigateAfterOnboard()
-        } else {
-            viewModel.onBoardShowed()
         }
     }
 
@@ -71,8 +69,10 @@ fun OnboardingScreen(
         if (currentScreen < onBoardList.size - 1) {
             coroutineScope.launch {
                 pagerState.animateScrollToPage(currentScreen + 1)
+                viewModel.logOnboardNextEvent(currentScreen + 1)
             }
         } else {
+            viewModel.onBoardShowed()
             navigateAfterOnboard()
         }
     }
@@ -114,6 +114,8 @@ fun OnboardingScreen(
                 .padding(top = 60.dp)
         ) {
             PrimaryTextButton(text = stringResource(id = R.string.text_skip)) {
+                viewModel.logOnboardSkipEvent()
+                viewModel.onBoardShowed()
                 navigateAfterOnboard()
             }
             PrimaryButton(text = stringResource(id = R.string.text_next)) {
