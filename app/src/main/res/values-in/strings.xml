@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ShutterShop</string>
+
+    <!--  Onboard String  -->
+    <string name="onboard_title_first">Selamat Datang di \nShutterShop!</string>
+    <string name="onboard_subtitle_first">Temukan berbagai kamera dan aksesori dengan mudah di ShutterShop.</string>
+
+    <string name="onboard_title_second">Beli Kamera \ndengan Mudah</string>
+    <string name="onboard_subtitle_second">Nikmati pengalaman berbelanja yang nyaman dan aman di ShutterShop.</string>
+
+    <string name="onboard_title_third">Penawaran Eksklusif dan Diskon</string>
+    <string name="onboard_subtitle_third">Dapatkan akses ke penawaran eksklusif dan diskon khusus hanya di ShutterShop.</string>
+
+    <!--  Button  -->
+    <string name="text_next">Berikutnya</string>
+    <string name="text_skip">Lewati</string>
+    <string name="text_login">Masuk</string>
+    <string name="text_email">Email</string>
+    <string name="text_password">Kata Sandi</string>
+    <string name="text_no_account">Tidak Punya Akun?</string>
+    <string name="text_register_now">Daftar Sekarang</string>
+    <string name="text_subtitle_login">Mari Menangkap Dunia</string>
+    <string name="text_name">Nama</string>
+    <string name="text_subtitle_register">Daftar dan Tangkap Momen</string>
+    <string name="text_register">Daftar</string>
+    <string name="text_login_now">Masuk Sekarang</string>
+    <string name="text_have_account">Sudah punya akun?</string>
+    <string name="text_light">Terang</string>
+    <string name="text_dark">Gelap</string>
+    <string name="text_en">EN</string>
+    <string name="text_id">ID</string>
+    <string name="text_logout">Keluar</string>
+</resources>
