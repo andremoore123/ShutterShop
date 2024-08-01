@@ -1,9 +1,9 @@
 package com.id.shuttershop.ui.navigation.splash
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -17,12 +17,14 @@ import com.id.shuttershop.ui.screen.onboarding.OnboardingScreen
  * Email: andremoore431@gmail.com
  */
 fun NavGraphBuilder.splashNavigation(
-//    navController: NavController,
+    navController: NavController,
 ) {
     navigation(SplashRoute.ON_BOARDING.route, route = MainRoute.SplashNavigation.route) {
         composable(SplashRoute.ON_BOARDING.route) {
             OnboardingScreen(modifier = Modifier.padding(24.dp)) {
-                Log.d("SplashNavigation", "Navigated To Next Screen")
+                navController.navigate(MainRoute.AuthNavigation.route) {
+                    popUpTo(SplashRoute.ON_BOARDING.route) { inclusive = true }
+                }
             }
         }
     }

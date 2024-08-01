@@ -9,5 +9,5 @@ import android.os.Bundle
  * Email: andremoore431@gmail.com
  */
 interface IAnalyticRepository {
-    suspend fun logEvent(eventName: String, eventBundle: Bundle)
+    fun logEvent(eventName: String, eventBundle: Bundle)
 }

@@ -14,7 +14,7 @@ import javax.inject.Inject
 class AnalyticRepository @Inject constructor(
     private val analytic: FirebaseAnalytics
 ): IAnalyticRepository {
-    override suspend fun logEvent(eventName: String, eventBundle: Bundle) {
+    override fun logEvent(eventName: String, eventBundle: Bundle) {
         analytic.logEvent(eventName, eventBundle)
     }
 }

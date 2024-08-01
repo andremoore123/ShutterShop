@@ -11,7 +11,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.id.shuttershop.ui.navigation.MainRoute
 import com.id.shuttershop.ui.navigation.auth.authNavigation
-import com.id.shuttershop.ui.navigation.splash.SplashRoute
 import com.id.shuttershop.ui.navigation.splash.splashNavigation
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 
@@ -43,7 +42,7 @@ fun MainContainer(
         startDestination = MainRoute.SplashNavigation.route,
         modifier = modifier
     ) {
-        splashNavigation()
+        splashNavigation(mainNavController)
         authNavigation(mainNavController)
     }
 }
