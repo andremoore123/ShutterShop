@@ -43,7 +43,7 @@ fun MainContainer(
         startDestination = MainRoute.SplashNavigation.route,
         modifier = modifier
     ) {
-        splashNavigation(mainNavController)
+        splashNavigation()
         authNavigation(mainNavController)
     }
 }
