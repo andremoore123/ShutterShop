@@ -1,9 +1,14 @@
+import java.util.Locale
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.android.detekt)
     id("kotlin-kapt")
+    jacoco
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -31,6 +36,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -50,10 +59,64 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    applicationVariants.all {
+        val variantName = this.name.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
+
+        // Define task names for unit tests and Android tests
+        val unitTests = "test${variantName}UnitTest"
+        val androidTests = "connected${variantName}AndroidTest"
+
+        // Register a JacocoReport task for code coverage analysis
+        tasks.register<JacocoReport>("Jacoco${variantName}CodeCoverage") {
+            // Depend on unit tests and Android tests tasks
+            dependsOn(listOf(unitTests, androidTests))
+            // Set task grouping and description
+            group = "Reporting"
+            description = "Execute UI and unit tests, generate and combine Jacoco coverage report"
+            // Configure reports to generate both XML and HTML formats
+            reports {
+                xml.required.set(true)
+                html.required.set(true)
+            }
+            // Set source directories to the main source directory
+            sourceDirectories.setFrom(layout.projectDirectory.dir("src/main"))
+            // Set class directories to compiled Java and Kotlin classes, excluding specified exclusions
+            classDirectories.setFrom(files(
+                fileTree(layout.buildDirectory.dir("intermediates/javac/")) {
+                    exclude(exclusions)
+                },
+                fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/")) {
+                    exclude(exclusions)
+                }
+            ))
+            // Collect execution data from .exec and .ec files generated during test execution
+            executionData.setFrom(files(
+                fileTree(layout.buildDirectory) { include(listOf("**/*.exec", "**/*.ec")) }
+            ))
+        }
+    }
 }
 
-dependencies {
+val exclusions = listOf(
+    "**/R.class",
+    "**/R\$*.class",
+    "**/BuildConfig.*",
+    "**/Manifest*.*",
+    "**/*Test*.*"
+)
 
+tasks.withType(Test::class) {
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
+
+dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -69,6 +132,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":domain"))
+    implementation(libs.firebase.crashlytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
