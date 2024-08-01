@@ -1,8 +1,10 @@
 package com.id.data.di
 
+import com.id.data.analytic.AnalyticRepository
 import com.id.data.auth.AuthRepository
 import com.id.data.preference.PreferenceRepository
 import com.id.data.session.SessionRepository
+import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.auth.IAuthRepository
 import com.id.domain.preference.IPreferenceRepository
 import com.id.domain.session.ISessionRepository
@@ -29,4 +31,7 @@ abstract class AppModule {
 
     @Binds
     abstract fun provideAuthRepository(repository: AuthRepository): IAuthRepository
+
+    @Binds
+    abstract fun provideAnalyticRepository(repository: AnalyticRepository): IAnalyticRepository
 }
