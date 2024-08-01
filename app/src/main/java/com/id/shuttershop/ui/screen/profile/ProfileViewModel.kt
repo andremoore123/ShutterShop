@@ -3,10 +3,15 @@ package com.id.shuttershop.ui.screen.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.preference.IPreferenceRepository
+import com.id.domain.session.ISessionRepository
+import com.id.domain.session.UserModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val preferenceRepository: IPreferenceRepository,
+    private val sessionRepository: ISessionRepository,
 ) : ViewModel() {
     val isDarkMode: StateFlow<Boolean> = preferenceRepository.isDarkMode.stateIn(
         scope = viewModelScope,
@@ -33,6 +39,18 @@ class ProfileViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = false
     )
+
+    private val _userData = MutableStateFlow<UserModel>(UserModel.emptyModel)
+    val userData = _userData.asStateFlow()
+
+    fun fetchUserData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = sessionRepository.fetchUserData()
+            _userData.getAndUpdate {
+                response
+            }
+        }
+    }
 
     fun setDarkMode(value: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {

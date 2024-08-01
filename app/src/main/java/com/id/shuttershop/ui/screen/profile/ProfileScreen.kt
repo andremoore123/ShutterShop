@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -44,9 +45,17 @@ fun ProfileScreen(
 ) {
     val isDarkMode by viewModel.isDarkMode.collectAsState()
     val isIndonesiaLanguage by viewModel.isIndonesiaLanguage.collectAsState()
+    val userData by viewModel.userData.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.fetchUserData()
+    }
+
 
     ProfileContent(
         modifier = modifier,
+        profileName = userData.name,
+        profileEmail = userData.email,
         isDarkMode = isDarkMode,
         isIndonesia = isIndonesiaLanguage,
         onThemeSwitchChange = viewModel::setDarkMode,
