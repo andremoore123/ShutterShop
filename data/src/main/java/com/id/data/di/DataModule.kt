@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.ktx.Firebase
+import com.id.data.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,4 +34,11 @@ object DataModule {
     @Provides
     @Singleton
     fun provideFirebaseAnalytics(@ApplicationContext context: Context) = FirebaseAnalytics.getInstance(context)
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context) = AppDatabase.buildDatabase(context)
+
+    @Provides
+    fun provideWishlistDao(appDatabase: AppDatabase) = appDatabase.wishlistDao()
 }

@@ -56,4 +56,9 @@ dependencies {
     api(libs.androidx.hilt.work)
     kapt(libs.androidx.hilt.compiler)
     kapt(libs.hilt.android.compiler)
+
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
 }

@@ -30,4 +30,7 @@
     <string name="text_en">EN</string>
     <string name="text_id">ID</string>
     <string name="text_logout">Logout</string>
+    <string name="text_item_subtitle">%s | Sold %s</string>
+    <string name="text_button_add_cart">+ Cart</string>
+    <string name="text_total_item">%s Items</string>
 </resources>
