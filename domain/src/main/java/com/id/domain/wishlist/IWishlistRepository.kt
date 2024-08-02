@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
  * Email: andremoore431@gmail.com
  */
 interface IWishlistRepository {
-    fun fetchWishlists(): Flow<WishlistModel>
+    fun fetchWishlists(): Flow<List<WishlistModel>>
 
     suspend fun addToWishlist(data: WishlistModel)
     suspend fun remoteWishlist(data: WishlistModel)

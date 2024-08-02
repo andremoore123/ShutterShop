@@ -1,5 +1,6 @@
 package com.id.shuttershop.ui.components.button;
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ fun PrimaryIconButton(
         .clip(CircleShape)
         .clickable { onClick() }
         .border(2.dp, MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+        .background(color = MaterialTheme.colorScheme.surface)
     ) {
         Icon(
             imageVector = icon,

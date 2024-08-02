@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WishlistDao {
     @Query("SELECT * from wishlist")
-    fun fetchWishlists(): Flow<WishlistEntity>
+    fun fetchWishlists(): Flow<List<WishlistEntity>>
 
     @Insert
     suspend fun insertWishlist(data: WishlistEntity)

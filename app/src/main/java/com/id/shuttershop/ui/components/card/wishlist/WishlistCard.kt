@@ -55,7 +55,16 @@ fun WishlistCard(
 ) {
     when (wishlistType) {
         WishlistCardType.GRID -> {
-            Box(modifier = modifier.width(170.dp)) {
+            Box(
+                modifier = modifier
+                    .width(170.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .border(
+                        2.dp,
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        RoundedCornerShape(16.dp)
+                    )
+            ) {
                 Column {
                     Box(modifier = Modifier, contentAlignment = Alignment.TopEnd) {
                         Box(
