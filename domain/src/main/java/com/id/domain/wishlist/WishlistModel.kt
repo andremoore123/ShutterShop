@@ -17,10 +17,10 @@ data class WishlistModel(
     companion object {
         val dummyData = WishlistModel(
             id = 2990,
-            itemName = "Angelina Hendrix",
-            itemSold = "aliquid",
-            itemPrice = "pro",
-            itemRating = "vocibus",
+            itemName = "Angelina Hesdfjsdifjdsfisdfndrix",
+            itemSold = "5",
+            itemPrice = "230 000",
+            itemRating = "3",
             itemSeller = "noluisse"
         )
     }
