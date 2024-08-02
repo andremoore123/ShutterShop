@@ -131,7 +131,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(project(":data"))
     implementation(project(":domain"))
-    implementation(project(":domain"))
     implementation(libs.firebase.crashlytics)
     implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
