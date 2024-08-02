@@ -2,11 +2,10 @@ package com.id.data.wishlist
 
 import com.id.data.wishlist.source.WishlistDao
 import com.id.data.wishlist.source.mapToEntity
-import com.id.data.wishlist.source.mapToModel
 import com.id.domain.wishlist.IWishlistRepository
 import com.id.domain.wishlist.WishlistModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -18,8 +17,22 @@ import javax.inject.Inject
 class WishlistRepository @Inject constructor(
     private val wishlistDao: WishlistDao,
 ) : IWishlistRepository {
-    override fun fetchWishlists(): Flow<WishlistModel> = wishlistDao.fetchWishlists().map {
-        it.mapToModel()
+//    override fun fetchWishlists(): Flow<List<WishlistModel>> = wishlistDao.fetchWishlists().map { list ->
+//        list.map {
+//            it.mapToModel()
+//        }
+//    }
+
+    // TODO(): Delete On Production
+    override fun fetchWishlists(): Flow<List<WishlistModel>> = flow {
+        emit(
+            listOf(
+                WishlistModel.dummyData,
+                WishlistModel.dummyData,
+                WishlistModel.dummyData,
+                WishlistModel.dummyData,
+            )
+        )
     }
 
     override suspend fun addToWishlist(data: WishlistModel) {
