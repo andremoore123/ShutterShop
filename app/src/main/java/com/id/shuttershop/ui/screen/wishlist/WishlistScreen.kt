@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.domain.wishlist.WishlistModel
 import com.id.shuttershop.R
-import com.id.shuttershop.ui.components.card.wishlist.WishlistCard
-import com.id.shuttershop.ui.components.card.wishlist.WishlistCardType
+import com.id.shuttershop.ui.components.card.WishlistCard
+import com.id.shuttershop.ui.components.card.WishlistCardType
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
 import com.id.shuttershop.ui.theme.ShutterShopTheme
