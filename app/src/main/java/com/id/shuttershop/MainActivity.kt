@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.id.shuttershop.ui.screen.home.HomeScreen
+import com.id.shuttershop.ui.screen.launchpad.LaunchpadScreen
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 darkTheme = isDarkMode.value
             ) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HomeScreen(modifier = Modifier.padding(innerPadding))
+                    LaunchpadScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

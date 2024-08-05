@@ -33,7 +33,6 @@ class OnboardViewModel @Inject constructor(
     fun fetchShowOnboard() {
         viewModelScope.launch(Dispatchers.IO) {
             val isShowed = preferenceRepository.isOnboardShow()
-            Log.d("ONBARDVM", isShowed.toString())
             _isShowOnboardState.getAndUpdate {
                 isShowed
             }

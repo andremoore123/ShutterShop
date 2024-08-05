@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -39,6 +40,7 @@ import com.id.shuttershop.ui.components.SearchTextField
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
 import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
+import com.id.shuttershop.ui.components.topbar.HomeTopBar
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
 import com.id.shuttershop.ui.theme.ShutterShopTheme
@@ -64,7 +66,7 @@ fun HomeScreen(
     }
 
     HomeContent(
-        modifier = modifier,
+        modifier = modifier.padding(horizontal = 16.dp),
         currentLayoutType = currentLayoutType,
         productState = productState,
         onLayoutChange = viewModel::setLayoutType
@@ -87,7 +89,6 @@ internal fun HomeContent(
             onLayoutChange = onLayoutChange,
             showBottomSheet = {},
             navigateToSearch = {
-                Log.d("HOME_SCREEN", "Search_Clicked")
             }
         )
         productState.onSuccess {
@@ -128,6 +129,8 @@ internal fun HomeContent(
 internal fun HomeHeader(
     modifier: Modifier = Modifier,
     currentLayoutType: String,
+    userName: String = "",
+    userImageUrl: String = "",
     onLayoutChange: (String) -> Unit,
     showBottomSheet: () -> Unit,
     navigateToSearch: () -> Unit = {},
@@ -136,11 +139,16 @@ internal fun HomeHeader(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        HomeTopBar(
+            userName = userName,
+            userImageUrl = userImageUrl
+        )
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             SearchTextField(
+                modifier = Modifier.weight(1f),
                 hint = stringResource(R.string.text_search_camera),
                 enabled = false,
                 onClick = navigateToSearch
