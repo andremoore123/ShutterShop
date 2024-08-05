@@ -4,11 +4,13 @@ import com.id.data.analytic.AnalyticRepository
 import com.id.data.auth.AuthRepository
 import com.id.data.preference.PreferenceRepository
 import com.id.data.session.SessionRepository
+import com.id.data.transaction.TransactionRepository
 import com.id.data.wishlist.WishlistRepository
 import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.auth.IAuthRepository
 import com.id.domain.preference.IPreferenceRepository
 import com.id.domain.session.ISessionRepository
+import com.id.domain.transaction.ITransactionRepository
 import com.id.domain.wishlist.IWishlistRepository
 import dagger.Binds
 import dagger.Module
@@ -39,4 +41,7 @@ abstract class AppModule {
 
     @Binds
     abstract fun provideWishlistRepository(repository: WishlistRepository): IWishlistRepository
+
+    @Binds
+    abstract fun provideTransactionRepository(repository: TransactionRepository): ITransactionRepository
 }

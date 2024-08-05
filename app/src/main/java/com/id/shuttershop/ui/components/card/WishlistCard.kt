@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.components.card.wishlist;
+package com.id.shuttershop.ui.components.card;
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
