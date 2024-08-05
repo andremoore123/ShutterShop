@@ -7,6 +7,13 @@ package com.id.shuttershop.utils.analytics
  * Email: andremoore431@gmail.com
  */
 object AnalyticsConstants {
+    // Home Event Names
+    const val EVENT_HOME_PRODUCT_DETAIL = "home_product_detail"
+    const val EVENT_HOME_LAYOUT = "home_layout"
+    const val EVENT_HOME_NOTIFICATION = "home_notification"
+    const val EVENT_HOME_CART = "home_cart"
+    const val EVENT_HOME_SEARCH = "home_search"
+
     // Onboard Event Names
     const val EVENT_ONBOARD_SKIP = "onboard_skip"
     const val EVENT_ONBOARD_NEXT = "onboard_next"
@@ -34,7 +41,6 @@ object AnalyticsConstants {
 
     // Parameter Wishlist
     const val WISHLIST_BUTTON = "wishlist"
-
 
     // Transaction Event Names
     const val EVENT_RATE_PRODUCT = "rate_product"

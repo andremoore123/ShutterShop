@@ -1,6 +1,6 @@
 package com.id.shuttershop.ui.screen.home;
 
-import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -62,6 +62,10 @@ fun HomeScreen(
     val productState by viewModel.productUiState.collectAsState()
     val userState by viewModel.userData.collectAsState()
 
+    val navigateToDetail: (ProductModel) -> Unit = {
+        viewModel.logHomeDetailProduct(it.itemName)
+    }
+
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchProducts()
         viewModel.fetchUserData()
@@ -73,7 +77,13 @@ fun HomeScreen(
         productState = productState,
         onLayoutChange = viewModel::setLayoutType,
         userName = userState.name,
-        userImageUrl = userState.email
+        userImageUrl = userState.email,
+        navigateToDetail = navigateToDetail,
+        logEvent = HomeLogEvent(
+            logSearchButton = viewModel::logSearchButton,
+            logNotificationButton = viewModel::logNotificationButton,
+            logCartButton = viewModel::logCartButton
+        )
     )
 }
 
@@ -85,6 +95,8 @@ internal fun HomeContent(
     userImageUrl: String,
     productState: UiState<List<ProductModel>>,
     onLayoutChange: (String) -> Unit,
+    navigateToDetail: (ProductModel) -> Unit,
+    logEvent: HomeLogEvent,
 ) {
     Column(
         modifier = modifier,
@@ -93,9 +105,11 @@ internal fun HomeContent(
         HomeHeader(
             currentLayoutType = currentLayoutType,
             onLayoutChange = onLayoutChange,
+            userName = userName,
+            userImageUrl = userImageUrl,
+            logEvent = logEvent,
             showBottomSheet = {},
-            navigateToSearch = {
-            }
+            navigateToSearch = {},
         )
         productState.onSuccess {
             when (currentLayoutType) {
@@ -107,6 +121,9 @@ internal fun HomeContent(
                     ) {
                         items(it) {
                             HomeCard(
+                                modifier = Modifier.clickable {
+                                    navigateToDetail(it)
+                                },
                                 productModel = it,
                                 cardOrientation = HomeCardOrientation.GRID
                             )
@@ -120,6 +137,9 @@ internal fun HomeContent(
                     ) {
                         items(it) {
                             HomeCard(
+                                modifier = Modifier.clickable {
+                                    navigateToDetail(it)
+                                },
                                 productModel = it,
                                 cardOrientation = HomeCardOrientation.COLUMN
                             )
@@ -135,6 +155,7 @@ internal fun HomeContent(
 internal fun HomeHeader(
     modifier: Modifier = Modifier,
     currentLayoutType: String,
+    logEvent: HomeLogEvent,
     userName: String = "",
     userImageUrl: String = "",
     onLayoutChange: (String) -> Unit,
@@ -157,10 +178,23 @@ internal fun HomeHeader(
                 modifier = Modifier.weight(1f),
                 hint = stringResource(R.string.text_search_camera),
                 enabled = false,
-                onClick = navigateToSearch
+                onClick = {
+                    navigateToSearch()
+                    logEvent.logSearchButton()
+                }
             )
-            PrimaryIconButton(icon = Icons.Default.Notifications, modifier = Modifier.size(60.dp))
-            PrimaryIconButton(icon = Icons.Default.ShoppingCart, modifier = Modifier.size(60.dp))
+            PrimaryIconButton(
+                icon = Icons.Default.Notifications,
+                modifier = Modifier.size(60.dp),
+                onClick = {
+                    logEvent.logNotificationButton()
+                })
+            PrimaryIconButton(
+                icon = Icons.Default.ShoppingCart,
+                modifier = Modifier.size(60.dp),
+                onClick = {
+                    logEvent.logCartButton()
+                })
         }
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -204,7 +238,9 @@ internal fun ShowHomeScreenPreview() {
             ),
             onLayoutChange = {},
             userName = "",
-            userImageUrl = ""
+            userImageUrl = "",
+            navigateToDetail = {},
+            logEvent = HomeLogEvent()
         )
     }
 }
