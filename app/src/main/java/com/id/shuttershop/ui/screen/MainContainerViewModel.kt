@@ -3,14 +3,15 @@ package com.id.shuttershop.ui.screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.preference.IPreferenceRepository
+import com.id.domain.session.ISessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 /**
@@ -22,9 +23,16 @@ import javax.inject.Inject
 @HiltViewModel
 class MainContainerViewModel @Inject constructor(
     private val preferenceRepository: IPreferenceRepository,
+    private val sessionRepository: ISessionRepository,
 ) : ViewModel() {
     private val _isOnboardShowed = MutableStateFlow(false)
     val isOnboardShowed = _isOnboardShowed.asStateFlow()
+
+    val isUserLogin = sessionRepository.isUserLogin().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
 
     fun fetchIsOnboardShowed() {
         viewModelScope.launch(Dispatchers.IO) {

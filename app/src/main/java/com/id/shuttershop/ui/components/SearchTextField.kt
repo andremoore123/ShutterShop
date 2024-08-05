@@ -3,6 +3,7 @@ package com.id.shuttershop.ui.components;
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -47,6 +48,7 @@ fun SearchTextField(
         }
         OutlinedTextField(
             modifier = Modifier
+                .fillMaxWidth(1f)
                 .clip(OutlinedTextFieldDefaults.shape)
                 .clickable(enabled.not(), onClick = onClick),
             value = value,

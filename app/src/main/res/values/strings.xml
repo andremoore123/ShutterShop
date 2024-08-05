@@ -37,4 +37,6 @@
     <string name="text_total_payment">Total Payment</string>
     <string name="text_shop">"Shop | "</string>
     <string name="text_search_camera">Search Camera</string>
+    <string name="text_welcome">Welcome, %s</string>
+    <string name="text_desc_home">Find Your Perfect Camera</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.id.shuttershop.utils
 
+import androidx.navigation.NavController
 import com.id.domain.ext.ErrorType
 import com.id.domain.ext.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,4 +28,13 @@ fun <T> Resource<T>.onError(handleError: (ErrorType) -> Unit): Resource<T> {
         handleError(errorType)
     }
     return this
+}
+
+fun NavController.navigateAndPopUpAll(destination: String) {
+    val currentDestination = currentDestination?.route
+    currentDestination?.let {
+        navigate(destination) {
+            popUpTo(currentDestination) { inclusive = true }
+        }
+    }
 }

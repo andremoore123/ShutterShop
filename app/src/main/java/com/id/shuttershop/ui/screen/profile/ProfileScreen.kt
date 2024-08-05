@@ -41,7 +41,6 @@ import com.id.shuttershop.utils.dashedBorder
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = hiltViewModel(),
-    onLogoutClick: () -> Unit = {},
 ) {
     val isDarkMode by viewModel.isDarkMode.collectAsState()
     val isIndonesiaLanguage by viewModel.isIndonesiaLanguage.collectAsState()
@@ -60,7 +59,7 @@ fun ProfileScreen(
         isIndonesia = isIndonesiaLanguage,
         onThemeSwitchChange = viewModel::setDarkMode,
         onLanguageSwitchChange = viewModel::setIndonesiaLanguage,
-        onLogoutClick = onLogoutClick
+        onLogoutClick = viewModel::logout
     )
 }
 
