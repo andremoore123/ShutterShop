@@ -1,10 +1,18 @@
 package com.id.shuttershop.ui.screen.transaction
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.transaction.ITransactionRepository
 import com.id.domain.transaction.TransactionModel
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_RATE_PRODUCT
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.PARAM_BUTTON
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.PARAM_SCREEN_NAME
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.PRODUCT_NAME
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.RATE_BUTTON
+import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_TRANSACTION
 import com.id.shuttershop.utils.handleUpdateUiState
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onSuccess
@@ -24,6 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val transactionRepository: ITransactionRepository,
+    private val analyticRepository: IAnalyticRepository,
 ) : ViewModel() {
     private val _transactionState =
         MutableStateFlow<UiState<List<TransactionModel>>>(UiState.Initiate)
@@ -45,6 +54,15 @@ class TransactionViewModel @Inject constructor(
 
     // TODO(): Implement when Rating use case is implemented
     fun rateTransaction(data: TransactionModel) {
+        logRateItem(data.itemName)
+    }
 
+    private fun logRateItem(itemName: String) {
+        val bundle = Bundle().apply {
+            putString(PARAM_SCREEN_NAME, SCREEN_TRANSACTION)
+            putString(PARAM_BUTTON, RATE_BUTTON)
+            putString(PRODUCT_NAME, itemName)
+        }
+        analyticRepository.logEvent(EVENT_RATE_PRODUCT, bundle)
     }
 }
