@@ -23,7 +23,9 @@ object AnalyticsConstants {
 
     // Logout Event Names
     const val EVENT_LOGOUT_ATTEMPT = "logout_attempt"
-    const val EVENT_BUTTON_LOGOUT = "logout"
+
+    // Parameter Profile
+    const val LOGOUT_BUTTON = "logout"
 
 
     // Transaction Event Names

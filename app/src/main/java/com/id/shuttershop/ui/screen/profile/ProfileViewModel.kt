@@ -9,7 +9,7 @@ import com.id.domain.preference.IPreferenceRepository
 import com.id.domain.session.ISessionRepository
 import com.id.domain.session.UserModel
 import com.id.shuttershop.utils.analytics.AnalyticsConstants
-import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_BUTTON_LOGOUT
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.LOGOUT_BUTTON
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_PROFILE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -77,7 +77,7 @@ class ProfileViewModel @Inject constructor(
         val params = Bundle().apply {
             putString(AnalyticsConstants.PARAM_SCREEN_NAME, SCREEN_PROFILE)
             putString(AnalyticsConstants.PARAM_EMAIL, email)
-            putString(AnalyticsConstants.PARAM_BUTTON, EVENT_BUTTON_LOGOUT)
+            putString(AnalyticsConstants.PARAM_BUTTON, LOGOUT_BUTTON)
         }
         analyticRepository.logEvent(AnalyticsConstants.EVENT_LOGOUT_ATTEMPT, params)
     }
