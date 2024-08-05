@@ -27,6 +27,14 @@ object AnalyticsConstants {
     // Parameter Profile
     const val LOGOUT_BUTTON = "logout"
 
+    // Wishlist Event Names
+    const val EVENT_WISHLIST_ADD_TO_CART = "wishlist_add_to_cart"
+    const val EVENT_WISHLIST_REMOVE = "wishlist_remove"
+    const val EVENT_WISHLIST_LAYOUT = "wishlist_layout"
+
+    // Parameter Wishlist
+    const val WISHLIST_BUTTON = "wishlist"
+
 
     // Transaction Event Names
     const val EVENT_RATE_PRODUCT = "rate_product"
@@ -38,6 +46,7 @@ object AnalyticsConstants {
 
     // Parameter Names
     const val PARAM_BUTTON = "btn_click"
+    const val PARAM_LAYOUT = "layout_type"
     const val PARAM_SCREEN_NAME = "screen_name"
     const val PARAM_SCREEN_INDEX = "screen_index"
     const val PARAM_EMAIL = "email"

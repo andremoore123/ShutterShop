@@ -12,4 +12,5 @@ object ScreenConstants {
     const val SCREEN_REGISTER = "register_screen"
     const val SCREEN_PROFILE = "profile_screen"
     const val SCREEN_TRANSACTION = "transaction_screen"
+    const val SCREEN_WISHLIST = "wishlist_screen"
 }
