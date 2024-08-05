@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.id.domain.wishlist.WishlistModel
@@ -145,8 +146,12 @@ internal fun WishlistItemText(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        Text(text = data.itemName, style = AppTypography.bodyLarge)
-        Text(text = data.itemPrice, style = AppTypography.headlineSmall)
+        Text(text = data.itemName, style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = data.itemPrice, style = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = FontWeight.Bold
+            )
+        )
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp)
@@ -156,7 +161,7 @@ internal fun WishlistItemText(
                 contentDescription = null,
                 modifier = Modifier.size(14.dp)
             )
-            Text(text = data.itemSeller, style = AppTypography.bodyLarge)
+            Text(text = data.itemSeller, style = MaterialTheme.typography.bodySmall)
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -168,8 +173,12 @@ internal fun WishlistItemText(
                 modifier = Modifier.size(14.dp)
             )
             Text(
-                text = stringResource(R.string.text_item_subtitle, data.itemRating, data.itemSold),
-                style = MaterialTheme.typography.bodyLarge
+                text = stringResource(
+                    R.string.text_item_subtitle,
+                    data.itemRating,
+                    data.itemSold
+                ),
+                style = MaterialTheme.typography.bodySmall
             )
         }
     }
