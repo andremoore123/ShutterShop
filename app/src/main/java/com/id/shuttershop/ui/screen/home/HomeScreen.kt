@@ -60,16 +60,20 @@ fun HomeScreen(
 ) {
     val currentLayoutType by viewModel.isColumnLayout.collectAsState()
     val productState by viewModel.productUiState.collectAsState()
+    val userState by viewModel.userData.collectAsState()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchProducts()
+        viewModel.fetchUserData()
     }
 
     HomeContent(
         modifier = modifier.padding(horizontal = 16.dp),
         currentLayoutType = currentLayoutType,
         productState = productState,
-        onLayoutChange = viewModel::setLayoutType
+        onLayoutChange = viewModel::setLayoutType,
+        userName = userState.name,
+        userImageUrl = userState.email
     )
 }
 
@@ -77,6 +81,8 @@ fun HomeScreen(
 internal fun HomeContent(
     modifier: Modifier = Modifier,
     currentLayoutType: String,
+    userName: String,
+    userImageUrl: String,
     productState: UiState<List<ProductModel>>,
     onLayoutChange: (String) -> Unit,
 ) {
@@ -196,7 +202,9 @@ internal fun ShowHomeScreenPreview() {
                     ProductModel.dummyData
                 )
             ),
-            onLayoutChange = {}
+            onLayoutChange = {},
+            userName = "",
+            userImageUrl = ""
         )
     }
 }

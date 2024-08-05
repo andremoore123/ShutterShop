@@ -9,6 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.id.shuttershop.ui.navigation.MainRoute
 import com.id.shuttershop.ui.screen.onboarding.OnboardingScreen
+import com.id.shuttershop.ui.screen.splash.SplashScreen
+import com.id.shuttershop.utils.navigateAndPopUpAll
 
 /**
  * Created by: andreputras.
@@ -19,12 +21,13 @@ import com.id.shuttershop.ui.screen.onboarding.OnboardingScreen
 fun NavGraphBuilder.splashNavigation(
     navController: NavController,
 ) {
-    navigation(SplashRoute.ON_BOARDING.route, route = MainRoute.SplashNavigation.route) {
+    navigation(SplashRoute.SPLASH_SCREEN.route, route = MainRoute.SplashNavigation.route) {
+        composable(SplashRoute.SPLASH_SCREEN.route) {
+            SplashScreen(modifier = Modifier)
+        }
         composable(SplashRoute.ON_BOARDING.route) {
             OnboardingScreen(modifier = Modifier.padding(24.dp)) {
-                navController.navigate(MainRoute.AuthNavigation.route) {
-                    popUpTo(SplashRoute.ON_BOARDING.route) { inclusive = true }
-                }
+                navController.navigateAndPopUpAll(MainRoute.AuthNavigation.route)
             }
         }
     }

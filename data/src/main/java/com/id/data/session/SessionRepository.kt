@@ -52,7 +52,9 @@ class SessionRepository @Inject constructor(
 
     override suspend fun clearUserSession() {
         dataStore.edit {
-            it.clear()
+            it[userToken] = ""
+            it[userNameValue] = ""
+            it[userEmailValue] = ""
         }
     }
 

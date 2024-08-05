@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,6 +34,7 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
 @Composable
 fun LaunchpadScreen(
     modifier: Modifier = Modifier,
+    mainNavController: NavController,
 ) {
     val launchdPadNavController = rememberNavController()
     val navBackStackEntry by launchdPadNavController.currentBackStackEntryAsState()
@@ -95,6 +97,6 @@ fun LaunchpadScreen(
 @Preview
 internal fun ShowLaunchpadScreenPreview() {
     ShutterShopTheme {
-        LaunchpadScreen()
+        LaunchpadScreen(mainNavController = rememberNavController())
     }
 }
