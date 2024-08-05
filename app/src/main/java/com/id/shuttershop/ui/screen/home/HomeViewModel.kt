@@ -1,13 +1,24 @@
 package com.id.shuttershop.ui.screen.home
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductModel
 import com.id.domain.session.ISessionRepository
 import com.id.domain.session.UserModel
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_HOME_CART
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_HOME_LAYOUT
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_HOME_NOTIFICATION
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_HOME_PRODUCT_DETAIL
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_HOME_SEARCH
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.PARAM_LAYOUT
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.PARAM_SCREEN_NAME
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.PRODUCT_NAME
+import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_HOME
 import com.id.shuttershop.utils.handleUpdateUiState
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onSuccess
@@ -30,6 +41,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val productRepository: IProductRepository,
     private val sessionRepository: ISessionRepository,
+    private val analyticRepository: IAnalyticRepository,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _productsUiState = MutableStateFlow<UiState<List<ProductModel>>>(UiState.Initiate)
@@ -67,11 +79,49 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setLayoutType(currentLayout: String) {
+        logHomeLayout(currentLayout)
         if (currentLayout == GRID_LAYOUT) {
             savedStateHandle[LAYOUT_TYPE] = COLUMN_LAYOUT
         } else {
             savedStateHandle[LAYOUT_TYPE] = GRID_LAYOUT
         }
+    }
+
+    fun logSearchButton() {
+        val params = Bundle().apply {
+            putString(PARAM_SCREEN_NAME, SCREEN_HOME)
+        }
+        analyticRepository.logEvent(EVENT_HOME_NOTIFICATION, params)
+    }
+
+    fun logNotificationButton() {
+        val params = Bundle().apply {
+            putString(PARAM_SCREEN_NAME, SCREEN_HOME)
+        }
+        analyticRepository.logEvent(EVENT_HOME_SEARCH, params)
+    }
+
+    fun logCartButton() {
+        val params = Bundle().apply {
+            putString(PARAM_SCREEN_NAME, SCREEN_HOME)
+        }
+        analyticRepository.logEvent(EVENT_HOME_CART, params)
+    }
+
+    fun logHomeDetailProduct(productName: String) {
+        val params = Bundle().apply {
+            putString(PARAM_SCREEN_NAME, SCREEN_HOME)
+            putString(PRODUCT_NAME, productName)
+        }
+        analyticRepository.logEvent(EVENT_HOME_PRODUCT_DETAIL, params)
+    }
+
+    private fun logHomeLayout(layoutName: String) {
+        val params = Bundle().apply {
+            putString(PARAM_SCREEN_NAME, SCREEN_HOME)
+            putString(PARAM_LAYOUT, layoutName)
+        }
+        analyticRepository.logEvent(EVENT_HOME_LAYOUT, params)
     }
 
     companion object {

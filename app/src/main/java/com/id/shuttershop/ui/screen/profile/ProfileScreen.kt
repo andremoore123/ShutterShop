@@ -73,7 +73,7 @@ internal fun ProfileContent(
     isIndonesia: Boolean = false,
     onThemeSwitchChange: (Boolean) -> Unit = {},
     onLanguageSwitchChange: (Boolean) -> Unit = {},
-    onLogoutClick: () -> Unit = {},
+    onLogoutClick: (String) -> Unit = {},
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -126,7 +126,7 @@ internal fun ProfileContent(
         PrimaryButton(
             text = stringResource(R.string.text_logout),
             modifier = Modifier.padding(top = 40.dp),
-            onClick = onLogoutClick
+            onClick = { onLogoutClick(profileEmail) }
         )
     }
 }

@@ -1,11 +1,16 @@
 package com.id.shuttershop.ui.screen.profile
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.auth.LogoutUseCase
 import com.id.domain.preference.IPreferenceRepository
 import com.id.domain.session.ISessionRepository
 import com.id.domain.session.UserModel
+import com.id.shuttershop.utils.analytics.AnalyticsConstants
+import com.id.shuttershop.utils.analytics.AnalyticsConstants.LOGOUT_BUTTON
+import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_PROFILE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +33,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val preferenceRepository: IPreferenceRepository,
     private val sessionRepository: ISessionRepository,
+    private val analyticRepository: IAnalyticRepository,
     private val logoutUseCase: LogoutUseCase,
 ) : ViewModel() {
     val isDarkMode: StateFlow<Boolean> = preferenceRepository.isDarkMode.stateIn(
@@ -54,8 +60,9 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun logout() {
+    fun logout(userEmail: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            logLogoutAttempt(userEmail)
             logoutUseCase.invoke()
         }
     }
@@ -64,6 +71,15 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             preferenceRepository.setDarkMode()
         }
+    }
+
+    private fun logLogoutAttempt(email: String) {
+        val params = Bundle().apply {
+            putString(AnalyticsConstants.PARAM_SCREEN_NAME, SCREEN_PROFILE)
+            putString(AnalyticsConstants.PARAM_EMAIL, email)
+            putString(AnalyticsConstants.PARAM_BUTTON, LOGOUT_BUTTON)
+        }
+        analyticRepository.logEvent(AnalyticsConstants.EVENT_LOGOUT_ATTEMPT, params)
     }
 
     fun setIndonesiaLanguage(value: Boolean) {
