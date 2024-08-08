@@ -50,11 +50,13 @@ fun SearchTextField(
             modifier = Modifier
                 .fillMaxWidth(1f)
                 .clip(OutlinedTextFieldDefaults.shape)
-                .clickable(enabled.not(), onClick = onClick),
+                .clickable {
+                    onClick()
+                },
             value = value,
             onValueChange = onValueChange,
-            enabled = enabled,
             shape = CircleShape,
+            enabled = enabled,
             label = {
                 AnimatedVisibility(visible = value.isEmpty()) {
                     Text(text = hint)

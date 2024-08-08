@@ -57,6 +57,7 @@ import com.id.shuttershop.utils.onSuccess
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    navigateToSearch: () -> Unit = {}
 ) {
     val currentLayoutType by viewModel.isColumnLayout.collectAsState()
     val productState by viewModel.productUiState.collectAsState()
@@ -83,7 +84,8 @@ fun HomeScreen(
             logSearchButton = viewModel::logSearchButton,
             logNotificationButton = viewModel::logNotificationButton,
             logCartButton = viewModel::logCartButton
-        )
+        ),
+        navigateToSearch = navigateToSearch
     )
 }
 
@@ -96,6 +98,7 @@ internal fun HomeContent(
     productState: UiState<List<ProductModel>>,
     onLayoutChange: (String) -> Unit,
     navigateToDetail: (ProductModel) -> Unit,
+    navigateToSearch: () -> Unit,
     logEvent: HomeLogEvent,
 ) {
     Column(
@@ -109,7 +112,7 @@ internal fun HomeContent(
             userImageUrl = userImageUrl,
             logEvent = logEvent,
             showBottomSheet = {},
-            navigateToSearch = {},
+            navigateToSearch = navigateToSearch,
         )
         productState.onSuccess {
             when (currentLayoutType) {
@@ -177,7 +180,6 @@ internal fun HomeHeader(
             SearchTextField(
                 modifier = Modifier.weight(1f),
                 hint = stringResource(R.string.text_search_camera),
-                enabled = false,
                 onClick = {
                     navigateToSearch()
                     logEvent.logSearchButton()
@@ -240,7 +242,8 @@ internal fun ShowHomeScreenPreview() {
             userName = "",
             userImageUrl = "",
             navigateToDetail = {},
-            logEvent = HomeLogEvent()
+            logEvent = HomeLogEvent(),
+            navigateToSearch = {}
         )
     }
 }

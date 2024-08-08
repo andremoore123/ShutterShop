@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.id.shuttershop.ui.navigation.MainRoute
 import com.id.shuttershop.ui.screen.launchpad.LaunchpadScreen
+import com.id.shuttershop.ui.screen.search.SearchScreen
 
 /**
  * Created by: andreputras.
@@ -21,6 +22,9 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
     ) {
         composable(MainNavRoute.LAUNCHPAD_SCREEN.route) {
             LaunchpadScreen(mainNavController = navController)
+        }
+        composable(MainNavRoute.SEARCH_SCREEN.route) {
+            SearchScreen(navigateBack = { navController.popBackStack() })
         }
     }
 }

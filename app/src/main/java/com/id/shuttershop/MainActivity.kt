@@ -1,6 +1,7 @@
 package com.id.shuttershop
 
 import android.app.LocaleManager
+import android.os.Build
 import android.os.Bundle
 import android.os.LocaleList
 import androidx.activity.ComponentActivity
@@ -54,7 +55,9 @@ class MainActivity : ComponentActivity() {
                 "en"
             }
         }
-        applicationContext.getSystemService(LocaleManager::class.java).applicationLocales =
-            LocaleList.forLanguageTags(languageTag)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            applicationContext.getSystemService(LocaleManager::class.java).applicationLocales =
+                LocaleList.forLanguageTags(languageTag)
+        }
     }
 }
