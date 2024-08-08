@@ -36,4 +36,26 @@ class ProductRepository @Inject constructor(
         )
         return Resource.Success(dummyData)
     }
+
+    override suspend fun searchProduct(query: String): Resource<List<ProductModel>> {
+        val dummyData = listOf(
+            ProductModel(
+                id = 3063,
+                itemName = "Michael O'Brien",
+                itemSold = "pericula",
+                itemPrice = "tincidunt",
+                itemRating = "ponderum",
+                itemSeller = "nostrum"
+            ),
+            ProductModel(
+                id = 3063,
+                itemName = "Michael O'Brien",
+                itemSold = "pericula",
+                itemPrice = "tincidunt",
+                itemRating = "ponderum",
+                itemSeller = "nostrum"
+            ),
+        )
+        return Resource.Success(dummyData)
+    }
 }

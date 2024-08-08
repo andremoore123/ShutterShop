@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadMenus
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadRoute
+import com.id.shuttershop.ui.navigation.main.MainNavRoute
 import com.id.shuttershop.ui.screen.home.HomeScreen
 import com.id.shuttershop.ui.screen.profile.ProfileScreen
 import com.id.shuttershop.ui.screen.transaction.TransactionScreen
@@ -78,7 +79,7 @@ fun LaunchpadScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(LaunchpadRoute.HomeRoute.route) {
-                HomeScreen()
+                HomeScreen(navigateToSearch = { mainNavController.navigate(MainNavRoute.SEARCH_SCREEN.route) })
             }
             composable(LaunchpadRoute.TransactionRoute.route) {
                 TransactionScreen()
