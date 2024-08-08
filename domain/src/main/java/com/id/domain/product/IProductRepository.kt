@@ -12,4 +12,6 @@ interface IProductRepository {
     suspend fun fetchProducts(productFilterParams: ProductFilterParams? = null): Resource<List<ProductModel>>
 
     suspend fun searchProduct(query: String): Resource<List<ProductModel>>
+
+    suspend fun fetchProductDetail(id: Int): Resource<ProductDetailModel>
 }

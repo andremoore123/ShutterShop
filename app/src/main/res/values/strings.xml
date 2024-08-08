@@ -39,4 +39,10 @@
     <string name="text_search_camera">Search Camera</string>
     <string name="text_welcome">Welcome, %s</string>
     <string name="text_desc_home">Find Your Perfect Camera</string>
+    <string name="text_sold">Sold %s</string>
+    <string name="text_buy_now">Buy Now</string>
+    <string name="text_user_review">%1$s Review</string>
+    <string name="text_see_all">See All</string>
+    <string name="text_detail_product">Product Detail</string>
+    <string name="text_remove">Remove</string>
 </resources>

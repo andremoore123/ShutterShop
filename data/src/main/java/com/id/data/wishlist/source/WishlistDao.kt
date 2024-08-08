@@ -23,6 +23,9 @@ interface WishlistDao {
     @Delete
     suspend fun removeWishlist(data: WishlistEntity)
 
+    @Query("SELECT * FROM wishlist WHERE itemName = :name")
+    suspend fun findWishlistByName(name: String): WishlistEntity?
+
     @Query("DELETE FROM WISHLIST")
     suspend fun deleteTable()
 }

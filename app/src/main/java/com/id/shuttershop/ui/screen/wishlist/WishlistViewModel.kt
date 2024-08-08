@@ -44,7 +44,7 @@ class WishlistViewModel @Inject constructor(
     fun deleteWishlist(data: WishlistModel) {
         logDeleteFromWishlist(data.itemName)
         viewModelScope.launch(Dispatchers.IO) {
-            wishlistRepository.remoteWishlist(data)
+            wishlistRepository.removeWishlist(data)
         }
     }
 

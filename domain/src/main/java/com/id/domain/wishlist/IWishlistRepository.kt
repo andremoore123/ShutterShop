@@ -11,8 +11,9 @@ import kotlinx.coroutines.flow.Flow
 interface IWishlistRepository {
     fun fetchWishlists(): Flow<List<WishlistModel>>
 
+    suspend fun findWishlistByName(name: String): WishlistModel?
     suspend fun addToWishlist(data: WishlistModel)
-    suspend fun remoteWishlist(data: WishlistModel)
+    suspend fun removeWishlist(data: WishlistModel)
 
     suspend fun clearDatabase()
 }

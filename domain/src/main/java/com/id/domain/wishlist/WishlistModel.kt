@@ -7,12 +7,13 @@ package com.id.domain.wishlist
  * Email: andremoore431@gmail.com
  */
 data class WishlistModel(
-    val id: Int,
+    val id: Int?,
     val itemName: String,
     val itemSold: String,
     val itemPrice: String,
     val itemRating: String,
     val itemSeller: String,
+    val itemImageUrl: String = "",
 ) {
     companion object {
         val dummyData = WishlistModel(
@@ -21,7 +22,8 @@ data class WishlistModel(
             itemSold = "5",
             itemPrice = "230 000",
             itemRating = "3",
-            itemSeller = "noluisse"
+            itemSeller = "noluisse",
+            itemImageUrl = ""
         )
     }
 }
