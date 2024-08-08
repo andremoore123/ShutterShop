@@ -8,5 +8,6 @@ package com.id.shuttershop.ui.navigation.main
  */
 enum class MainNavRoute(val route: String) {
     LAUNCHPAD_SCREEN("launchpadScreen"),
-    SEARCH_SCREEN("searchScreen")
+    SEARCH_SCREEN("searchScreen"),
+    NOTIFICATION_SCREEN("notificationScreen"),
 }
