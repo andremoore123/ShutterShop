@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
+import com.id.domain.rating.RatingModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.IconTextButton
 import com.id.shuttershop.ui.components.button.PrimaryButton
@@ -77,6 +78,8 @@ fun DetailProductScreen(
     val isInWishlist by viewModel.isInWishlist.collectAsState()
     val isInCart by viewModel.isInCart.collectAsState()
     val selectedVariant by viewModel.selectedVariant.collectAsState()
+    val isBottomShowValue by viewModel.isBottomShowValue.collectAsState()
+    val ratingState by viewModel.ratingState.collectAsState()
 
     val detailEvent = DetailProductEvent(
         onVarianceChange = viewModel::setSelectedVariant,
@@ -85,21 +88,25 @@ fun DetailProductScreen(
         onWishlistClick = viewModel::checkOnWishlist,
         onShareClick = {},
         checkIsOnWishlist = viewModel::checkIsInWishlist,
-        checkIsOnCart = viewModel::checkIsOnCart
+        checkIsOnCart = viewModel::checkIsOnCart,
+        changeBottomSheetValue = viewModel::modifySheetValue
     )
 
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchProduct(idProduct)
+        viewModel.fetchProductRating(idProduct)
     }
 
     DetailProductContent(
         modifier = modifier,
         productState = productState,
+        ratingState = ratingState,
         onBackClick = onBackClick,
         detailEvent = detailEvent,
         selectedVariant = selectedVariant,
         isInWishlist = isInWishlist,
-        isInCart = isInCart
+        isInCart = isInCart,
+        isBottomSheetShow = isBottomShowValue
     )
 }
 
@@ -107,9 +114,11 @@ fun DetailProductScreen(
 internal fun DetailProductContent(
     modifier: Modifier = Modifier,
     productState: UiState<ProductDetailModel>,
+    ratingState: UiState<List<RatingModel>>,
     onBackClick: () -> Unit,
     isInWishlist: Boolean,
     isInCart: Boolean,
+    isBottomSheetShow: Boolean,
     selectedVariant: VarianceModel?,
     detailEvent: DetailProductEvent,
 ) {
@@ -117,6 +126,12 @@ internal fun DetailProductContent(
     Column(
         modifier = modifier
     ) {
+        if (isBottomSheetShow) {
+            RateBottomSheet(
+                ratingState = ratingState,
+                changeBottomSheetValue = detailEvent.changeBottomSheetValue
+            )
+        }
         TitleTopBar(
             showNavigation = true,
             onBackClickListener = onBackClick,
@@ -155,7 +170,11 @@ internal fun DetailProductContent(
                     HorizontalDivider()
                     DetailDesc(detailModel = it, modifier = defaultHorizontalPadding)
                     HorizontalDivider()
-                    DetailReview(detailModel = it, modifier = defaultHorizontalPadding)
+                    DetailReview(
+                        detailModel = it,
+                        modifier = defaultHorizontalPadding,
+                        onBottomSheetChange = detailEvent.changeBottomSheetValue
+                    )
                 }
                 Row(
                     modifier = Modifier
@@ -265,8 +284,9 @@ internal fun DetailDesc(modifier: Modifier = Modifier, detailModel: ProductDetai
 
 @Composable
 internal fun DetailReview(
-    modifier: Modifier = Modifier, detailModel: ProductDetailModel,
-    navigateToAllReview: (ProductDetailModel) -> Unit = {},
+    modifier: Modifier = Modifier,
+    detailModel: ProductDetailModel,
+    onBottomSheetChange: (Boolean) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -279,7 +299,7 @@ internal fun DetailReview(
             Text(text = "User Reviews", style = MaterialTheme.typography.bodyMedium)
             PrimaryTextButton(text = stringResource(R.string.text_see_all),
                 onClick = {
-                    navigateToAllReview(detailModel)
+                    onBottomSheetChange(true)
                 })
         }
         Row(
@@ -412,12 +432,15 @@ internal fun DetailProductScreenPreview() {
                 onCartClick = { _, _ -> },
                 onWishlistClick = {},
                 onShareClick = {},
-                checkIsOnWishlist = {}, checkIsOnCart = {},
-
+                checkIsOnWishlist = {},
+                checkIsOnCart = {},
+                changeBottomSheetValue = {}
                 ),
             selectedVariant = null,
             isInWishlist = false,
-            isInCart = true
+            isInCart = true,
+            isBottomSheetShow = false,
+            ratingState = UiState.Loading
         )
     }
 }

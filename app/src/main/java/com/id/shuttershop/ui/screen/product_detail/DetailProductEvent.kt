@@ -17,4 +17,5 @@ data class DetailProductEvent(
     val checkIsOnWishlist: (ProductDetailModel) -> Unit,
     val checkIsOnCart: (ProductDetailModel) -> Unit,
     val onShareClick: () -> Unit,
+    val changeBottomSheetValue: (Boolean) -> Unit,
 )

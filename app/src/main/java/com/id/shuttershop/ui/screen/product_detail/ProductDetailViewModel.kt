@@ -1,5 +1,6 @@
 package com.id.shuttershop.ui.screen.product_detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.cart.CartModel
@@ -8,6 +9,8 @@ import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
 import com.id.domain.product.toWishlist
+import com.id.domain.rating.IRatingRepository
+import com.id.domain.rating.RatingModel
 import com.id.domain.wishlist.IWishlistRepository
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
@@ -32,6 +35,8 @@ class ProductDetailViewModel @Inject constructor(
     private val productRepository: IProductRepository,
     private val wishlistRepository: IWishlistRepository,
     private val cartRepository: ICartRepository,
+    private val ratingRepository: IRatingRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _productState = MutableStateFlow<UiState<ProductDetailModel>>(UiState.Initiate)
     val productState = _productState.asStateFlow()
@@ -45,6 +50,15 @@ class ProductDetailViewModel @Inject constructor(
     private val _selectedVariant = MutableStateFlow<VarianceModel?>(null)
     val selectedVariant = _selectedVariant.asStateFlow()
 
+    private val _ratingState = MutableStateFlow<UiState<List<RatingModel>>>(UiState.Initiate)
+    val ratingState = _ratingState.asStateFlow()
+
+    val isBottomShowValue = savedStateHandle.getStateFlow(IS_SHEET_SHOW_VALUE, false)
+
+    fun modifySheetValue(value: Boolean) {
+        savedStateHandle[IS_SHEET_SHOW_VALUE] = value
+    }
+
     fun fetchProduct(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             with(_productState) {
@@ -52,6 +66,18 @@ class ProductDetailViewModel @Inject constructor(
                 val response = productRepository.fetchProductDetail(id)
                 response.onSuccess {
                     setSelectedVariant(it.productVariance.firstOrNull())
+                    handleUpdateUiState(UiState.Success(it))
+                }
+            }
+        }
+    }
+
+    fun fetchProductRating(productId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _ratingState.run {
+                handleUpdateUiState(UiState.Loading)
+                val response = ratingRepository.fetchRatings(productId)
+                response.onSuccess {
                     handleUpdateUiState(UiState.Success(it))
                 }
             }
@@ -125,5 +151,7 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-
+    companion object {
+        private const val IS_SHEET_SHOW_VALUE = "isSheetShow"
+    }
 }
