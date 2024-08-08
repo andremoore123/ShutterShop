@@ -41,4 +41,7 @@ object DataModule {
 
     @Provides
     fun provideWishlistDao(appDatabase: AppDatabase) = appDatabase.wishlistDao()
+
+    @Provides
+    fun provideCartDao(appDatabase: AppDatabase) = appDatabase.cartDao()
 }

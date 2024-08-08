@@ -2,6 +2,8 @@ package com.id.shuttershop.ui.screen.product_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.id.domain.cart.CartModel
+import com.id.domain.cart.ICartRepository
 import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
@@ -29,6 +31,7 @@ import javax.inject.Inject
 class ProductDetailViewModel @Inject constructor(
     private val productRepository: IProductRepository,
     private val wishlistRepository: IWishlistRepository,
+    private val cartRepository: ICartRepository,
 ) : ViewModel() {
     private val _productState = MutableStateFlow<UiState<ProductDetailModel>>(UiState.Initiate)
     val productState = _productState.asStateFlow()
@@ -85,7 +88,6 @@ class ProductDetailViewModel @Inject constructor(
         } else {
             addToCart(data)
         }
-        checkIsOnCart(data)
     }
 
     /**
@@ -93,18 +95,27 @@ class ProductDetailViewModel @Inject constructor(
      */
     fun checkIsOnCart(data: ProductDetailModel) {
         viewModelScope.launch(Dispatchers.IO) {
+            val isProductInCart = cartRepository.findCartById(data.id)
             _isInCart.getAndUpdate {
-                it.not()
+                isProductInCart != null
             }
         }
     }
 
     private fun addToCart(data: ProductDetailModel) {
-
+        viewModelScope.launch(Dispatchers.IO) {
+            val dataCart = CartModel(itemId = data.id, itemName = data.productName)
+            cartRepository.insertCart(dataCart)
+            checkIsOnCart(data)
+        }
     }
 
     private fun removeFromCart(data: ProductDetailModel) {
-
+        viewModelScope.launch(Dispatchers.IO) {
+            val dataCart = CartModel(itemId = data.id, itemName = data.productName)
+            cartRepository.deleteCart(dataCart)
+            checkIsOnCart(data)
+        }
     }
 
     fun checkIsInWishlist(data: ProductDetailModel) {

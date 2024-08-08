@@ -16,7 +16,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.id.shuttershop.ui.screen.MainContainer
-import com.id.shuttershop.ui.screen.product_detail.DetailProductScreen
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 darkTheme = isDarkMode.value
             ) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    DetailProductScreen(idProduct = 1, modifier = Modifier.padding(innerPadding))
+                    MainContainer(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
