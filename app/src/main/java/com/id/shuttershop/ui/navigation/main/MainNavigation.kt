@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.id.shuttershop.ui.navigation.MainRoute
 import com.id.shuttershop.ui.screen.cart.CartScreen
+import com.id.shuttershop.ui.screen.checkout.CheckoutScreen
 import com.id.shuttershop.ui.screen.launchpad.LaunchpadScreen
 import com.id.shuttershop.ui.screen.notification.NotificationScreen
 import com.id.shuttershop.ui.screen.product_detail.DetailProductScreen
@@ -41,7 +42,16 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             }
         }
         composable(MainNavRoute.CART_SCREEN.route) {
-            CartScreen(onBackClick = { navController.popBackStack() })
+            CartScreen(
+                onBackClick = { navController.popBackStack() },
+                navigateToCheckout = { navController.navigate(MainNavRoute.CHECKOUT_SCREEN.route) })
+        }
+        composable(MainNavRoute.CHECKOUT_SCREEN.route) {
+            CheckoutScreen(
+                onBackClick = { navController.popBackStack() },
+                navigateToPaymentStatus = {
+                    TODO("Navigate To Payment Status Screen and Pass Transaction Model")
+                })
         }
     }
 }

@@ -49,6 +49,7 @@ fun CartScreen(
     modifier: Modifier = Modifier,
     viewModel: CartViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {},
+    navigateToCheckout: () -> Unit,
 ) {
     val selectedCart by viewModel.selectedCart.collectAsState()
     val screenState by viewModel.screenState.collectAsState()
@@ -62,7 +63,7 @@ fun CartScreen(
         onAddClick = viewModel::addItemCart,
         onMinusClick = viewModel::reduceItemCart,
         onRemoveCartClick = viewModel::removeCartFromSelected,
-        onCheckoutClick = {},
+        onCheckoutClick = navigateToCheckout,
         onSelectCart = viewModel::onSelectCart,
         onSelectAllCart = viewModel::onSelectAllProducts,
         onSelectedCartRemove = viewModel::removeCarts
@@ -148,7 +149,8 @@ internal fun CartContent(
         CartBottom(
             modifier = Modifier.align(Alignment.BottomCenter),
             totalPrice = totalPrice,
-            enabled = selectedCart.isNotEmpty()
+            enabled = selectedCart.isNotEmpty(),
+            onCheckoutClick = cartEvent.onCheckoutClick
         )
     }
 }
