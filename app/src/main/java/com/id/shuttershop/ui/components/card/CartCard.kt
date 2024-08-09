@@ -1,5 +1,6 @@
 package com.id.shuttershop.ui.components.card
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -48,16 +49,26 @@ fun CartCard(
     cartModel: CartModel,
     isSelected: Boolean = false,
     onCheckClick: (Boolean) -> Unit,
+    onRemoveClick: () -> Unit = {},
     onItemAdd: () -> Unit = {},
     onItemMinus: () -> Unit = {},
 ) {
+    val cartEnabled = cartModel.itemStock > 0
+    val addButtonEnabled = cartModel.itemCount < cartModel.itemStock
+    val minusButtonEnabled = cartModel.itemCount > 1
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(checked = isSelected, onCheckedChange = onCheckClick)
+        Checkbox(
+            enabled = cartEnabled,
+            checked = isSelected,
+            onCheckedChange = onCheckClick
+        )
         Row(
             modifier = Modifier
+                .padding(start = 5.dp)
                 .border(1.dp, DividerDefaults.color, RoundedCornerShape(10.dp))
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -65,7 +76,7 @@ fun CartCard(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .size(90.dp)
+                    .size(70.dp)
                     .background(Color.Black)
             )
             Column(
@@ -73,9 +84,13 @@ fun CartCard(
             ) {
                 Text(
                     text = cartModel.itemName,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                 )
-                Text(text = cartModel.itemDesc, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    text = cartModel.itemDesc, style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Normal
+                    )
+                )
                 if (cartModel.itemStock >= 5) {
                     Text(
                         text = stringResource(id = R.string.text_stock, cartModel.itemStock),
@@ -86,7 +101,7 @@ fun CartCard(
                         text = stringResource(
                             id = R.string.text_stock_remaining,
                             cartModel.itemStock
-                        ), style = MaterialTheme.typography.labelMedium.copy(
+                        ), style = MaterialTheme.typography.labelSmall.copy(
                             color = MaterialTheme.colorScheme.error
                         )
                     )
@@ -97,18 +112,26 @@ fun CartCard(
                 ) {
                     Text(
                         text = "${cartModel.itemPrice * cartModel.itemStock}",
-                        style = MaterialTheme.typography.titleLarge.copy(
+                        style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.Bold
                         )
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    PrimaryIconButton(icon = Icons.Default.Delete)
-                    ItemCountSection(
-                        modifier = Modifier.padding(start = 5.dp),
-                        itemCount = cartModel.itemCount,
-                        onItemAdd = onItemAdd,
-                        onItemMinus = onItemMinus
+                    PrimaryIconButton(
+                        icon = Icons.Default.Delete,
+                        iconSize = 40.dp,
+                        onClick = onRemoveClick
                     )
+                    if (cartEnabled && cartModel.itemStock != 1) {
+                        ItemCountSection(
+                            modifier = Modifier.padding(start = 5.dp),
+                            itemCount = cartModel.itemCount,
+                            onItemAdd = onItemAdd,
+                            onItemMinus = onItemMinus,
+                            addButtonEnabled = addButtonEnabled,
+                            minusButtonEnabled = minusButtonEnabled
+                        )
+                    }
                 }
             }
         }
@@ -119,6 +142,8 @@ fun CartCard(
 internal fun ItemCountSection(
     modifier: Modifier = Modifier,
     itemCount: Int = 0,
+    addButtonEnabled: Boolean = true,
+    minusButtonEnabled: Boolean = true,
     onItemAdd: () -> Unit = {},
     onItemMinus: () -> Unit = {},
 ) {
@@ -129,20 +154,24 @@ internal fun ItemCountSection(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        PrimaryIconButton(
-            icon = ImageVector.vectorResource(id = R.drawable.baseline_remove_24),
-            color = MaterialTheme.colorScheme.error,
-            iconSize = 30.dp,
-            onClick = onItemMinus
-        )
+        AnimatedVisibility(visible = minusButtonEnabled) {
+            PrimaryIconButton(
+                icon = ImageVector.vectorResource(id = R.drawable.baseline_remove_24),
+                color = MaterialTheme.colorScheme.error,
+                iconSize = 25.dp,
+                onClick = onItemMinus
+            )
+        }
         Text(
             text = itemCount.toString(),
             style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary)
         )
-        PrimaryIconButton(
-            icon = Icons.Default.Add, iconSize = 30.dp,
-            onClick = onItemAdd
-        )
+        AnimatedVisibility(visible = addButtonEnabled) {
+            PrimaryIconButton(
+                icon = Icons.Default.Add, iconSize = 25.dp,
+                onClick = onItemAdd
+            )
+        }
     }
 }
 
@@ -155,8 +184,8 @@ internal fun CartCardPreview() {
                 itemId = 0,
                 itemName = "Perfect Camera",
                 itemDesc = "16GB, 1TB SSD",
-                itemStock = 4,
-                itemCount = 0
+                itemStock = 1,
+                itemCount = 1
             )
         )
     }

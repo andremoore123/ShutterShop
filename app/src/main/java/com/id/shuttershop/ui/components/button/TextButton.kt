@@ -18,9 +18,10 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
 fun PrimaryTextButton(
     modifier: Modifier = Modifier,
     text: String = "",
+    enabled: Boolean = true,
     onClick: () -> Unit = {},
 ) {
-    TextButton(onClick = onClick, modifier = modifier) {
+    TextButton(onClick = onClick, modifier = modifier, enabled = enabled) {
         Text(text = text, style = AppTypography.titleMedium)
     }
 }

@@ -13,5 +13,6 @@ enum class MainNavRoute(val route: String) {
     LAUNCHPAD_SCREEN("launchpadScreen"),
     SEARCH_SCREEN("searchScreen"),
     NOTIFICATION_SCREEN("notificationScreen"),
-    PRODUCT_DETAIL_SCREEN("productDetailScreen/${USER_WITH_BRACKET}")
+    PRODUCT_DETAIL_SCREEN("productDetailScreen/${USER_WITH_BRACKET}"),
+    CART_SCREEN("cartScreen"),
 }

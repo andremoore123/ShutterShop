@@ -20,7 +20,7 @@ data class CartEntity(
 )
 
 fun CartEntity.toModel() = CartModel(
-    itemId = itemId, itemName = itemName
+    itemId = itemId, itemName = itemName, itemCount = itemCount
 )
 
 fun CartModel.toEntity() = CartEntity(

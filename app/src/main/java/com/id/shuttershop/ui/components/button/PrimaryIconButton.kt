@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.components.button;
+package com.id.shuttershop.ui.components.button
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,13 +33,14 @@ fun PrimaryIconButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     iconSize: Dp? = null,
+    enabled: Boolean = true,
     onClick: () -> Unit = {},
     color: Color = MaterialTheme.colorScheme.primary,
 ) {
     val modifierSize = if (iconSize != null) Modifier.size(iconSize) else Modifier
     Box(modifier = modifier
         .clip(CircleShape)
-        .clickable { onClick() }
+        .clickable(enabled = enabled) { onClick() }
         .border(2.dp, MaterialTheme.colorScheme.secondaryContainer, CircleShape)
         .background(color = MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.Center
@@ -48,7 +49,9 @@ fun PrimaryIconButton(
             imageVector = icon,
             tint = color,
             contentDescription = null,
-            modifier = Modifier.then(modifierSize).padding(8.dp)
+            modifier = Modifier
+                .then(modifierSize)
+                .padding(8.dp)
         )
     }
 }

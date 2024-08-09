@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.screen.launchpad;
+package com.id.shuttershop.ui.screen.launchpad
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
@@ -90,7 +90,7 @@ fun LaunchpadScreen(
                         )
                     },
                     navigateToNotification = { mainNavController.navigate(MainNavRoute.NOTIFICATION_SCREEN.route) },
-                    navigateToCart = {}
+                    navigateToCart = { mainNavController.navigate(MainNavRoute.CART_SCREEN.route) }
                 )
             }
             composable(LaunchpadRoute.TransactionRoute.route) {

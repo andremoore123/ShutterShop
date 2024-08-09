@@ -10,7 +10,7 @@ data class CartModel(
     val itemId: Int,
     val itemName: String,
     val itemDesc: String = "",
-    val itemStock: Int = 0,
+    val itemStock: Int = 2,
     val itemCount: Int = 1,
     val itemPrice: Int = 0,
 )

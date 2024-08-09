@@ -49,4 +49,7 @@
 
     <string name="text_stock">Stock %s</string>
     <string name="text_stock_remaining">Remaining %s</string>
+    <string name="text_delete">Delete</string>
+    <string name="text_cart">Cart</string>
+    <string name="text_select_all">Select All</string>
 </resources>
