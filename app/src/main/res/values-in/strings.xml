@@ -33,4 +33,23 @@
     <string name="text_logout">Keluar</string>
     <string name="text_item_subtitle">%s | Terjual %s</string>
     <string name="text_button_add_cart">+ Keranjang</string>
+    <string name="text_total_item">%s Item</string>
+    <string name="text_rating">Beri Nilai</string>
+    <string name="text_total_payment">Total Pembayaran</string>
+    <string name="text_shop">"Belanja | "</string>
+    <string name="text_search_camera">Cari Kamera</string>
+    <string name="text_welcome">Selamat Datang, %s</string>
+    <string name="text_desc_home">Temukan Kamera yang Sempurna</string>
+    <string name="text_sold">Terjual %s</string>
+    <string name="text_buy_now">Beli Sekarang</string>
+    <string name="text_user_review">%1$s Ulasan</string>
+    <string name="text_see_all">Lihat Semua</string>
+    <string name="text_detail_product">Detail Produk</string>
+    <string name="text_remove">Hapus</string>
+    <string name="text_notification">Notifikasi</string>
+    <string name="text_stock">Stok %s</string>
+    <string name="text_stock_remaining">Sisa %s</string>
+    <string name="text_delete">Hapus</string>
+    <string name="text_cart">Keranjang</string>
+    <string name="text_select_all">Pilih Semua</string>
 </resources>

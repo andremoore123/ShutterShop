@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.id.shuttershop.ui.navigation.MainRoute
+import com.id.shuttershop.ui.screen.cart.CartScreen
 import com.id.shuttershop.ui.screen.launchpad.LaunchpadScreen
 import com.id.shuttershop.ui.screen.notification.NotificationScreen
 import com.id.shuttershop.ui.screen.product_detail.DetailProductScreen
@@ -38,6 +39,9 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
                     idProduct = it,
                     onBackClick = { navController.popBackStack() })
             }
+        }
+        composable(MainNavRoute.CART_SCREEN.route) {
+            CartScreen(onBackClick = { navController.popBackStack() })
         }
     }
 }

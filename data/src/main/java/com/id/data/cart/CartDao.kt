@@ -5,6 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by: andre.
@@ -15,7 +17,7 @@ import androidx.room.Query
 @Dao
 interface CartDao {
     @Query("SELECT * FROM cart")
-    suspend fun fetchCarts(): List<CartEntity>
+    fun fetchCarts(): Flow<List<CartEntity>>
 
     @Query("SELECT * FROM cart where itemId = :id")
     suspend fun findCartById(id: Int): CartEntity?
@@ -31,4 +33,7 @@ interface CartDao {
 
     @Query("DELETE FROM cart")
     suspend fun deleteAllCartData()
+
+    @Update
+    suspend fun updateCart(data: CartEntity)
 }

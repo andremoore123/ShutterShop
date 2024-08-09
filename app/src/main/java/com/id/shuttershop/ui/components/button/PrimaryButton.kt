@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.components.button;
+package com.id.shuttershop.ui.components.button
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -18,9 +18,10 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
 fun PrimaryButton(
     modifier: Modifier = Modifier,
     text: String = "",
+    enabled: Boolean = true,
     onClick: () -> Unit = {},
 ) {
-    Button(onClick = onClick, modifier = modifier) {
+    Button(onClick = onClick, modifier = modifier, enabled = enabled) {
         Text(text = text, style = AppTypography.titleMedium)
     }
 }
