@@ -52,4 +52,6 @@
     <string name="text_delete">Delete</string>
     <string name="text_cart">Cart</string>
     <string name="text_select_all">Select All</string>
+    <string name="text_checkout">Checkout</string>
+    <string name="text_loading">Loading</string>
 </resources>
