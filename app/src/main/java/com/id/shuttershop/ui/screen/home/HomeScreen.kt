@@ -57,7 +57,10 @@ import com.id.shuttershop.utils.onSuccess
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    navigateToSearch: () -> Unit = {}
+    navigateToSearch: () -> Unit = {},
+    navigateToNotification: () -> Unit,
+    navigateToCart: () -> Unit,
+    navigateToDetailProduct: (Int) -> Unit,
 ) {
     val currentLayoutType by viewModel.isColumnLayout.collectAsState()
     val productState by viewModel.productUiState.collectAsState()
@@ -65,6 +68,7 @@ fun HomeScreen(
 
     val navigateToDetail: (ProductModel) -> Unit = {
         viewModel.logHomeDetailProduct(it.itemName)
+        navigateToDetailProduct(it.id)
     }
 
     LaunchedEffect(key1 = Unit) {
@@ -85,7 +89,9 @@ fun HomeScreen(
             logNotificationButton = viewModel::logNotificationButton,
             logCartButton = viewModel::logCartButton
         ),
-        navigateToSearch = navigateToSearch
+        navigateToSearch = navigateToSearch,
+        navigateToCart = navigateToCart,
+        navigateToNotification = navigateToNotification,
     )
 }
 
@@ -99,6 +105,8 @@ internal fun HomeContent(
     onLayoutChange: (String) -> Unit,
     navigateToDetail: (ProductModel) -> Unit,
     navigateToSearch: () -> Unit,
+    navigateToNotification: () -> Unit,
+    navigateToCart: () -> Unit,
     logEvent: HomeLogEvent,
 ) {
     Column(
@@ -113,6 +121,8 @@ internal fun HomeContent(
             logEvent = logEvent,
             showBottomSheet = {},
             navigateToSearch = navigateToSearch,
+            navigateToNotification = navigateToNotification,
+            navigateToCart = navigateToCart
         )
         productState.onSuccess {
             when (currentLayoutType) {
@@ -163,6 +173,8 @@ internal fun HomeHeader(
     userImageUrl: String = "",
     onLayoutChange: (String) -> Unit,
     showBottomSheet: () -> Unit,
+    navigateToNotification: () -> Unit,
+    navigateToCart: () -> Unit,
     navigateToSearch: () -> Unit = {},
 ) {
     Column(
@@ -190,12 +202,14 @@ internal fun HomeHeader(
                 modifier = Modifier.size(60.dp),
                 onClick = {
                     logEvent.logNotificationButton()
+                    navigateToNotification.invoke()
                 })
             PrimaryIconButton(
                 icon = Icons.Default.ShoppingCart,
                 modifier = Modifier.size(60.dp),
                 onClick = {
                     logEvent.logCartButton()
+                    navigateToCart.invoke()
                 })
         }
         Row(
@@ -243,7 +257,9 @@ internal fun ShowHomeScreenPreview() {
             userImageUrl = "",
             navigateToDetail = {},
             logEvent = HomeLogEvent(),
-            navigateToSearch = {}
+            navigateToSearch = {},
+            navigateToCart = {},
+            navigateToNotification = {},
         )
     }
 }

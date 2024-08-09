@@ -20,6 +20,7 @@ import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadMenus
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadRoute
 import com.id.shuttershop.ui.navigation.main.MainNavRoute
+import com.id.shuttershop.ui.navigation.main.USER_WITH_BRACKET
 import com.id.shuttershop.ui.screen.home.HomeScreen
 import com.id.shuttershop.ui.screen.profile.ProfileScreen
 import com.id.shuttershop.ui.screen.transaction.TransactionScreen
@@ -79,7 +80,18 @@ fun LaunchpadScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(LaunchpadRoute.HomeRoute.route) {
-                HomeScreen(navigateToSearch = { mainNavController.navigate(MainNavRoute.SEARCH_SCREEN.route) })
+                HomeScreen(
+                    navigateToSearch = { mainNavController.navigate(MainNavRoute.SEARCH_SCREEN.route) },
+                    navigateToDetailProduct = {
+                        mainNavController.navigate(
+                            MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
+                                USER_WITH_BRACKET, it.toString()
+                            )
+                        )
+                    },
+                    navigateToNotification = { mainNavController.navigate(MainNavRoute.NOTIFICATION_SCREEN.route) },
+                    navigateToCart = {}
+                )
             }
             composable(LaunchpadRoute.TransactionRoute.route) {
                 TransactionScreen()
