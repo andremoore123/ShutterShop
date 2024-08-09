@@ -6,8 +6,12 @@ package com.id.shuttershop.ui.navigation.main
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
+
+const val USER_ID = "userID"
+const val USER_WITH_BRACKET = "{${USER_ID}}"
 enum class MainNavRoute(val route: String) {
     LAUNCHPAD_SCREEN("launchpadScreen"),
     SEARCH_SCREEN("searchScreen"),
     NOTIFICATION_SCREEN("notificationScreen"),
+    PRODUCT_DETAIL_SCREEN("productDetailScreen/${USER_WITH_BRACKET}")
 }

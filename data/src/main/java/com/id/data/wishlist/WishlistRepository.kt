@@ -2,6 +2,7 @@ package com.id.data.wishlist
 
 import com.id.data.wishlist.source.WishlistDao
 import com.id.data.wishlist.source.mapToEntity
+import com.id.data.wishlist.source.mapToModel
 import com.id.domain.wishlist.IWishlistRepository
 import com.id.domain.wishlist.WishlistModel
 import kotlinx.coroutines.flow.Flow
@@ -35,11 +36,16 @@ class WishlistRepository @Inject constructor(
         )
     }
 
+    override suspend fun findWishlistByName(name: String): WishlistModel? {
+        val data = wishlistDao.findWishlistByName(name)
+        return data?.mapToModel()
+    }
+
     override suspend fun addToWishlist(data: WishlistModel) {
         wishlistDao.insertWishlist(data.mapToEntity())
     }
 
-    override suspend fun remoteWishlist(data: WishlistModel) {
+    override suspend fun removeWishlist(data: WishlistModel) {
         wishlistDao.removeWishlist(data.mapToEntity())
     }
 
