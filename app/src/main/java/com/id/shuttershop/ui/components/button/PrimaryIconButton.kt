@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -17,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 
@@ -30,9 +32,11 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
 fun PrimaryIconButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
+    iconSize: Dp? = null,
     onClick: () -> Unit = {},
     color: Color = MaterialTheme.colorScheme.primary,
 ) {
+    val modifierSize = if (iconSize != null) Modifier.size(iconSize) else Modifier
     Box(modifier = modifier
         .clip(CircleShape)
         .clickable { onClick() }
@@ -44,7 +48,7 @@ fun PrimaryIconButton(
             imageVector = icon,
             tint = color,
             contentDescription = null,
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier.then(modifierSize).padding(8.dp)
         )
     }
 }

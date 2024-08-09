@@ -2,6 +2,9 @@ package com.id.data.cart
 
 import com.id.domain.cart.CartModel
 import com.id.domain.cart.ICartRepository
+import com.id.domain.ext.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -13,7 +16,20 @@ import javax.inject.Inject
 class CartRepository @Inject constructor(
     private val cartDao: CartDao
 ) : ICartRepository {
-    override suspend fun fetchCarts(): List<CartModel> = cartDao.fetchCarts().map { it.toModel() }
+    override fun fetchCarts(): Flow<List<CartModel>> =
+        cartDao.fetchCarts().map { cartEntities -> cartEntities.map { it.toModel() } }
+
+    override suspend fun fetchCartFromNetwork(id: Int): Resource<CartModel> {
+        return Resource.Success(
+            CartModel(
+                itemId = 0,
+                itemName = "",
+                itemDesc = "",
+                itemStock = 0,
+                itemCount = 0
+            )
+        )
+    }
 
     override suspend fun insertCart(data: CartModel) = cartDao.insertCart(data.toEntity())
 
@@ -25,6 +41,8 @@ class CartRepository @Inject constructor(
         val entities = data.map { it.toEntity() }.toTypedArray()
         cartDao.deleteCarts(*entities)
     }
+
+    override suspend fun updateCart(data: CartModel) = cartDao.updateCart(data.toEntity())
 
     override suspend fun deleteAllCart() = cartDao.deleteAllCartData()
 }

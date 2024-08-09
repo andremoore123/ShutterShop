@@ -16,6 +16,7 @@ data class CartEntity(
     @PrimaryKey
     val itemId: Int,
     val itemName: String,
+    val itemCount: Int = 1
 )
 
 fun CartEntity.toModel() = CartModel(
@@ -23,5 +24,5 @@ fun CartEntity.toModel() = CartModel(
 )
 
 fun CartModel.toEntity() = CartEntity(
-    itemId = itemId, itemName = itemName
+    itemId = itemId, itemName = itemName, itemCount = itemCount
 )
