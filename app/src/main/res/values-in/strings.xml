@@ -52,4 +52,9 @@
     <string name="text_delete">Hapus</string>
     <string name="text_cart">Keranjang</string>
     <string name="text_select_all">Pilih Semua</string>
+    <string name="text_checkout">Checkout</string>
+    <string name="text_loading">Loading</string>
+    <string name="text_choose_variance">Pilih Jenis</string>
+    <string name="text_add_cart_success">Barang Telah Ditambahkan ke Keranjang</string>
+    <string name="text_version_not_supported">Versi Android Kamu \nTidak Mendukung Fitur Ini</string>
 </resources>
