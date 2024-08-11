@@ -18,7 +18,10 @@ class AddToCartUseCase @Inject constructor(
 
     suspend operator fun invoke(data: WishlistModel) {
         val cartModel = CartModel(
-            itemId = data.itemId, itemName = data.itemName, itemPrice = data.itemPrice
+            itemId = data.itemId,
+            itemName = data.itemName,
+            itemPrice = data.itemPrice,
+            itemVariantName = data.itemVariantName
         )
         insertCart(cartModel)
     }
@@ -30,7 +33,10 @@ class AddToCartUseCase @Inject constructor(
      * - Else, Insert a new one
      */
     private suspend fun insertCart(data: CartModel) {
-        val cartFromDatabase = cartRepository.findCartById(data.cartId ?: 0)
+        val cartFromDatabase = cartRepository.findCartByItemIdAndVariant(
+            itemId = data.itemId,
+            variantName = data.itemVariantName
+        )
         cartFromDatabase?.let {
             it.run {
                 val newData = copy(
