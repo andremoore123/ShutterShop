@@ -32,7 +32,6 @@ import com.id.domain.wishlist.WishlistModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
-import com.id.shuttershop.ui.theme.AppTypography
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 
 /**
@@ -148,7 +147,7 @@ internal fun WishlistItemText(
     ) {
         Text(text = data.itemName, style = MaterialTheme.typography.bodyMedium)
         Text(
-            text = data.itemPrice, style = MaterialTheme.typography.labelLarge.copy(
+            text = data.itemPrice.toString(), style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.Bold
             )
         )

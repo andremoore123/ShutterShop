@@ -17,14 +17,21 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +44,7 @@ import com.id.shuttershop.ui.components.card.WishlistCardType
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import kotlinx.coroutines.launch
 
 /**
  * Created by: andreputras.
@@ -51,15 +59,41 @@ fun WishlistScreen(
 ) {
     val wishlists by viewModel.wishlists.collectAsState()
     val currentLayoutType by viewModel.isColumnLayout.collectAsState()
+    val message by viewModel.message.collectAsState()
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val currentContext = LocalContext.current
 
-    WishlistContent(
+    val addProductToCart: (WishlistModel) -> Unit = {
+        viewModel.addToCart(it)
+        val newMessage = currentContext.getString(R.string.text_add_cart_success)
+        viewModel.updateMessage(newMessage)
+    }
+
+    LaunchedEffect(key1 = message) {
+        message?.let {
+            scope.launch {
+                snackBarHostState.showSnackbar(it)
+            }
+        }
+    }
+
+    Scaffold(
         modifier = modifier,
-        currentLayoutType = currentLayoutType,
-        wishlists = wishlists,
-        onLayoutChange = viewModel::setLayoutType,
-        onDeleteClick = viewModel::deleteWishlist,
-        onAddToCard = viewModel::addToCart
-    )
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        }
+    ) { innerPadding ->
+        WishlistContent(
+            modifier = Modifier.padding(innerPadding),
+            currentLayoutType = currentLayoutType,
+            wishlists = wishlists,
+            onLayoutChange = viewModel::setLayoutType,
+            onDeleteClick = viewModel::deleteWishlist,
+            addToCart = addProductToCart,
+        )
+    }
+
 }
 
 @Composable
@@ -69,7 +103,7 @@ internal fun WishlistContent(
     wishlists: List<WishlistModel>,
     onLayoutChange: (String) -> Unit,
     onDeleteClick: (WishlistModel) -> Unit = {},
-    onAddToCard: (WishlistModel) -> Unit = {},
+    addToCart: (WishlistModel) -> Unit = {},
 ) {
     Column(
         modifier = modifier.padding(horizontal = 16.dp)
@@ -110,7 +144,7 @@ internal fun WishlistContent(
                         WishlistCard(
                             data = it,
                             onDeleteClick = { onDeleteClick(it) },
-                            onAddClick = { onAddToCard(it) },
+                            onAddClick = { addToCart(it) },
                             wishlistType = WishlistCardType.GRID
                         )
                     }
@@ -125,7 +159,7 @@ internal fun WishlistContent(
                         WishlistCard(
                             data = it,
                             onDeleteClick = { onDeleteClick(it) },
-                            onAddClick = { onAddToCard(it) },
+                            onAddClick = { addToCart(it) },
                             wishlistType = WishlistCardType.COLUMN
                         )
                     }

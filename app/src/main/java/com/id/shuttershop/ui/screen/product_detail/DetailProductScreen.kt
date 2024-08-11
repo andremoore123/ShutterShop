@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
@@ -34,15 +33,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,13 +57,13 @@ import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
 import com.id.domain.rating.RatingModel
 import com.id.shuttershop.R
-import com.id.shuttershop.ui.components.button.IconTextButton
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.onSuccess
+import kotlinx.coroutines.launch
 
 /**
  * Created by: andre.
@@ -76,38 +81,59 @@ fun DetailProductScreen(
 ) {
     val productState by viewModel.productState.collectAsState()
     val isInWishlist by viewModel.isInWishlist.collectAsState()
-    val isInCart by viewModel.isInCart.collectAsState()
     val selectedVariant by viewModel.selectedVariant.collectAsState()
     val isBottomShowValue by viewModel.isBottomShowValue.collectAsState()
     val ratingState by viewModel.ratingState.collectAsState()
+    val message by viewModel.message.collectAsState()
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val currentContext = LocalContext.current
+
+    val addItemToCart: (ProductDetailModel, VarianceModel?) -> Unit = { product, variance ->
+        viewModel.addItemToCart(product, variance)
+        val newMessage = currentContext.getString(R.string.text_add_cart_success)
+        viewModel.updateMessage(newMessage)
+    }
 
     val detailEvent = DetailProductEvent(
         onVarianceChange = viewModel::setSelectedVariant,
-        onCheckoutClick = {},
-        onCartClick = viewModel::onChartClick,
+        onCheckoutClick = {}, addItemToCart = addItemToCart,
         onWishlistClick = viewModel::checkOnWishlist,
         onShareClick = {},
         checkIsOnWishlist = viewModel::checkIsInWishlist,
-        checkIsOnCart = viewModel::checkIsOnCart,
         changeBottomSheetValue = viewModel::modifySheetValue
     )
+
 
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchProduct(idProduct)
         viewModel.fetchProductRating(idProduct)
     }
 
-    DetailProductContent(
-        modifier = modifier,
-        productState = productState,
-        ratingState = ratingState,
-        onBackClick = onBackClick,
-        detailEvent = detailEvent,
-        selectedVariant = selectedVariant,
-        isInWishlist = isInWishlist,
-        isInCart = isInCart,
-        isBottomSheetShow = isBottomShowValue
-    )
+    LaunchedEffect(key1 = message) {
+        message?.let {
+            scope.launch {
+                snackBarHostState.showSnackbar(it)
+            }
+        }
+    }
+
+    Scaffold(modifier = modifier, snackbarHost = {
+        SnackbarHost(hostState = snackBarHostState)
+    }) { innerPadding ->
+        DetailProductContent(
+            modifier = Modifier.padding(innerPadding),
+            productState = productState,
+            ratingState = ratingState,
+            onBackClick = onBackClick,
+            detailEvent = detailEvent,
+            selectedVariant = selectedVariant,
+            isInWishlist = isInWishlist,
+            isBottomSheetShow = isBottomShowValue
+        )
+
+    }
+
 }
 
 @Composable
@@ -117,7 +143,6 @@ internal fun DetailProductContent(
     ratingState: UiState<List<RatingModel>>,
     onBackClick: () -> Unit,
     isInWishlist: Boolean,
-    isInCart: Boolean,
     isBottomSheetShow: Boolean,
     selectedVariant: VarianceModel?,
     detailEvent: DetailProductEvent,
@@ -139,8 +164,7 @@ internal fun DetailProductContent(
         )
         productState.onSuccess {
             LaunchedEffect(key1 = Unit) {
-                detailEvent.checkIsOnWishlist(it)
-                detailEvent.checkIsOnCart(it)
+                detailEvent.checkIsOnWishlist(it, selectedVariant)
             }
 
             Box {
@@ -158,7 +182,8 @@ internal fun DetailProductContent(
                         detailModel = it,
                         isInWishlist = isInWishlist,
                         onAddToWishlist = detailEvent.onWishlistClick,
-                        onShareClick = detailEvent.onShareClick
+                        onShareClick = detailEvent.onShareClick,
+                        selectedVariant = selectedVariant
                     )
                     HorizontalDivider()
                     DetailVariance(
@@ -191,30 +216,9 @@ internal fun DetailProductContent(
                     ) {
                         Text(text = stringResource(R.string.text_buy_now))
                     }
-                    if (isInCart) {
-                        IconTextButton(
-                            modifier = Modifier.fillMaxWidth(1f),
-                            containerColor = MaterialTheme.colorScheme.error,
-                            content = {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = null
-                                    )
-                                    Text(text = stringResource(R.string.text_remove))
-                                }
-                            }, onClick = { detailEvent.onCartClick(it, true) }
-                        )
-                    } else {
-                        PrimaryButton(
-                            text = stringResource(id = R.string.text_button_add_cart),
-                            modifier = Modifier.fillMaxWidth(1f),
-                            onClick = { detailEvent.onCartClick(it, false) }
-                        )
-                    }
+                    PrimaryButton(text = stringResource(id = R.string.text_button_add_cart),
+                        modifier = Modifier.fillMaxWidth(1f),
+                        onClick = { detailEvent.addItemToCart(it, selectedVariant) })
                 }
             }
         }
@@ -225,8 +229,9 @@ internal fun DetailProductContent(
 internal fun DetailTitle(
     modifier: Modifier = Modifier, detailModel: ProductDetailModel,
     onShareClick: () -> Unit = {},
+    selectedVariant: VarianceModel?,
     isInWishlist: Boolean,
-    onAddToWishlist: (ProductDetailModel) -> Unit,
+    onAddToWishlist: (ProductDetailModel, VarianceModel?) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -237,14 +242,14 @@ internal fun DetailTitle(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = detailModel.productPrice,
+                text = detailModel.productPrice.toString(),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.weight(1f))
             IconButton(onClick = onShareClick) {
                 Icon(imageVector = Icons.Default.Share, contentDescription = null)
             }
-            IconButton(onClick = { onAddToWishlist(detailModel) }) {
+            IconButton(onClick = { onAddToWishlist(detailModel, selectedVariant) }) {
                 Icon(
                     imageVector = if (isInWishlist) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                     contentDescription = null
@@ -339,18 +344,21 @@ internal fun DetailVariance(
     modifier: Modifier = Modifier,
     selectedVariant: VarianceModel?,
     detailModel: ProductDetailModel,
-    onVarianceChange: (VarianceModel) -> Unit
+    onVarianceChange: (ProductDetailModel, VarianceModel) -> Unit
 ) {
     Column(
         modifier = modifier
     ) {
-        Text(text = "Choose Variant", style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = stringResource(R.string.text_choose_variance),
+            style = MaterialTheme.typography.bodyMedium
+        )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(detailModel.productVariance) {
                 FilterChip(
-                    onClick = { onVarianceChange(it) },
+                    onClick = { onVarianceChange(detailModel, it) },
                     selected = selectedVariant == it,
                     label = {
                         Text(text = it.title)
@@ -416,8 +424,7 @@ internal fun DetailProductScreenPreview() {
                     id = 9198,
                     title = "mea"
                 )
-            ),
-            productPrice = "posidonium",
+            ), productPrice = 230232323,
             productSold = "23",
             productRating = "4.5",
             totalRating = "5",
@@ -427,18 +434,16 @@ internal fun DetailProductScreenPreview() {
             productState = UiState.Success(dummyData),
             onBackClick = {},
             detailEvent = DetailProductEvent(
-                onVarianceChange = {},
+                onVarianceChange = { _, _ -> },
                 onCheckoutClick = {},
-                onCartClick = { _, _ -> },
-                onWishlistClick = {},
+                addItemToCart = { _, _ -> },
+                onWishlistClick = { _, _ -> },
                 onShareClick = {},
-                checkIsOnWishlist = {},
-                checkIsOnCart = {},
+                checkIsOnWishlist = { _, _ -> },
                 changeBottomSheetValue = {}
                 ),
             selectedVariant = null,
             isInWishlist = false,
-            isInCart = true,
             isBottomSheetShow = false,
             ratingState = UiState.Loading
         )

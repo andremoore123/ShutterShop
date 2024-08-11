@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.analytic.IAnalyticRepository
+import com.id.domain.cart.AddToCartUseCase
 import com.id.domain.wishlist.IWishlistRepository
 import com.id.domain.wishlist.WishlistModel
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_WISHLIST_ADD_TO_CART
@@ -16,7 +17,11 @@ import com.id.shuttershop.utils.analytics.AnalyticsConstants.WISHLIST_BUTTON
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_WISHLIST
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,8 +35,9 @@ import javax.inject.Inject
 @HiltViewModel
 class WishlistViewModel @Inject constructor(
     private val wishlistRepository: IWishlistRepository,
-    private val savedStateHandle: SavedStateHandle,
     private val analyticRepository: IAnalyticRepository,
+    private val addToCartUseCase: AddToCartUseCase,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     val isColumnLayout = savedStateHandle.getStateFlow(LAYOUT_TYPE, COLUMN_LAYOUT)
 
@@ -40,6 +46,9 @@ class WishlistViewModel @Inject constructor(
         started = SharingStarted.Eagerly,
         initialValue = listOf()
     )
+
+    private val _message = MutableStateFlow<String?>(null)
+    val message = _message.asStateFlow()
 
     fun deleteWishlist(data: WishlistModel) {
         logDeleteFromWishlist(data.itemName)
@@ -51,7 +60,7 @@ class WishlistViewModel @Inject constructor(
     fun addToCart(data: WishlistModel) {
         logAddToCart(data.itemName)
         viewModelScope.launch(Dispatchers.IO) {
-            // TODO(): Implement This Function when Cart Feature is Available
+            addToCartUseCase.invoke(data)
         }
     }
 
@@ -61,6 +70,18 @@ class WishlistViewModel @Inject constructor(
             savedStateHandle[LAYOUT_TYPE] = COLUMN_LAYOUT
         } else {
             savedStateHandle[LAYOUT_TYPE] = GRID_LAYOUT
+        }
+    }
+
+    fun updateMessage(value: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _message.getAndUpdate {
+                value
+            }
+            delay(1_000)
+            _message.getAndUpdate {
+                null
+            }
         }
     }
 

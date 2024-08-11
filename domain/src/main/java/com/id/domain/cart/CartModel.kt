@@ -12,10 +12,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CartModel(
+    val cartId: Int? = null,
     val itemId: Int,
     val itemName: String,
-    val itemDesc: String = "",
-    val itemStock: Int = 2,
+    val itemVariantName: String = "",
+    val itemStock: Int = 5,
     val itemCount: Int = 1,
-    val itemPrice: Int = 0,
+    val itemPrice: Int = 250000,
 ) : Parcelable

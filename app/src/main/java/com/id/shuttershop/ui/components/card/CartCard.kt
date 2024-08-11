@@ -62,7 +62,7 @@ fun CartCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
-            enabled = cartEnabled,
+            enabled = cartEnabled && cartModel.itemCount <= cartModel.itemStock,
             checked = isSelected,
             onCheckedChange = onCheckClick
         )
@@ -87,7 +87,7 @@ fun CartCard(
                     style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = cartModel.itemDesc, style = MaterialTheme.typography.labelSmall.copy(
+                    text = cartModel.itemVariantName, style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Normal
                     )
                 )
@@ -183,7 +183,7 @@ internal fun CartCardPreview() {
             onCheckClick = {}, cartModel = CartModel(
                 itemId = 0,
                 itemName = "Perfect Camera",
-                itemDesc = "16GB, 1TB SSD",
+                itemVariantName = "16GB, 1TB SSD",
                 itemStock = 1,
                 itemCount = 1
             )

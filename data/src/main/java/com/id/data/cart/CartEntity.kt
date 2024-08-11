@@ -13,16 +13,26 @@ import com.id.domain.cart.CartModel
 
 @Entity(tableName = "cart")
 data class CartEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val cartId: Int? = null,
     val itemId: Int,
     val itemName: String,
+    val itemVariantName: String,
     val itemCount: Int = 1
 )
 
 fun CartEntity.toModel() = CartModel(
-    itemId = itemId, itemName = itemName, itemCount = itemCount
+    cartId = cartId,
+    itemId = itemId,
+    itemName = itemName,
+    itemCount = itemCount,
+    itemVariantName = itemVariantName
 )
 
 fun CartModel.toEntity() = CartEntity(
-    itemId = itemId, itemName = itemName, itemCount = itemCount
+    cartId = cartId,
+    itemId = itemId,
+    itemName = itemName,
+    itemCount = itemCount,
+    itemVariantName = itemVariantName
 )

@@ -24,7 +24,7 @@ class CartRepository @Inject constructor(
             CartModel(
                 itemId = 0,
                 itemName = "",
-                itemDesc = "",
+                itemVariantName = "",
                 itemStock = 0,
                 itemCount = 0
             )
@@ -36,6 +36,9 @@ class CartRepository @Inject constructor(
     override suspend fun deleteCart(data: CartModel) = cartDao.deleteCart(data.toEntity())
 
     override suspend fun findCartById(id: Int): CartModel? = cartDao.findCartById(id)?.toModel()
+
+    override suspend fun findCartByItemIdAndVariant(itemId: Int, variantName: String): CartModel? =
+        cartDao.findCartByItemIdAndVariant(itemId, variantName)?.toModel()
 
     override suspend fun deleteCarts(vararg data: CartModel) {
         val entities = data.map { it.toEntity() }.toTypedArray()

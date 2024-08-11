@@ -54,4 +54,6 @@
     <string name="text_select_all">Select All</string>
     <string name="text_checkout">Checkout</string>
     <string name="text_loading">Loading</string>
+    <string name="text_choose_variance">Choose Variant</string>
+    <string name="text_add_cart_success">Item Added to Cart</string>
 </resources>
