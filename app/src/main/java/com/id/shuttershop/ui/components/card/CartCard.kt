@@ -62,7 +62,7 @@ fun CartCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
-            enabled = cartEnabled,
+            enabled = cartEnabled && cartModel.itemCount <= cartModel.itemStock,
             checked = isSelected,
             onCheckedChange = onCheckClick
         )

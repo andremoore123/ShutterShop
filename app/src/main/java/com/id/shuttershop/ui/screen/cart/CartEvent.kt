@@ -9,11 +9,11 @@ import com.id.domain.cart.CartModel
  * Email: andremoore431@gmail.com
  */
 data class CartEvent(
-    val onAddClick: (CartModel) -> Unit,
-    val onMinusClick: (CartModel) -> Unit,
-    val onRemoveCartClick: (CartModel) -> Unit,
+    val addCartQuantity: (CartModel) -> Unit,
+    val reduceCartQuantity: (CartModel) -> Unit,
     val onCheckoutClick: () -> Unit,
     val onSelectCart: (Boolean, CartModel) -> Unit,
-    val onSelectAllCart: (Boolean, List<CartModel>) -> Unit,
-    val onSelectedCartRemove: (List<CartModel>) -> Unit,
+    val onSelectAllCart: (Boolean) -> Unit,
+    val removeCarts: (List<Int>) -> Unit,
+    val isAllChartSelected: () -> Boolean?,
 )

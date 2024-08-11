@@ -44,7 +44,10 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
         composable(MainNavRoute.CART_SCREEN.route) {
             CartScreen(
                 onBackClick = { navController.popBackStack() },
-                navigateToCheckout = { navController.navigate(MainNavRoute.CHECKOUT_SCREEN.route) })
+                navigateToCheckout = {
+                    navController.navigate(MainNavRoute.CHECKOUT_SCREEN.route)
+                }
+            )
         }
         composable(MainNavRoute.CHECKOUT_SCREEN.route) {
             CheckoutScreen(

@@ -49,33 +49,39 @@ fun CartScreen(
     modifier: Modifier = Modifier,
     viewModel: CartViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {},
-    navigateToCheckout: () -> Unit,
+    navigateToCheckout: (List<CartModel>) -> Unit,
 ) {
     val selectedCart by viewModel.selectedCart.collectAsState()
     val screenState by viewModel.screenState.collectAsState()
     val cartList by viewModel.cartList.collectAsState()
+    val totalPayment by viewModel.totalPaymentValue.collectAsState()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.updateCartStock()
+        viewModel.updateCartStockFromNetwork()
+    }
+
+    LaunchedEffect(key1 = cartList, key2 = selectedCart) {
+        val newPaymentValue = viewModel.calculateTotalPrice()
+        viewModel.updateTotalPayment(newPaymentValue)
     }
 
     val cartEvent = CartEvent(
-        onAddClick = viewModel::addItemCart,
-        onMinusClick = viewModel::reduceItemCart,
-        onRemoveCartClick = viewModel::removeCartFromSelected,
-        onCheckoutClick = navigateToCheckout,
+        addCartQuantity = viewModel::addCartQuantity,
+        reduceCartQuantity = viewModel::reduceCartQuantity,
+        onCheckoutClick = { navigateToCheckout(viewModel.getSelectedCartModelsByIds(selectedCart)) },
         onSelectCart = viewModel::onSelectCart,
-        onSelectAllCart = viewModel::onSelectAllProducts,
-        onSelectedCartRemove = viewModel::removeCarts
+        onSelectAllCart = viewModel::onSelectAllClick,
+        removeCarts = viewModel::removeCarts,
+        isAllChartSelected = viewModel::isAllCartSelected
     )
     CartContent(
         modifier = modifier,
         cartEvent = cartEvent,
         onBackClick = onBackClick,
-        selectedCart = selectedCart,
         productList = cartList,
         screenState = screenState,
-        totalPrice = viewModel.calculateTotalPrice(selectedCart)
+        selectedCart = selectedCart,
+        totalPrice = totalPayment.toString()
     )
 }
 
@@ -84,7 +90,7 @@ internal fun CartContent(
     modifier: Modifier = Modifier,
     cartEvent: CartEvent,
     onBackClick: () -> Unit,
-    selectedCart: List<CartModel>,
+    selectedCart: List<Int>,
     productList: List<CartModel>,
     totalPrice: String,
     screenState: UiState<Boolean>,
@@ -99,8 +105,7 @@ internal fun CartContent(
                 showNavigation = true
             )
             screenState.onSuccess {
-                val showSelectOption =
-                    productList.all { it.itemStock > 0 } and productList.isNotEmpty()
+                val showSelectOption = productList.isNotEmpty()
                 AnimatedVisibility(visible = showSelectOption) {
                     Row(
                         modifier = Modifier
@@ -109,10 +114,10 @@ internal fun CartContent(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
-                            enabled = it,
-                            checked = selectedCart.containsAll(productList) and productList.isNotEmpty(),
+                            enabled = cartEvent.isAllChartSelected() != null,
+                            checked = cartEvent.isAllChartSelected() == true,
                             onCheckedChange = { state ->
-                                cartEvent.onSelectAllCart(state, productList)
+                                cartEvent.onSelectAllCart(state)
                             })
                         Text(
                             text = stringResource(R.string.text_select_all),
@@ -122,7 +127,7 @@ internal fun CartContent(
                         PrimaryTextButton(
                             text = stringResource(id = R.string.text_delete),
                             enabled = selectedCart.isNotEmpty(),
-                            onClick = { cartEvent.onSelectedCartRemove.invoke(selectedCart) }
+                            onClick = { cartEvent.removeCarts(listOf()) }
                         )
                     }
                     HorizontalDivider()
@@ -136,11 +141,11 @@ internal fun CartContent(
                     items(productList) { cart ->
                         CartCard(
                             cartModel = cart,
-                            isSelected = selectedCart.contains(cart),
+                            isSelected = selectedCart.any { cart.cartId == it },
                             onCheckClick = { cartEvent.onSelectCart.invoke(it, cart) },
-                            onItemAdd = { cartEvent.onAddClick(cart) },
-                            onItemMinus = { cartEvent.onMinusClick(cart) },
-                            onRemoveClick = { cartEvent.onSelectedCartRemove(listOf(cart)) },
+                            onItemAdd = { cartEvent.addCartQuantity(cart) },
+                            onItemMinus = { cartEvent.reduceCartQuantity(cart) },
+                            onRemoveClick = { cartEvent.removeCarts(listOf(cart.cartId ?: 0)) },
                         )
                     }
                 }
@@ -176,14 +181,18 @@ internal fun CartBottom(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = "Total Payment")
+                Text(text = stringResource(id = R.string.text_total_payment))
                 Text(
                     text = totalPrice, style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
             }
-            PrimaryButton(text = "Checkout", onClick = onCheckoutClick, enabled = enabled)
+            PrimaryButton(
+                text = stringResource(id = R.string.text_checkout),
+                onClick = onCheckoutClick,
+                enabled = enabled
+            )
         }
     }
 }
@@ -196,13 +205,12 @@ internal fun CartScreenPreview() {
         CartContent(
             screenState = UiState.Success(
                 true
-            ), onBackClick = {}, cartEvent = CartEvent(onAddClick = {},
-                onMinusClick = {},
-                onRemoveCartClick = {},
+            ), onBackClick = {}, cartEvent = CartEvent(addCartQuantity = {},
+                reduceCartQuantity = {},
                 onCheckoutClick = {},
                 onSelectCart = { _, _ -> },
-                onSelectAllCart = { _, _ -> },
-                onSelectedCartRemove = {}),
+                onSelectAllCart = {},
+                removeCarts = {}, isAllChartSelected = { false }),
             selectedCart = listOf(),
             productList = listOf(
                 CartModel(

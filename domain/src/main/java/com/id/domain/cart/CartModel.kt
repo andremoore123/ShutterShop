@@ -16,7 +16,7 @@ data class CartModel(
     val itemId: Int,
     val itemName: String,
     val itemVariantName: String = "",
-    val itemStock: Int = 0,
+    val itemStock: Int = 5,
     val itemCount: Int = 1,
-    val itemPrice: Int = 0,
+    val itemPrice: Int = 250000,
 ) : Parcelable

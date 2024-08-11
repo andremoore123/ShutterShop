@@ -1,6 +1,5 @@
 package com.id.shuttershop.ui.screen.product_detail
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -129,7 +128,6 @@ class ProductDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val inWishlist =
                 checkInWishlistUseCase(data.toWishlist(variant ?: data.productVariance.first()))
-            Log.d("PDVM", isInWishlist.toString())
             _isInWishlist.getAndUpdate { inWishlist != null}
         }
     }
