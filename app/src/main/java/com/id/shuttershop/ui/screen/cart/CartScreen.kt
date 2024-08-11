@@ -208,7 +208,7 @@ internal fun CartScreenPreview() {
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
-                    itemDesc = "eius",
+                    itemVariantName = "eius",
                     itemStock = 1,
                     itemCount = 1,
                     itemPrice = 1333
@@ -216,7 +216,7 @@ internal fun CartScreenPreview() {
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
-                    itemDesc = "eius",
+                    itemVariantName = "eius",
                     itemStock = 4,
                     itemCount = 3,
                     itemPrice = 1333
@@ -224,7 +224,7 @@ internal fun CartScreenPreview() {
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
-                    itemDesc = "eius",
+                    itemVariantName = "eius",
                     itemStock = 0,
                     itemCount = 5,
                     itemPrice = 1333
@@ -232,7 +232,7 @@ internal fun CartScreenPreview() {
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
-                    itemDesc = "eius",
+                    itemVariantName = "eius",
                     itemStock = 2492,
                     itemCount = 5,
                     itemPrice = 1333
@@ -240,7 +240,7 @@ internal fun CartScreenPreview() {
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
-                    itemDesc = "eius",
+                    itemVariantName = "eius",
                     itemStock = 2492,
                     itemCount = 5,
                     itemPrice = 1333
@@ -248,7 +248,7 @@ internal fun CartScreenPreview() {
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
-                    itemDesc = "eius",
+                    itemVariantName = "eius",
                     itemStock = 2492,
                     itemCount = 5,
                     itemPrice = 1333
@@ -256,7 +256,7 @@ internal fun CartScreenPreview() {
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
-                    itemDesc = "eius",
+                    itemVariantName = "eius",
                     itemStock = 2492,
                     itemCount = 5,
                     itemPrice = 1333
@@ -264,7 +264,7 @@ internal fun CartScreenPreview() {
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
-                    itemDesc = "eius",
+                    itemVariantName = "eius",
                     itemStock = 2492,
                     itemCount = 5,
                     itemPrice = 1333

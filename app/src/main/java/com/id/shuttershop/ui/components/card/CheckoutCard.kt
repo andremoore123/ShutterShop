@@ -59,7 +59,7 @@ fun CheckoutCard(
                 style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
             )
             Text(
-                text = cartModel.itemDesc, style = MaterialTheme.typography.labelSmall.copy(
+                text = cartModel.itemVariantName, style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight.Normal
                 )
             )
@@ -88,7 +88,7 @@ internal fun CheckoutCardPreview() {
             cartModel = CartModel(
                 itemId = 0,
                 itemName = "Perfect Camera",
-                itemDesc = "16GB, 1TB SSD",
+                itemVariantName = "16GB, 1TB SSD",
                 itemStock = 1,
                 itemCount = 1
             )

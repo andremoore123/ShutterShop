@@ -13,7 +13,7 @@ data class ProductDetailModel(
     val productName: String,
     val productDesc: String,
     val productVariance: List<VarianceModel>,
-    val productPrice: String,
+    val productPrice: Int,
     val productSold: String,
     val productRating: String,
     val totalRating: String,
@@ -21,12 +21,13 @@ data class ProductDetailModel(
     val productStore: String = "",
 )
 
-fun ProductDetailModel.toWishlist(): WishlistModel {
+fun ProductDetailModel.toWishlist(selectedVariant: VarianceModel): WishlistModel {
     return WishlistModel(
-        id = null,
+        itemId = id,
         itemName = productName,
         itemSold = productSold,
         itemPrice = productPrice,
+        itemVariantName = selectedVariant.title,
         itemRating = productRating,
         itemSeller = productStore,
         itemImageUrl = imageUrl.firstOrNull() ?: ""

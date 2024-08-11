@@ -3,8 +3,8 @@ package com.id.shuttershop.ui.screen.product_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.id.domain.cart.AddToCartUseCase
 import com.id.domain.cart.CartModel
-import com.id.domain.cart.ICartRepository
 import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
@@ -17,6 +17,7 @@ import com.id.shuttershop.utils.handleUpdateUiState
 import com.id.shuttershop.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
@@ -34,8 +35,8 @@ import javax.inject.Inject
 class ProductDetailViewModel @Inject constructor(
     private val productRepository: IProductRepository,
     private val wishlistRepository: IWishlistRepository,
-    private val cartRepository: ICartRepository,
     private val ratingRepository: IRatingRepository,
+    private val addToCartUseCase: AddToCartUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _productState = MutableStateFlow<UiState<ProductDetailModel>>(UiState.Initiate)
@@ -44,9 +45,6 @@ class ProductDetailViewModel @Inject constructor(
     private val _isInWishlist = MutableStateFlow(false)
     val isInWishlist = _isInWishlist.asStateFlow()
 
-    private val _isInCart = MutableStateFlow(false)
-    val isInCart = _isInCart.asStateFlow()
-
     private val _selectedVariant = MutableStateFlow<VarianceModel?>(null)
     val selectedVariant = _selectedVariant.asStateFlow()
 
@@ -54,6 +52,9 @@ class ProductDetailViewModel @Inject constructor(
     val ratingState = _ratingState.asStateFlow()
 
     val isBottomShowValue = savedStateHandle.getStateFlow(IS_SHEET_SHOW_VALUE, false)
+
+    private val _message = MutableStateFlow<String?>(null)
+    val message = _message.asStateFlow()
 
     fun modifySheetValue(value: Boolean) {
         savedStateHandle[IS_SHEET_SHOW_VALUE] = value
@@ -65,7 +66,7 @@ class ProductDetailViewModel @Inject constructor(
                 handleUpdateUiState(UiState.Loading)
                 val response = productRepository.fetchProductDetail(id)
                 response.onSuccess {
-                    setSelectedVariant(it.productVariance.firstOrNull())
+                    setSelectedVariant(it.productVariance.first())
                     handleUpdateUiState(UiState.Success(it))
                 }
             }
@@ -84,13 +85,13 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-    fun checkOnWishlist(data: ProductDetailModel) {
+    fun checkOnWishlist(data: ProductDetailModel, variant: VarianceModel?) {
         viewModelScope.launch(Dispatchers.IO) {
             val inWishlist = wishlistRepository.findWishlistByName(data.productName)
             inWishlist?.let {
                 wishlistRepository.removeWishlist(it)
             } ?: wishlistRepository.addToWishlist(
-                data.toWishlist()
+                data.toWishlist(variant ?: data.productVariance.first())
             )
             checkIsInWishlist(data)
         }
@@ -108,39 +109,15 @@ class ProductDetailViewModel @Inject constructor(
      * This Function Handle on Cart Click, whether it's Add or Remove
      */
 
-    fun onChartClick(data: ProductDetailModel, isOnCart: Boolean) {
-        if (isOnCart) {
-            removeFromCart(data)
-        } else {
-            addToCart(data)
-        }
-    }
-
-    /**
-     * This function Check Product from Local Database
-     */
-    fun checkIsOnCart(data: ProductDetailModel) {
+    fun addItemToCart(data: ProductDetailModel, variant: VarianceModel?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val isProductInCart = cartRepository.findCartById(data.id)
-            _isInCart.getAndUpdate {
-                isProductInCart != null
-            }
-        }
-    }
-
-    private fun addToCart(data: ProductDetailModel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val dataCart = CartModel(itemId = data.id, itemName = data.productName)
-            cartRepository.insertCart(dataCart)
-            checkIsOnCart(data)
-        }
-    }
-
-    private fun removeFromCart(data: ProductDetailModel) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val dataCart = CartModel(itemId = data.id, itemName = data.productName)
-            cartRepository.deleteCart(dataCart)
-            checkIsOnCart(data)
+            val selectedVariant = variant ?: data.productVariance.first()
+            val dataCart = CartModel(
+                itemId = data.id,
+                itemName = data.productName,
+                itemVariantName = selectedVariant.title
+            )
+            addToCartUseCase.invoke(dataCart)
         }
     }
 
@@ -148,6 +125,18 @@ class ProductDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val inWishlist = wishlistRepository.findWishlistByName(data.productName)
             _isInWishlist.getAndUpdate { inWishlist != null }
+        }
+    }
+
+    fun updateMessage(value: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _message.getAndUpdate {
+                value
+            }
+            delay(1_000)
+            _message.getAndUpdate {
+                null
+            }
         }
     }
 

@@ -24,7 +24,7 @@ class CartRepository @Inject constructor(
             CartModel(
                 itemId = 0,
                 itemName = "",
-                itemDesc = "",
+                itemVariantName = "",
                 itemStock = 0,
                 itemCount = 0
             )
