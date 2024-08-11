@@ -23,6 +23,7 @@ fun SwitchWithText(
     modifier: Modifier = Modifier,
     firstText: String = "",
     secondText: String = "",
+    enabled: Boolean = true,
     checked: Boolean = false,
     onCheckChange: (Boolean) -> Unit = {},
 ) {
@@ -32,7 +33,7 @@ fun SwitchWithText(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(text = firstText, style = AppTypography.titleMedium)
-        Switch(checked = checked, onCheckedChange = onCheckChange)
+        Switch(checked = checked, onCheckedChange = onCheckChange, enabled = enabled)
         Text(text = secondText, style = AppTypography.titleMedium)
     }
 }
