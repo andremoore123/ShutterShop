@@ -6,24 +6,30 @@ package com.id.domain.wishlist
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
+
+/**
+ * Item Desc is Chosen Item
+ */
 data class WishlistModel(
-    val id: Int?,
+    val wishlistId: Int? = null,
+    val itemId: Int,
     val itemName: String,
     val itemSold: String,
-    val itemPrice: String,
+    val itemVariantName: String = "",
+    val itemPrice: Int,
     val itemRating: String,
     val itemSeller: String,
     val itemImageUrl: String = "",
 ) {
     companion object {
         val dummyData = WishlistModel(
-            id = 2990,
+            itemId = 2990,
             itemName = "Angelina Hesdfjsdifjdsfisdfndrix",
             itemSold = "5",
-            itemPrice = "230 000",
+            itemPrice = 0,
             itemRating = "3",
             itemSeller = "noluisse",
-            itemImageUrl = ""
+            itemImageUrl = "",
         )
     }
 }

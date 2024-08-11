@@ -164,7 +164,7 @@ internal fun DetailProductContent(
         )
         productState.onSuccess {
             LaunchedEffect(key1 = Unit) {
-                detailEvent.checkIsOnWishlist(it)
+                detailEvent.checkIsOnWishlist(it, selectedVariant)
             }
 
             Box {
@@ -344,7 +344,7 @@ internal fun DetailVariance(
     modifier: Modifier = Modifier,
     selectedVariant: VarianceModel?,
     detailModel: ProductDetailModel,
-    onVarianceChange: (VarianceModel) -> Unit
+    onVarianceChange: (ProductDetailModel, VarianceModel) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -358,7 +358,7 @@ internal fun DetailVariance(
         ) {
             items(detailModel.productVariance) {
                 FilterChip(
-                    onClick = { onVarianceChange(it) },
+                    onClick = { onVarianceChange(detailModel, it) },
                     selected = selectedVariant == it,
                     label = {
                         Text(text = it.title)
@@ -434,12 +434,12 @@ internal fun DetailProductScreenPreview() {
             productState = UiState.Success(dummyData),
             onBackClick = {},
             detailEvent = DetailProductEvent(
-                onVarianceChange = {},
+                onVarianceChange = { _, _ -> },
                 onCheckoutClick = {},
                 addItemToCart = { _, _ -> },
                 onWishlistClick = { _, _ -> },
                 onShareClick = {},
-                checkIsOnWishlist = {},
+                checkIsOnWishlist = { _, _ -> },
                 changeBottomSheetValue = {}
                 ),
             selectedVariant = null,

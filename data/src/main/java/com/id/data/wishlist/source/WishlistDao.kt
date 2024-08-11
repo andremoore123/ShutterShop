@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -23,8 +24,17 @@ interface WishlistDao {
     @Delete
     suspend fun removeWishlist(data: WishlistEntity)
 
+    @Update
+    suspend fun updateWishlist(data: WishlistEntity)
+
     @Query("SELECT * FROM wishlist WHERE itemName = :name")
     suspend fun findWishlistByName(name: String): WishlistEntity?
+
+    @Query("SELECT * FROM WISHLIST WHERE productId = :productId AND itemVariantName = :variantName")
+    suspend fun findWishlistByIdAndVariant(productId: Int, variantName: String): WishlistEntity?
+
+    @Query("SELECT * FROM wishlist WHERE productId = :id")
+    suspend fun findWishlistById(id: Int): WishlistEntity?
 
     @Query("DELETE FROM WISHLIST")
     suspend fun deleteTable()

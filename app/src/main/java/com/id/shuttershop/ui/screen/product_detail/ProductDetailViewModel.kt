@@ -1,5 +1,6 @@
 package com.id.shuttershop.ui.screen.product_detail
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +12,9 @@ import com.id.domain.product.VarianceModel
 import com.id.domain.product.toWishlist
 import com.id.domain.rating.IRatingRepository
 import com.id.domain.rating.RatingModel
-import com.id.domain.wishlist.IWishlistRepository
+import com.id.domain.wishlist.AddToWishlistUseCase
+import com.id.domain.wishlist.CheckInWishlistUseCase
+import com.id.domain.wishlist.RemoveFromWishlistUseCase
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
 import com.id.shuttershop.utils.onSuccess
@@ -34,9 +37,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductDetailViewModel @Inject constructor(
     private val productRepository: IProductRepository,
-    private val wishlistRepository: IWishlistRepository,
     private val ratingRepository: IRatingRepository,
     private val addToCartUseCase: AddToCartUseCase,
+    private val addToWishlistUseCase: AddToWishlistUseCase,
+    private val removeFromWishlistUseCase: RemoveFromWishlistUseCase,
+    private val checkInWishlistUseCase: CheckInWishlistUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _productState = MutableStateFlow<UiState<ProductDetailModel>>(UiState.Initiate)
@@ -66,7 +71,7 @@ class ProductDetailViewModel @Inject constructor(
                 handleUpdateUiState(UiState.Loading)
                 val response = productRepository.fetchProductDetail(id)
                 response.onSuccess {
-                    setSelectedVariant(it.productVariance.first())
+                    setSelectedVariant(it, it.productVariance.first())
                     handleUpdateUiState(UiState.Success(it))
                 }
             }
@@ -87,21 +92,20 @@ class ProductDetailViewModel @Inject constructor(
 
     fun checkOnWishlist(data: ProductDetailModel, variant: VarianceModel?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val inWishlist = wishlistRepository.findWishlistByName(data.productName)
-            inWishlist?.let {
-                wishlistRepository.removeWishlist(it)
-            } ?: wishlistRepository.addToWishlist(
-                data.toWishlist(variant ?: data.productVariance.first())
-            )
-            checkIsInWishlist(data)
+            val wishlistModel = data.toWishlist(variant ?: data.productVariance.first())
+            checkInWishlistUseCase.invoke(wishlistModel)?.let {
+                removeFromWishlistUseCase(it)
+            } ?: addToWishlistUseCase(wishlistModel)
+            checkIsInWishlist(data, variant)
         }
     }
 
-    fun setSelectedVariant(variant: VarianceModel?) {
+    fun setSelectedVariant(data: ProductDetailModel, variant: VarianceModel?) {
         viewModelScope.launch(Dispatchers.IO) {
             _selectedVariant.getAndUpdate {
                 variant
             }
+            checkIsInWishlist(data, variant)
         }
     }
 
@@ -121,10 +125,12 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-    fun checkIsInWishlist(data: ProductDetailModel) {
+    fun checkIsInWishlist(data: ProductDetailModel, variant: VarianceModel?) {
         viewModelScope.launch(Dispatchers.IO) {
-            val inWishlist = wishlistRepository.findWishlistByName(data.productName)
-            _isInWishlist.getAndUpdate { inWishlist != null }
+            val inWishlist =
+                checkInWishlistUseCase(data.toWishlist(variant ?: data.productVariance.first()))
+            Log.d("PDVM", isInWishlist.toString())
+            _isInWishlist.getAndUpdate { inWishlist != null}
         }
     }
 

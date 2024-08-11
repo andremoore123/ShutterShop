@@ -10,11 +10,11 @@ import com.id.domain.product.VarianceModel
  * Email: andremoore431@gmail.com
  */
 data class DetailProductEvent(
-    val onVarianceChange: (VarianceModel) -> Unit,
+    val onVarianceChange: (ProductDetailModel, VarianceModel) -> Unit,
     val onCheckoutClick: (ProductDetailModel) -> Unit,
     val addItemToCart: (ProductDetailModel, VarianceModel?) -> Unit,
     val onWishlistClick: (ProductDetailModel, VarianceModel?) -> Unit,
-    val checkIsOnWishlist: (ProductDetailModel) -> Unit,
+    val checkIsOnWishlist: (ProductDetailModel, VarianceModel?) -> Unit,
     val onShareClick: () -> Unit,
     val changeBottomSheetValue: (Boolean) -> Unit,
 )

@@ -6,7 +6,7 @@ import com.id.data.wishlist.source.mapToModel
 import com.id.domain.wishlist.IWishlistRepository
 import com.id.domain.wishlist.WishlistModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -18,28 +18,23 @@ import javax.inject.Inject
 class WishlistRepository @Inject constructor(
     private val wishlistDao: WishlistDao,
 ) : IWishlistRepository {
-//    override fun fetchWishlists(): Flow<List<WishlistModel>> = wishlistDao.fetchWishlists().map { list ->
-//        list.map {
-//            it.mapToModel()
-//        }
-//    }
-
-    // TODO(): Delete On Production
-    override fun fetchWishlists(): Flow<List<WishlistModel>> = flow {
-        emit(
-            listOf(
-                WishlistModel.dummyData,
-                WishlistModel.dummyData,
-                WishlistModel.dummyData,
-                WishlistModel.dummyData,
-            )
-        )
-    }
+    override fun fetchWishlists(): Flow<List<WishlistModel>> =
+        wishlistDao.fetchWishlists().map { list ->
+            list.map {
+                it.mapToModel()
+            }
+        }
 
     override suspend fun findWishlistByName(name: String): WishlistModel? {
         val data = wishlistDao.findWishlistByName(name)
         return data?.mapToModel()
     }
+
+    override suspend fun findWishlistById(id: Int): WishlistModel? =
+        wishlistDao.findWishlistById(id)?.mapToModel()
+
+    override suspend fun findWishlistByIdAndVariant(productId: Int, variantName: String): WishlistModel? =
+        wishlistDao.findWishlistByIdAndVariant(productId, variantName)?.mapToModel()
 
     override suspend fun addToWishlist(data: WishlistModel) {
         wishlistDao.insertWishlist(data.mapToEntity())
@@ -47,6 +42,10 @@ class WishlistRepository @Inject constructor(
 
     override suspend fun removeWishlist(data: WishlistModel) {
         wishlistDao.removeWishlist(data.mapToEntity())
+    }
+
+    override suspend fun updateWishlist(data: WishlistModel) {
+        wishlistDao.updateWishlist(data.mapToEntity())
     }
 
     override suspend fun clearDatabase() {

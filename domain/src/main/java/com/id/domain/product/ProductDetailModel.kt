@@ -23,6 +23,7 @@ data class ProductDetailModel(
 
 fun ProductDetailModel.toWishlist(selectedVariant: VarianceModel): WishlistModel {
     return WishlistModel(
+        wishlistId = null,
         itemId = id,
         itemName = productName,
         itemSold = productSold,
