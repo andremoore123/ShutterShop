@@ -1,6 +1,7 @@
 package com.id.domain.cart
 
 import android.os.Parcelable
+import com.id.domain.ext.formatToRupiah
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -19,4 +20,8 @@ data class CartModel(
     val itemStock: Int = 5,
     val itemCount: Int = 1,
     val itemPrice: Int = 250000,
-) : Parcelable
+) : Parcelable {
+    fun getFormattedCurrency(): String {
+        return itemPrice.formatToRupiah()
+    }
+}

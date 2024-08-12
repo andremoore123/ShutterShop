@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.id.domain.cart.CartModel
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
 import com.id.domain.rating.RatingModel
@@ -76,6 +77,7 @@ import kotlinx.coroutines.launch
 fun DetailProductScreen(
     modifier: Modifier = Modifier,
     idProduct: Int,
+    onCheckoutClick: (CartModel) -> Unit,
     viewModel: ProductDetailViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {},
 ) {
@@ -97,7 +99,11 @@ fun DetailProductScreen(
 
     val detailEvent = DetailProductEvent(
         onVarianceChange = viewModel::setSelectedVariant,
-        onCheckoutClick = {}, addItemToCart = addItemToCart,
+        onCheckoutClick = {
+            val data = viewModel::convertDetailToCart.invoke(it, selectedVariant)
+            onCheckoutClick(data)
+        },
+        addItemToCart = addItemToCart,
         onWishlistClick = viewModel::checkOnWishlist,
         onShareClick = {},
         checkIsOnWishlist = viewModel::checkIsInWishlist,
@@ -131,9 +137,7 @@ fun DetailProductScreen(
             isInWishlist = isInWishlist,
             isBottomSheetShow = isBottomShowValue
         )
-
     }
-
 }
 
 @Composable
@@ -242,7 +246,7 @@ internal fun DetailTitle(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = detailModel.productPrice.toString(),
+                text = detailModel.getFormattedCurrency(),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -428,7 +432,8 @@ internal fun DetailProductScreenPreview() {
             productSold = "23",
             productRating = "4.5",
             totalRating = "5",
-            imageUrl = listOf("sdf", "df")
+            imageUrl = listOf("sdf", "df"),
+            productStore = "uvuvwve"
         )
         DetailProductContent(
             productState = UiState.Success(dummyData),

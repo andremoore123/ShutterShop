@@ -89,6 +89,16 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
+    fun convertDetailToCart(data: ProductDetailModel, variant: VarianceModel?): CartModel {
+        val cartModel = CartModel(
+            itemId = data.id,
+            itemName = data.productName,
+            itemVariantName = variant?.title ?: data.productVariance.first().title,
+            itemPrice = data.productPrice
+        )
+        return cartModel
+    }
+
     fun checkOnWishlist(data: ProductDetailModel, variant: VarianceModel?) {
         viewModelScope.launch(Dispatchers.IO) {
             val wishlistModel = data.toWishlist(variant ?: data.productVariance.first())
@@ -111,7 +121,6 @@ class ProductDetailViewModel @Inject constructor(
     /**
      * This Function Handle on Cart Click, whether it's Add or Remove
      */
-
     fun addItemToCart(data: ProductDetailModel, variant: VarianceModel?) {
         viewModelScope.launch(Dispatchers.IO) {
             val selectedVariant = variant ?: data.productVariance.first()

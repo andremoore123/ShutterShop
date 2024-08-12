@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.id.domain.ext.formatToRupiah
 import com.id.domain.wishlist.WishlistModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
@@ -145,9 +146,14 @@ internal fun WishlistItemText(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        Text(text = data.itemName, style = MaterialTheme.typography.bodyMedium)
         Text(
-            text = data.itemPrice.toString(), style = MaterialTheme.typography.labelLarge.copy(
+            text = "${data.itemName} (${data.itemVariantName})",
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 1
+        )
+        Text(
+            text = data.itemPrice.formatToRupiah(),
+            style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.Bold
             )
         )

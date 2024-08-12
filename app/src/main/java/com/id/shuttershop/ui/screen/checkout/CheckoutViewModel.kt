@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.cart.CartModel
 import com.id.domain.cart.ICartRepository
+import com.id.domain.ext.formatToRupiah
 import com.id.domain.payment.IPaymentRepository
 import com.id.domain.payment.PaymentModel
 import com.id.domain.transaction.PayUseCase
@@ -36,11 +37,6 @@ class CheckoutViewModel @Inject constructor(
     cartRepository: ICartRepository,
     private val payUseCase: PayUseCase
 ) : ViewModel() {
-    val cartList = cartRepository.fetchCarts().stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = listOf()
-    )
 
     private val _paymentState = MutableStateFlow<UiState<TransactionModel>>(UiState.Initiate)
     val paymentState = _paymentState.asStateFlow()
@@ -71,8 +67,8 @@ class CheckoutViewModel @Inject constructor(
     }
 
     fun calculateTotalPrice(data: List<CartModel>): String {
-        val totalPrice = data.sumOf { it.itemStock * it.itemPrice }
-        return totalPrice.toString()
+        val totalPrice = data.sumOf { it.itemCount * it.itemPrice }
+        return totalPrice.formatToRupiah()
     }
 
 

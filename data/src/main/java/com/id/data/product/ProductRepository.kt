@@ -72,6 +72,7 @@ class ProductRepository @Inject constructor(
                     title = "sit"
                 )
             ),
+            productStore = "Uvuvwvwe",
             productPrice = 230232323,
             productSold = "23",
             productRating = "4.5",

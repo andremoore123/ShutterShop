@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.id.domain.cart.CartModel
 import com.id.shuttershop.ui.navigation.MainRoute
 import com.id.shuttershop.ui.screen.cart.CartScreen
 import com.id.shuttershop.ui.screen.checkout.CheckoutScreen
@@ -38,23 +39,35 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             productId?.let {
                 DetailProductScreen(
                     idProduct = it,
-                    onBackClick = { navController.popBackStack() })
+                    onBackClick = { navController.popBackStack() },
+                    onCheckoutClick = { cart ->
+                        navController.navigate(route = MainNavRoute.CHECKOUT_SCREEN.route)
+                        navBackStackEntry.savedStateHandle[CHECKOUT_DATA] = ArrayList(listOf(cart))
+                    }
+                )
             }
         }
-        composable(MainNavRoute.CART_SCREEN.route) {
+        composable(MainNavRoute.CART_SCREEN.route) { navBackStackEntry ->
             CartScreen(
                 onBackClick = { navController.popBackStack() },
-                navigateToCheckout = {
-                    navController.navigate(MainNavRoute.CHECKOUT_SCREEN.route)
+                navigateToCheckout = { carts: List<CartModel> ->
+                    navController.navigate(route = MainNavRoute.CHECKOUT_SCREEN.route)
+                    navBackStackEntry.savedStateHandle[CHECKOUT_DATA] = ArrayList(carts)
                 }
             )
         }
         composable(MainNavRoute.CHECKOUT_SCREEN.route) {
+            val checkoutItems =
+                navController.previousBackStackEntry?.savedStateHandle?.get<ArrayList<CartModel>>(
+                    CHECKOUT_DATA
+                ) ?: listOf()
             CheckoutScreen(
                 onBackClick = { navController.popBackStack() },
+                checkoutItems = checkoutItems,
                 navigateToPaymentStatus = {
-                    TODO("Navigate To Payment Status Screen and Pass Transaction Model")
-                })
+
+                }
+            )
         }
     }
 }
