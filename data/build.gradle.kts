@@ -10,9 +10,13 @@ android {
     namespace = "com.id.data"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         minSdk = 24
-
+        buildConfigField("String", "BASE_URL", "\"https://mymarket.phincon.site/\"")
+        buildConfigField("String", "API_KEY", "\"6f8856ed-9189-488f-9011-0ff4b6c08edc\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -60,5 +64,12 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter)
+    implementation(libs.retrofit.converter)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.okhttp)
 
 }

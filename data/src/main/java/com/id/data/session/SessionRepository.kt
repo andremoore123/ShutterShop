@@ -23,6 +23,7 @@ class SessionRepository @Inject constructor(
     private val userToken = stringPreferencesKey(USER_TOKEN)
     private val userEmailValue = stringPreferencesKey(USER_EMAIL)
     private val userNameValue = stringPreferencesKey(USER_NAME)
+    private val userRefreshToken = stringPreferencesKey(USER_REFRESH_TOKEN)
 
     override fun isUserLogin(): Flow<Boolean?> = dataStore.data.map {
         it[userToken]?.isNotEmpty()
@@ -43,10 +44,13 @@ class SessionRepository @Inject constructor(
     }
 
     override suspend fun fetchUserToken(): String = dataStore.data.first()[userToken] ?: ""
+    override suspend fun fetchUserRefreshToken(): String =
+        dataStore.data.first()[userRefreshToken] ?: ""
 
-    override suspend fun insertUserToken(token: String) {
+    override suspend fun insertUserToken(token: String, refreshToken: String) {
         dataStore.edit {
             it[userToken] = token
+            it[userRefreshToken] = refreshToken
         }
     }
 
@@ -62,5 +66,6 @@ class SessionRepository @Inject constructor(
         private const val USER_TOKEN = "userToken"
         private const val USER_NAME = "userName"
         private const val USER_EMAIL = "userEmail"
+        private const val USER_REFRESH_TOKEN = "userRefreshToken"
     }
 }
