@@ -2,12 +2,15 @@ package com.id.shuttershop.ui.screen.auth.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -30,6 +33,7 @@ import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.PrimaryTextField
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
+import com.id.shuttershop.ui.components.state.LoadingState
 import com.id.shuttershop.ui.theme.AppTypography
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.onError
@@ -50,7 +54,7 @@ fun RegisterScreen(
     viewModel: RegisterViewModel = hiltViewModel(),
     navigateToLogin: () -> Unit = {},
 ) {
-    val loginUiState by viewModel.registerUiState.collectAsState()
+    val registerUiState by viewModel.registerUiState.collectAsState()
     val messageValue by viewModel.messageValue.collectAsState()
     val nameValue by viewModel.nameValue.collectAsState()
     val emailValue by viewModel.emailValue.collectAsState()
@@ -66,34 +70,37 @@ fun RegisterScreen(
         }
     }
 
-    loginUiState.onSuccess {
-        viewModel.onMessageValueChange("Register Success")
-        navigateToLogin()
-    }.onError {
-        viewModel.onMessageValueChange(it.errorMessage)
-    }.onLoading {
-        viewModel.onMessageValueChange("Loading")
-    }
-
-    Scaffold(
-        modifier = modifier,
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
+    Box(modifier = modifier.fillMaxSize()) {
+        registerUiState.onLoading {
+            LoadingState()
+        }.onSuccess {
+            viewModel.onMessageValueChange("Register Success")
+            navigateToLogin()
+        }.onError {
+            viewModel.onMessageValueChange(it.errorMessage)
         }
-    ) {
-        RegisterContent(
-            modifier = Modifier.padding(it),
-            nameValue = nameValue,
-            emailValue = emailValue,
-            passwordValue = passwordValue,
-            onNameChange = viewModel::onNameChange,
-            onEmailChange = viewModel::onEmailValueChange,
-            onPasswordChange = viewModel::onPasswordChange,
-            onLoginClick = {
-                viewModel.register(nameValue, emailValue, passwordValue)
-            },
-            onRegisterClick = navigateToLogin
-        )
+        Scaffold(
+            modifier = Modifier,
+            snackbarHost = {
+                SnackbarHost(hostState = snackBarHostState)
+            }
+        ) {
+            RegisterContent(
+                modifier = Modifier
+                    .padding(it)
+                    .verticalScroll(rememberScrollState()),
+                nameValue = nameValue,
+                emailValue = emailValue,
+                passwordValue = passwordValue,
+                onNameChange = viewModel::onNameChange,
+                onEmailChange = viewModel::onEmailValueChange,
+                onPasswordChange = viewModel::onPasswordChange,
+                onLoginClick = {
+                    viewModel.register(nameValue, emailValue, passwordValue)
+                },
+                onRegisterClick = navigateToLogin
+            )
+        }
     }
 }
 

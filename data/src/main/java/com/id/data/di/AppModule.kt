@@ -41,9 +41,6 @@ abstract class AppModule {
     abstract fun providePreferenceRepository(repository: PreferenceRepository): IPreferenceRepository
 
     @Binds
-    abstract fun provideSessionRepository(repository: SessionRepository): ISessionRepository
-
-    @Binds
     abstract fun provideAuthRepository(repository: AuthRepository): IAuthRepository
 
     @Binds

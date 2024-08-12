@@ -1,5 +1,6 @@
 package com.id.domain.auth
 
+import com.id.domain.auth.model.AuthDataModel
 import com.id.domain.ext.NetworkResponse
 
 /**
@@ -9,6 +10,6 @@ import com.id.domain.ext.NetworkResponse
  * Email: andremoore431@gmail.com
  */
 interface IAuthRepository {
-    suspend fun login(email: String, password: String): NetworkResponse<String>
-    suspend fun register(name: String, email: String, password: String): NetworkResponse<String>
+    suspend fun login(email: String, password: String): NetworkResponse<AuthDataModel>
+    suspend fun register(name: String, email: String, password: String): NetworkResponse<AuthDataModel>
 }

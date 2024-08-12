@@ -5,6 +5,7 @@ import com.id.domain.ext.Resource
 import com.id.domain.ext.onSuccess
 import com.id.domain.ext.onUnknownError
 import com.id.domain.session.ISessionRepository
+import com.id.domain.session.UserModel
 import javax.inject.Inject
 
 /**
@@ -21,9 +22,8 @@ class LoginUseCase @Inject constructor(
         val response = authRepository.login(email, password)
         var result: Resource<String> = Resource.Initiate
         response.onSuccess {
-            result = Resource.Success(it)
-            // TODO(): Replace Dummy Token with Real JWT Token
-            sessionRepository.insertUserToken("dummyToken")
+            sessionRepository.insertUserToken(it.accessToken, it.refreshToken)
+            sessionRepository.setUserData(UserModel(it.userName, email))
         }.onUnknownError {
             result = Resource.Error(ErrorType.UnknownError(it.message.toString()))
         }

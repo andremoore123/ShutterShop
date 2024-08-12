@@ -15,6 +15,7 @@ interface ISessionRepository {
 
     suspend fun fetchUserData(): UserModel
     suspend fun fetchUserToken(): String
-    suspend fun insertUserToken(token: String)
+    suspend fun fetchUserRefreshToken(): String
+    suspend fun insertUserToken(token: String, refreshToken: String)
     suspend fun clearUserSession()
 }

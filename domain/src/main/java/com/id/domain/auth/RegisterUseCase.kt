@@ -4,6 +4,7 @@ import com.id.domain.ext.ErrorType
 import com.id.domain.ext.Resource
 import com.id.domain.ext.onSuccess
 import com.id.domain.ext.onUnknownError
+import com.id.domain.session.ISessionRepository
 import javax.inject.Inject
 
 /**
@@ -14,12 +15,13 @@ import javax.inject.Inject
  */
 class RegisterUseCase @Inject constructor(
     private val authRepository: IAuthRepository,
+    private val sessionRepository: ISessionRepository
 ) {
     suspend operator fun invoke(name: String, email: String, password: String): Resource<String> {
         val response = authRepository.register(name = name, email = email, password = password)
         var result: Resource<String> = Resource.Initiate
         response.onSuccess {
-            result = Resource.Success(it)
+            sessionRepository.insertUserToken(it.accessToken, it.refreshToken)
         }.onUnknownError {
             result = Resource.Error(ErrorType.UnknownError(it.message.toString()))
         }
