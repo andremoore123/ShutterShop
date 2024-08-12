@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.screen.home;
+package com.id.shuttershop.ui.screen.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -68,7 +68,7 @@ fun HomeScreen(
 
     val navigateToDetail: (ProductModel) -> Unit = {
         viewModel.logHomeDetailProduct(it.itemName)
-        navigateToDetailProduct(it.id)
+        navigateToDetailProduct(0)
     }
 
     LaunchedEffect(key1 = Unit) {

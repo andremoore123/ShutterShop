@@ -1,11 +1,18 @@
 package com.id.data.product
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
+import com.id.data.product.response.mapToModel
 import com.id.domain.ext.Resource
 import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.ProductFilterParams
 import com.id.domain.product.ProductModel
 import com.id.domain.product.VarianceModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -15,50 +22,20 @@ import javax.inject.Inject
  * Email: andremoore431@gmail.com
  */
 class ProductRepository @Inject constructor(
-
+    private val apiService: ProductApiService
 ) : IProductRepository {
     override suspend fun fetchProducts(productFilterParams: ProductFilterParams?): Resource<List<ProductModel>> {
-        val dummyData = listOf(
-            ProductModel(
-                id = 3063,
-                itemName = "Michael O'Brien",
-                itemSold = "pericula",
-                itemPrice = "tincidunt",
-                itemRating = "ponderum",
-                itemSeller = "nostrum"
-            ),
-            ProductModel(
-                id = 3063,
-                itemName = "Michael O'Brien",
-                itemSold = "pericula",
-                itemPrice = "tincidunt",
-                itemRating = "ponderum",
-                itemSeller = "nostrum"
-            ),
-        )
-        return Resource.Success(dummyData)
+        return Resource.Success(listOf())
     }
 
-    override suspend fun searchProduct(query: String): Resource<List<ProductModel>> {
-        val dummyData = listOf(
-            ProductModel(
-                id = 3063,
-                itemName = "Michael O'Brien",
-                itemSold = "pericula",
-                itemPrice = "tincidunt",
-                itemRating = "ponderum",
-                itemSeller = "nostrum"
-            ),
-            ProductModel(
-                id = 3063,
-                itemName = "Michael O'Brien",
-                itemSold = "pericula",
-                itemPrice = "tincidunt",
-                itemRating = "ponderum",
-                itemSeller = "nostrum"
-            ),
-        )
-        return Resource.Success(dummyData)
+    override fun searchProduct(query: String): Flow<PagingData<ProductModel>> = Pager(
+        PagingConfig(10)
+    ) {
+        ProductPagingSource(apiService, parameter = ProductFilterParams(), query)
+    }.flow.map {
+        it.map { data ->
+            data.mapToModel()
+        }
     }
 
     override suspend fun fetchProductDetail(id: Int): Resource<ProductDetailModel> {

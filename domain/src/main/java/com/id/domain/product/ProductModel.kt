@@ -7,21 +7,23 @@ package com.id.domain.product
  * Email: andremoore431@gmail.com
  */
 data class ProductModel(
-    val id: Int,
+    val id: String,
     val itemName: String,
-    val itemSold: String,
-    val itemPrice: String,
+    val itemSold: Int,
+    val itemPrice: Int,
     val itemRating: String,
     val itemSeller: String,
+    val imageUrl: String,
 ) {
     companion object {
         val dummyData = ProductModel(
-            id = 2990,
+            id = "Sdfsdfdfs",
             itemName = "Angelina Hesdfjsdifjdsfisdfndrix",
-            itemSold = "5",
-            itemPrice = "230 000",
+            itemSold = 3,
+            itemPrice = 3443,
             itemRating = "3",
-            itemSeller = "noluisse"
+            itemSeller = "noluisse",
+            imageUrl = "dfsfsdf"
         )
     }
 }

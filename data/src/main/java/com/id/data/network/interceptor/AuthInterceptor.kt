@@ -24,7 +24,7 @@ class AuthInterceptor(
         }
 
         val token = runBlocking {
-            session.fetchUserToken().first()
+            session.fetchUserToken()
         }
         requestBuilder.addHeader("Authorization", "Bearer $token")
         return chain.proceed(requestBuilder.build())

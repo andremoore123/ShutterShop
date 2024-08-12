@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.0"
+coilCompose = "2.7.0"
 detektCompose = "0.4.8"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -9,6 +10,7 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
 composeBom = "2024.04.01"
+pagingRuntimeKtx = "3.3.2"
 roomRuntime = "2.6.1"
 uiTextGoogleFonts = "1.6.8"
 hiltWork = "1.2.0"
@@ -30,9 +32,12 @@ retrofitVer = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntimeKtx" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 detekt-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detektCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

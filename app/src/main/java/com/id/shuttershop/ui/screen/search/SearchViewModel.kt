@@ -3,14 +3,12 @@ package com.id.shuttershop.ui.screen.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductModel
-import com.id.shuttershop.utils.UiState
-import com.id.shuttershop.utils.handleUpdateUiState
-import com.id.shuttershop.utils.onError
-import com.id.shuttershop.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -28,24 +26,27 @@ class SearchViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     val searchValue = savedStateHandle.getStateFlow(SEARCH, "")
+    val messageValue = savedStateHandle.getStateFlow(MESSAGE, "")
 
-    private val _searchState = MutableStateFlow<UiState<List<ProductModel>>>(UiState.Initiate)
-    val searchState = _searchState.asStateFlow()
+    private val _searchData = MutableStateFlow<PagingData<ProductModel>>(PagingData.empty())
+    val searchData = _searchData.asStateFlow()
+
+    fun setMessageValue(value: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            savedStateHandle[MESSAGE] = value
+            delay(5_000)
+            savedStateHandle[MESSAGE] = ""
+        }
+    }
 
     fun fetchSearch(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            with(_searchState) {
-                handleUpdateUiState(UiState.Loading)
-                if (query.isNotEmpty()) {
-                    val response = productRepository.searchProduct(query)
-                    response.onSuccess {
-                        handleUpdateUiState(UiState.Success(it))
-                    }.onError {
-                        handleUpdateUiState(UiState.Error(it))
-                    }
-                } else {
-                    handleUpdateUiState(UiState.Initiate)
+            if (query.isNotEmpty()) {
+                productRepository.searchProduct(query = query).collect {
+                    _searchData.emit(it)
                 }
+            } else {
+                _searchData.emit(PagingData.empty())
             }
         }
     }
@@ -56,5 +57,6 @@ class SearchViewModel @Inject constructor(
 
     companion object {
         private const val SEARCH = "searchValue"
+        private const val MESSAGE = "messageValue"
     }
 }
