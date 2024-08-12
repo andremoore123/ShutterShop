@@ -1,5 +1,6 @@
 package com.id.domain.product
 
+import com.id.domain.ext.formatToRupiah
 import com.id.domain.wishlist.WishlistModel
 
 /**
@@ -18,8 +19,12 @@ data class ProductDetailModel(
     val productRating: String,
     val totalRating: String,
     val imageUrl: List<String>,
-    val productStore: String = "",
-)
+    val productStore: String,
+) {
+    fun getFormattedCurrency(): String {
+        return productPrice.formatToRupiah()
+    }
+}
 
 fun ProductDetailModel.toWishlist(selectedVariant: VarianceModel): WishlistModel {
     return WishlistModel(

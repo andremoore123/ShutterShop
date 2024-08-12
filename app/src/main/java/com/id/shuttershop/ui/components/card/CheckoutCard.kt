@@ -71,7 +71,7 @@ fun CheckoutCard(
             )
             Text(
                 modifier = Modifier.padding(top = 5.dp),
-                text = "${cartModel.itemPrice * cartModel.itemStock}",
+                text = cartModel.getFormattedCurrency(),
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontWeight = FontWeight.Bold
                 )

@@ -111,7 +111,7 @@ fun CartCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${cartModel.itemPrice * cartModel.itemStock}",
+                        text = cartModel.getFormattedCurrency(),
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontWeight = FontWeight.Bold
                         )

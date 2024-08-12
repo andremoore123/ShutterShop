@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.domain.cart.CartModel
+import com.id.domain.ext.formatToRupiah
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
@@ -81,7 +82,7 @@ fun CartScreen(
         productList = cartList,
         screenState = screenState,
         selectedCart = selectedCart,
-        totalPrice = totalPayment.toString()
+        totalPrice = totalPayment.formatToRupiah()
     )
 }
 

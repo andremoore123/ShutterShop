@@ -54,10 +54,10 @@ import kotlinx.coroutines.launch
 fun CheckoutScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
+    checkoutItems: List<CartModel>,
     navigateToPaymentStatus: () -> Unit,
     viewModel: CheckoutViewModel = hiltViewModel()
 ) {
-    val productsList by viewModel.cartList.collectAsState()
     val paymentMethods by viewModel.paymentMethods.collectAsState()
     val isBottomShowValue by viewModel.isBottomShowValue.collectAsState()
     val selectedPaymentValue by viewModel.selectedPaymentValue.collectAsState()
@@ -91,7 +91,7 @@ fun CheckoutScreen(
 
             is UiState.Success -> {
                 showSnackBar("Success")
-                navigateToPaymentStatus()
+//                navigateToPaymentStatus()
             }
 
             else -> {}
@@ -106,7 +106,7 @@ fun CheckoutScreen(
     ) { innerPadding ->
         CheckoutContent(
             modifier = Modifier.padding(innerPadding),
-            productsList = productsList,
+            checkoutItems = checkoutItems,
             paymentMethods = paymentMethods,
             isBottomSheetShow = isBottomShowValue,
             selectedPaymentMethod = selectedPaymentValue,
@@ -123,7 +123,7 @@ internal fun CheckoutContent(
     modifier: Modifier = Modifier,
     isBottomSheetShow: Boolean,
     selectedPaymentMethod: PaymentModel?,
-    productsList: List<CartModel>,
+    checkoutItems: List<CartModel>,
     paymentMethods: List<PaymentModel>,
     checkoutEvent: CheckoutEvent,
     onBackClick: () -> Unit = {},
@@ -151,7 +151,7 @@ internal fun CheckoutContent(
                     modifier = Modifier.padding(16.dp)
                 )
             }
-            items(productsList) {
+            items(checkoutItems) {
                 CheckoutCard(
                     cartModel = it, modifier = Modifier
                         .padding(horizontal = 16.dp)
@@ -176,10 +176,10 @@ internal fun CheckoutContent(
         }
         CheckoutBottom(
             modifier = Modifier.align(Alignment.BottomCenter),
-            totalPrice = checkoutEvent.calculatePrice(productsList),
+            totalPrice = checkoutEvent.calculatePrice(checkoutItems),
             enabled = selectedPaymentMethod != null,
             onPayClick = {
-                checkoutEvent.onPaymentClick(productsList, selectedPaymentMethod!!)
+                checkoutEvent.onPaymentClick(checkoutItems, selectedPaymentMethod!!)
             }
         )
     }
@@ -232,7 +232,7 @@ internal fun CheckoutScreenPreview() {
             paymentMethods = listOf(),
             isBottomSheetShow = false,
 
-            productsList = listOf(
+            checkoutItems = listOf(
                 CartModel(
                     itemId = 2626,
                     itemName = "Bertie Conway",
