@@ -29,7 +29,17 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             LaunchpadScreen(mainNavController = navController)
         }
         composable(MainNavRoute.SEARCH_SCREEN.route) {
-            SearchScreen(navigateBack = { navController.popBackStack() })
+            SearchScreen(
+                navigateBack = { navController.popBackStack() },
+                navigateToDetail = {
+                    navController.navigate(
+                        MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
+                            USER_WITH_BRACKET, it
+                        )
+                    )
+
+                }
+            )
         }
         composable(MainNavRoute.NOTIFICATION_SCREEN.route) {
             NotificationScreen(onBackClick = {navController.popBackStack()})

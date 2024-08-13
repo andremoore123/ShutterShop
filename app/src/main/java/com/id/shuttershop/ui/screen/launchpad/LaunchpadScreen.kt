@@ -85,7 +85,7 @@ fun LaunchpadScreen(
                     navigateToDetailProduct = {
                         mainNavController.navigate(
                             MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
-                                USER_WITH_BRACKET, it.toString()
+                                USER_WITH_BRACKET, it
                             )
                         )
                     },

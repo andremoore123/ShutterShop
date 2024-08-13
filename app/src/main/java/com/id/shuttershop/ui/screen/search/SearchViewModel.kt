@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +43,7 @@ class SearchViewModel @Inject constructor(
     fun fetchSearch(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             if (query.isNotEmpty()) {
-                productRepository.searchProduct(query = query).collect {
+                productRepository.searchProduct(query = query).cachedIn(viewModelScope).collect {
                     _searchData.emit(it)
                 }
             } else {
