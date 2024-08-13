@@ -35,7 +35,7 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             NotificationScreen(onBackClick = {navController.popBackStack()})
         }
         composable(MainNavRoute.PRODUCT_DETAIL_SCREEN.route) { navBackStackEntry ->
-            val productId = navBackStackEntry.arguments?.getInt(USER_ID)
+            val productId = navBackStackEntry.arguments?.getString(USER_ID)
             productId?.let {
                 DetailProductScreen(
                     idProduct = it,

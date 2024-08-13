@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.id.domain.cart.CartModel
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
@@ -76,7 +77,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailProductScreen(
     modifier: Modifier = Modifier,
-    idProduct: Int,
+    idProduct: String,
     onCheckoutClick: (CartModel) -> Unit,
     viewModel: ProductDetailViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {},
@@ -385,10 +386,10 @@ internal fun DetailImages(
 
     Box(modifier = modifier) {
         HorizontalPager(state = pagerState) {
-            Box(
-                modifier = Modifier
-                    .aspectRatio(1.4f)
-                    .background(Color.Black)
+            AsyncImage(
+                modifier = Modifier.aspectRatio(1.4f),
+                model = imageUrls[it],
+                contentDescription = null
             )
         }
         Row(
@@ -424,9 +425,8 @@ internal fun DetailProductScreenPreview() {
             productName = "Ira Jenkins",
             productDesc = "phasellus",
             productVariance = listOf(
-                VarianceModel(id = 4447, title = "a"), VarianceModel(
-                    id = 9198,
-                    title = "mea"
+                VarianceModel(id = 4447, title = "a", additionalPrice = 0), VarianceModel(
+                    id = 9198, title = "mea", additionalPrice = 0
                 )
             ), productPrice = 230232323,
             productSold = "23",

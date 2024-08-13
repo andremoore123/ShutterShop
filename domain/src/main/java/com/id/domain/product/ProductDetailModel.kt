@@ -20,6 +20,7 @@ data class ProductDetailModel(
     val totalRating: String,
     val imageUrl: List<String>,
     val productStore: String,
+    val productStock: Int = 0
 ) {
     fun getFormattedCurrency(): String {
         return productPrice.formatToRupiah()

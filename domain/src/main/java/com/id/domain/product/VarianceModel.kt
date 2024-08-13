@@ -9,4 +9,5 @@ package com.id.domain.product
 data class VarianceModel(
     val id: Int,
     val title: String,
+    val additionalPrice: Int = 0,
 )

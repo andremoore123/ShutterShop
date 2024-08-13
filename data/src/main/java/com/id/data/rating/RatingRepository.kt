@@ -14,7 +14,7 @@ import javax.inject.Inject
 class RatingRepository @Inject constructor(
 
 ) : IRatingRepository {
-    override suspend fun fetchRatings(productId: Int): Resource<List<RatingModel>> {
+    override suspend fun fetchRatings(productId: String): Resource<List<RatingModel>> {
         return Resource.Success(RatingModel.dummyList)
     }
 
