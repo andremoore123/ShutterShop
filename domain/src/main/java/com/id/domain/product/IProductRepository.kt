@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.Flow
  * Email: andremoore431@gmail.com
  */
 interface IProductRepository {
-    suspend fun fetchProducts(productFilterParams: ProductFilterParams? = null): Resource<List<ProductModel>>
+
+    fun fetchProducts(productFilterParams: ProductFilterParams): Flow<PagingData<ProductModel>>
 
     fun searchProduct(query: String): Flow<PagingData<ProductModel>>
 

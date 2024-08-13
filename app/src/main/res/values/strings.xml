@@ -57,4 +57,9 @@
     <string name="text_choose_variance">Choose Variant</string>
     <string name="text_add_cart_success">Item Added to Cart</string>
     <string name="text_version_not_supported">Your Android Version \nDoesn\'t Support This Feature</string>
+    <string name="text_sort">Sort</string>
+    <string name="text_price">Price</string>
+    <string name="text_lowest">Lowest</string>
+    <string name="text_highest">Highest</string>
+    <string name="text_show_product">Show Products</string>
 </resources>

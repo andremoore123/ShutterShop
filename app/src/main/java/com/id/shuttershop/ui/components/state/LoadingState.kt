@@ -9,7 +9,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 
@@ -23,9 +26,21 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
 @Composable
 fun LoadingState(
     modifier: Modifier = Modifier,
+    parentPadding: Dp = 30.dp
 ) {
     Box(
         modifier = modifier
+            .layout { measurable, constraints ->
+                val placeable = measurable.measure(
+                    constraints.copy(
+                        maxWidth = constraints.maxWidth + 2 * parentPadding.roundToPx(),
+                        maxHeight = constraints.maxHeight + 2 * parentPadding.roundToPx()
+                    ),
+                )
+                layout(width = constraints.maxWidth, height = constraints.maxHeight) {
+                    placeable.place(-parentPadding.roundToPx(), -parentPadding.roundToPx())
+                }
+            }
             .fillMaxSize()
             .zIndex(1f)
             .clickable(enabled = false, onClick = {})

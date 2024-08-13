@@ -57,4 +57,9 @@
     <string name="text_choose_variance">Pilih Jenis</string>
     <string name="text_add_cart_success">Barang Telah Ditambahkan ke Keranjang</string>
     <string name="text_version_not_supported">Versi Android Kamu \nTidak Mendukung Fitur Ini</string>
+    <string name="text_sort">Urutkan</string>
+    <string name="text_price">Harga</string>
+    <string name="text_lowest">Terendah</string>
+    <string name="text_highest">Tertinggi</string>
+    <string name="text_show_product">Tampilkan Produk</string>
 </resources>

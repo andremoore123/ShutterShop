@@ -2,7 +2,9 @@ package com.id.shuttershop.ui.screen.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,8 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
@@ -34,18 +34,25 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import com.id.domain.product.ProductFilterParams
 import com.id.domain.product.ProductModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.SearchTextField
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
 import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
+import com.id.shuttershop.ui.components.state.LoadingState
 import com.id.shuttershop.ui.components.topbar.HomeTopBar
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
 import com.id.shuttershop.ui.theme.ShutterShopTheme
-import com.id.shuttershop.utils.UiState
-import com.id.shuttershop.utils.onSuccess
+import kotlinx.coroutines.flow.flowOf
 
 /**
  * Created by: andreputras.
@@ -60,38 +67,51 @@ fun HomeScreen(
     navigateToSearch: () -> Unit = {},
     navigateToNotification: () -> Unit,
     navigateToCart: () -> Unit,
-    navigateToDetailProduct: (Int) -> Unit,
+    navigateToDetailProduct: (String) -> Unit,
 ) {
     val currentLayoutType by viewModel.isColumnLayout.collectAsState()
-    val productState by viewModel.productUiState.collectAsState()
+    val products = viewModel.products.collectAsLazyPagingItems()
     val userState by viewModel.userData.collectAsState()
+    val isBottomSheetShow by viewModel.isBottomShowValue.collectAsState()
+    val productFilterParams by viewModel.productFilter.collectAsState()
 
     val navigateToDetail: (ProductModel) -> Unit = {
         viewModel.logHomeDetailProduct(it.itemName)
-        navigateToDetailProduct(0)
+        navigateToDetailProduct(it.id)
+    }
+
+    LaunchedEffect(key1 = productFilterParams, key2 = Unit) {
+        viewModel.fetchProducts(productFilterParams)
     }
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.fetchProducts()
         viewModel.fetchUserData()
     }
+
+    val homeEvent = HomeEvent(
+        navigateToSearch = navigateToSearch,
+        navigateToCart = navigateToCart,
+        navigateToNotification = navigateToNotification,
+        navigateToDetail = navigateToDetail,
+        onLayoutChange = viewModel::setLayoutType,
+        changeBottomSheetValue = viewModel::modifySheetValue,
+        onShowProduct = viewModel::onFilterChange
+    )
 
     HomeContent(
         modifier = modifier.padding(horizontal = 16.dp),
         currentLayoutType = currentLayoutType,
-        productState = productState,
-        onLayoutChange = viewModel::setLayoutType,
         userName = userState.name,
         userImageUrl = userState.email,
-        navigateToDetail = navigateToDetail,
         logEvent = HomeLogEvent(
             logSearchButton = viewModel::logSearchButton,
             logNotificationButton = viewModel::logNotificationButton,
             logCartButton = viewModel::logCartButton
         ),
-        navigateToSearch = navigateToSearch,
-        navigateToCart = navigateToCart,
-        navigateToNotification = navigateToNotification,
+        homeEvent = homeEvent,
+        isBottomSheetShow = isBottomSheetShow,
+        products = products,
+        filterParams = productFilterParams
     )
 }
 
@@ -101,62 +121,89 @@ internal fun HomeContent(
     currentLayoutType: String,
     userName: String,
     userImageUrl: String,
-    productState: UiState<List<ProductModel>>,
-    onLayoutChange: (String) -> Unit,
-    navigateToDetail: (ProductModel) -> Unit,
-    navigateToSearch: () -> Unit,
-    navigateToNotification: () -> Unit,
-    navigateToCart: () -> Unit,
+    filterParams: ProductFilterParams,
+    products: LazyPagingItems<ProductModel>,
+    isBottomSheetShow: Boolean,
+    homeEvent: HomeEvent,
     logEvent: HomeLogEvent,
 ) {
+    if (isBottomSheetShow) {
+        FilterBottomSheet(
+            onShowProduct = homeEvent.onShowProduct,
+            changeBottomSheetValue = homeEvent.changeBottomSheetValue,
+            filterParams = filterParams
+        )
+    }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         HomeHeader(
             currentLayoutType = currentLayoutType,
-            onLayoutChange = onLayoutChange,
+            onLayoutChange = homeEvent.onLayoutChange,
             userName = userName,
             userImageUrl = userImageUrl,
             logEvent = logEvent,
-            showBottomSheet = {},
-            navigateToSearch = navigateToSearch,
-            navigateToNotification = navigateToNotification,
-            navigateToCart = navigateToCart
+            showBottomSheet = { homeEvent.changeBottomSheetValue(true) },
+            navigateToSearch = homeEvent.navigateToSearch,
+            navigateToNotification = homeEvent.navigateToNotification,
+            navigateToCart = homeEvent.navigateToCart
         )
-        productState.onSuccess {
+
+        Box {
+            val isLoading =
+                products.loadState.append is LoadState.Loading || products.loadState.refresh is LoadState.Loading
+            if (isLoading) {
+                LoadingState()
+            }
             when (currentLayoutType) {
                 GRID_LAYOUT -> {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(bottom = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        items(it) {
-                            HomeCard(
-                                modifier = Modifier.clickable {
-                                    navigateToDetail(it)
-                                },
-                                productModel = it,
-                                cardOrientation = HomeCardOrientation.GRID
-                            )
-                        }
+                        items(
+                            count = products.itemCount,
+                            key = products.itemKey(),
+                            contentType = { products[it] },
+                            itemContent = { index ->
+                                products[index]?.let {
+                                    HomeCard(
+                                        modifier = Modifier.clickable {
+                                            homeEvent.navigateToDetail(it)
+                                        },
+                                        productModel = it,
+                                        cardOrientation = HomeCardOrientation.GRID
+                                    )
+                                }
+                            }
+                        )
                     }
                 }
 
                 COLUMN_LAYOUT -> {
                     LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(bottom = 16.dp)
                     ) {
-                        items(it) {
-                            HomeCard(
-                                modifier = Modifier.clickable {
-                                    navigateToDetail(it)
-                                },
-                                productModel = it,
-                                cardOrientation = HomeCardOrientation.COLUMN
-                            )
-                        }
+                        items(
+                            count = products.itemCount,
+                            key = products.itemKey(),
+                            contentType = { products[it] },
+                            itemContent = { index ->
+                                products[index]?.let {
+                                    HomeCard(
+                                        modifier = Modifier.clickable {
+                                            homeEvent.navigateToDetail(it)
+                                        },
+                                        productModel = it,
+                                        cardOrientation = HomeCardOrientation.COLUMN
+                                    )
+                                }
+                            }
+                        )
                     }
                 }
             }
@@ -246,20 +293,31 @@ internal fun ShowHomeScreenPreview() {
     ShutterShopTheme {
         HomeContent(
             currentLayoutType = HomeViewModel.GRID_LAYOUT,
-            productState = UiState.Success(
-                listOf(
-                    ProductModel.dummyData,
-                    ProductModel.dummyData
-                )
-            ),
-            onLayoutChange = {},
             userName = "",
             userImageUrl = "",
-            navigateToDetail = {},
             logEvent = HomeLogEvent(),
-            navigateToSearch = {},
-            navigateToCart = {},
-            navigateToNotification = {},
+            homeEvent = HomeEvent(
+                onLayoutChange = {},
+                navigateToDetail = {},
+                navigateToSearch = {},
+                navigateToNotification = {},
+                navigateToCart = {},
+                changeBottomSheetValue = {},
+                onShowProduct = {}
+            ),
+            isBottomSheetShow = false,
+            filterParams = ProductFilterParams(),
+            products = flowOf(
+                PagingData.from(
+                    listOf<ProductModel>(),
+                    sourceLoadStates =
+                    LoadStates(
+                        refresh = LoadState.NotLoading(false),
+                        append = LoadState.NotLoading(false),
+                        prepend = LoadState.NotLoading(false),
+                    ),
+                ),
+            ).collectAsLazyPagingItems(),
         )
     }
 }

@@ -24,9 +24,13 @@ import javax.inject.Inject
 class ProductRepository @Inject constructor(
     private val apiService: ProductApiService
 ) : IProductRepository {
-    override suspend fun fetchProducts(productFilterParams: ProductFilterParams?): Resource<List<ProductModel>> {
-        return Resource.Success(listOf())
-    }
+
+    override fun fetchProducts(productFilterParams: ProductFilterParams): Flow<PagingData<ProductModel>> =
+        Pager(
+            PagingConfig(10)
+        ) {
+            ProductPagingSource(apiService, parameter = productFilterParams, "")
+        }.flow.map { it.map { data -> data.mapToModel() } }
 
     override fun searchProduct(query: String): Flow<PagingData<ProductModel>> = Pager(
         PagingConfig(10)
