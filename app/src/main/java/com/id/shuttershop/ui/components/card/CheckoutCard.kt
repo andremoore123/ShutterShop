@@ -90,7 +90,8 @@ internal fun CheckoutCardPreview() {
                 itemName = "Perfect Camera",
                 itemVariantName = "16GB, 1TB SSD",
                 itemStock = 1,
-                itemCount = 1
+                itemCount = 1,
+                itemPrice = 0
             )
         )
     }

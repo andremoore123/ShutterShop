@@ -26,7 +26,8 @@ class CartRepository @Inject constructor(
                 itemName = "",
                 itemVariantName = "",
                 itemStock = 0,
-                itemCount = 0
+                itemCount = 0,
+                itemPrice = 0
             )
         )
     }

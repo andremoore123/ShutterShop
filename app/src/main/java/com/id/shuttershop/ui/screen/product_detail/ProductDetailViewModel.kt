@@ -127,7 +127,8 @@ class ProductDetailViewModel @Inject constructor(
             val dataCart = CartModel(
                 itemId = data.id,
                 itemName = data.productName,
-                itemVariantName = selectedVariant.title
+                itemVariantName = selectedVariant.title,
+                itemPrice = data.productPrice + selectedVariant.additionalPrice
             )
             addToCartUseCase.invoke(dataCart)
         }

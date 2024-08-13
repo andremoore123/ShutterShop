@@ -2,6 +2,7 @@ package com.id.shuttershop.ui.screen.cart
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,9 +49,10 @@ import com.id.shuttershop.utils.onSuccess
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
+    navigateToCheckout: (List<CartModel>) -> Unit,
     viewModel: CartViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {},
-    navigateToCheckout: (List<CartModel>) -> Unit,
+    navigateToProductDetail: (String) -> Unit = {},
 ) {
     val selectedCart by viewModel.selectedCart.collectAsState()
     val screenState by viewModel.screenState.collectAsState()
@@ -73,7 +75,8 @@ fun CartScreen(
         onSelectCart = viewModel::onSelectCart,
         onSelectAllCart = viewModel::onSelectAllClick,
         removeCarts = viewModel::removeCarts,
-        isAllChartSelected = viewModel::isAllCartSelected
+        isAllChartSelected = viewModel::isAllCartSelected,
+        navigateToProductDetail = navigateToProductDetail
     )
     CartContent(
         modifier = modifier,
@@ -141,6 +144,9 @@ internal fun CartContent(
                 ) {
                     items(productList) { cart ->
                         CartCard(
+                            modifier = Modifier.clickable {
+                                cartEvent.navigateToProductDetail(cart.itemId)
+                            },
                             cartModel = cart,
                             isSelected = selectedCart.any { cart.cartId == it },
                             onCheckClick = { cartEvent.onSelectCart.invoke(it, cart) },
@@ -211,7 +217,9 @@ internal fun CartScreenPreview() {
                 onCheckoutClick = {},
                 onSelectCart = { _, _ -> },
                 onSelectAllCart = {},
-                removeCarts = {}, isAllChartSelected = { false }),
+                removeCarts = {},
+                isAllChartSelected = { false },
+                navigateToProductDetail = {}),
             selectedCart = listOf(),
             productList = listOf(
                 CartModel(

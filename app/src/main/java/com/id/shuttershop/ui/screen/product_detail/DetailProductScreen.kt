@@ -61,9 +61,11 @@ import com.id.domain.rating.RatingModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
+import com.id.shuttershop.ui.components.state.LoadingState
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
 import kotlinx.coroutines.launch
 
@@ -227,6 +229,9 @@ internal fun DetailProductContent(
                 }
             }
         }
+            .onLoading {
+                LoadingState()
+            }
     }
 }
 
@@ -247,7 +252,7 @@ internal fun DetailTitle(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = detailModel.getFormattedCurrency(),
+                text = detailModel.getFormattedCurrency(selectedVariant),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.weight(1f))

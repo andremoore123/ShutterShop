@@ -16,4 +16,5 @@ data class CartEvent(
     val onSelectAllCart: (Boolean) -> Unit,
     val removeCarts: (List<Int>) -> Unit,
     val isAllChartSelected: () -> Boolean?,
+    val navigateToProductDetail: (String) -> Unit,
 )

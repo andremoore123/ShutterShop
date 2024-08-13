@@ -22,8 +22,8 @@ data class ProductDetailModel(
     val productStore: String,
     val productStock: Int = 0
 ) {
-    fun getFormattedCurrency(): String {
-        return productPrice.formatToRupiah()
+    fun getFormattedCurrency(selectedVariant: VarianceModel?): String {
+        return (productPrice + (selectedVariant?.additionalPrice ?: 0)).formatToRupiah()
     }
 }
 
@@ -33,7 +33,7 @@ fun ProductDetailModel.toWishlist(selectedVariant: VarianceModel): WishlistModel
         itemId = id,
         itemName = productName,
         itemSold = productSold,
-        itemPrice = productPrice,
+        itemPrice = productPrice + selectedVariant.additionalPrice,
         itemVariantName = selectedVariant.title,
         itemRating = productRating,
         itemSeller = productStore,

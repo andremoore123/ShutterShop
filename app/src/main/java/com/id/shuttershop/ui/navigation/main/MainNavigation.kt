@@ -32,12 +32,7 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             SearchScreen(
                 navigateBack = { navController.popBackStack() },
                 navigateToDetail = {
-                    navController.navigate(
-                        MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
-                            USER_WITH_BRACKET, it
-                        )
-                    )
-
+                    navigateToCartDetail(navController, it)
                 }
             )
         }
@@ -63,6 +58,9 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
                 navigateToCheckout = { carts: List<CartModel> ->
                     navController.navigate(route = MainNavRoute.CHECKOUT_SCREEN.route)
                     navBackStackEntry.savedStateHandle[CHECKOUT_DATA] = ArrayList(carts)
+                },
+                navigateToProductDetail = {
+                    navigateToCartDetail(navController, it)
                 }
             )
         }
@@ -80,4 +78,12 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             )
         }
     }
+}
+
+fun navigateToCartDetail(navController: NavController, productId: String) {
+    navController.navigate(
+        MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
+            USER_WITH_BRACKET, productId
+        )
+    )
 }
