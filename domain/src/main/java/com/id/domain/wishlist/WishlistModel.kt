@@ -12,7 +12,7 @@ package com.id.domain.wishlist
  */
 data class WishlistModel(
     val wishlistId: Int? = null,
-    val itemId: Int,
+    val itemId: String,
     val itemName: String,
     val itemSold: String,
     val itemVariantName: String = "",
@@ -23,7 +23,7 @@ data class WishlistModel(
 ) {
     companion object {
         val dummyData = WishlistModel(
-            itemId = 2990,
+            itemId = "2990",
             itemName = "Angelina Hesdfjsdifjdsfisdfndrix",
             itemSold = "5",
             itemPrice = 0,

@@ -15,7 +15,7 @@ import com.id.domain.cart.CartModel
 data class CartEntity(
     @PrimaryKey(autoGenerate = true)
     val cartId: Int? = null,
-    val itemId: Int,
+    val itemId: String,
     val itemName: String,
     val itemVariantName: String,
     val itemCount: Int = 1

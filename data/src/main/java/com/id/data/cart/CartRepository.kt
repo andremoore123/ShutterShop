@@ -19,10 +19,10 @@ class CartRepository @Inject constructor(
     override fun fetchCarts(): Flow<List<CartModel>> =
         cartDao.fetchCarts().map { cartEntities -> cartEntities.map { it.toModel() } }
 
-    override suspend fun fetchCartFromNetwork(id: Int): Resource<CartModel> {
+    override suspend fun fetchCartFromNetwork(id: String): Resource<CartModel> {
         return Resource.Success(
             CartModel(
-                itemId = 0,
+                itemId = "",
                 itemName = "",
                 itemVariantName = "",
                 itemStock = 0,
@@ -37,7 +37,7 @@ class CartRepository @Inject constructor(
 
     override suspend fun findCartById(id: Int): CartModel? = cartDao.findCartById(id)?.toModel()
 
-    override suspend fun findCartByItemIdAndVariant(itemId: Int, variantName: String): CartModel? =
+    override suspend fun findCartByItemIdAndVariant(itemId: String, variantName: String): CartModel? =
         cartDao.findCartByItemIdAndVariant(itemId, variantName)?.toModel()
 
     override suspend fun deleteCarts(vararg data: CartModel) {

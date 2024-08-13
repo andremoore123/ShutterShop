@@ -31,7 +31,7 @@ interface WishlistDao {
     suspend fun findWishlistByName(name: String): WishlistEntity?
 
     @Query("SELECT * FROM WISHLIST WHERE productId = :productId AND itemVariantName = :variantName")
-    suspend fun findWishlistByIdAndVariant(productId: Int, variantName: String): WishlistEntity?
+    suspend fun findWishlistByIdAndVariant(productId: String, variantName: String): WishlistEntity?
 
     @Query("SELECT * FROM wishlist WHERE productId = :id")
     suspend fun findWishlistById(id: Int): WishlistEntity?

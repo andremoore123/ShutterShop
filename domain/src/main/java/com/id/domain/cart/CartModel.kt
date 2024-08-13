@@ -14,7 +14,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CartModel(
     val cartId: Int? = null,
-    val itemId: Int,
+    val itemId: String,
     val itemName: String,
     val itemVariantName: String = "",
     val itemStock: Int = 5,

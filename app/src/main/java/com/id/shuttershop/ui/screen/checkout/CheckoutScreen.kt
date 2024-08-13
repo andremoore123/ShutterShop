@@ -234,7 +234,7 @@ internal fun CheckoutScreenPreview() {
 
             checkoutItems = listOf(
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 1,
@@ -242,7 +242,7 @@ internal fun CheckoutScreenPreview() {
                     itemPrice = 1333
                 ),
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 4,
@@ -250,7 +250,7 @@ internal fun CheckoutScreenPreview() {
                     itemPrice = 1333
                 ),
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 0,
@@ -258,7 +258,7 @@ internal fun CheckoutScreenPreview() {
                     itemPrice = 1333
                 ),
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 2492,
@@ -266,7 +266,7 @@ internal fun CheckoutScreenPreview() {
                     itemPrice = 1333
                 ),
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 2492,
@@ -274,7 +274,7 @@ internal fun CheckoutScreenPreview() {
                     itemPrice = 1333
                 ),
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 4,
@@ -282,7 +282,7 @@ internal fun CheckoutScreenPreview() {
                     itemPrice = 1333
                 ),
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 0,
@@ -290,7 +290,7 @@ internal fun CheckoutScreenPreview() {
                     itemPrice = 1333
                 ),
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 2492,
@@ -298,7 +298,7 @@ internal fun CheckoutScreenPreview() {
                     itemPrice = 1333
                 ),
                 CartModel(
-                    itemId = 2626,
+                    itemId = "2626",
                     itemName = "Bertie Conway",
                     itemVariantName = "eius",
                     itemStock = 2492,

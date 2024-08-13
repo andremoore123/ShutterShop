@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.Flow
 interface ICartRepository {
     fun fetchCarts(): Flow<List<CartModel>>
 
-    suspend fun fetchCartFromNetwork(id: Int): Resource<CartModel>
+    suspend fun fetchCartFromNetwork(id: String): Resource<CartModel>
 
     suspend fun insertCart(data: CartModel)
     suspend fun deleteCart(data: CartModel)
     suspend fun findCartById(id: Int): CartModel?
-    suspend fun findCartByItemIdAndVariant(itemId: Int, variantName: String): CartModel?
+    suspend fun findCartByItemIdAndVariant(itemId: String, variantName: String): CartModel?
     suspend fun deleteCarts(vararg data: CartModel)
 
     suspend fun updateCart(data: CartModel)

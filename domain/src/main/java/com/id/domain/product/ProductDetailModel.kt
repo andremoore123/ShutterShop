@@ -10,7 +10,7 @@ import com.id.domain.wishlist.WishlistModel
  * Email: andremoore431@gmail.com
  */
 data class ProductDetailModel(
-    val id: Int,
+    val id: String,
     val productName: String,
     val productDesc: String,
     val productVariance: List<VarianceModel>,

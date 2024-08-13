@@ -181,7 +181,7 @@ internal fun CartCardPreview() {
     ShutterShopTheme {
         CartCard(
             onCheckClick = {}, cartModel = CartModel(
-                itemId = 0,
+                itemId = "",
                 itemName = "Perfect Camera",
                 itemVariantName = "16GB, 1TB SSD",
                 itemStock = 1,

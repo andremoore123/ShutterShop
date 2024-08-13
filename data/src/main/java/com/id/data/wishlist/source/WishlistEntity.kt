@@ -14,7 +14,7 @@ import com.id.domain.wishlist.WishlistModel
 data class WishlistEntity(
     @PrimaryKey(autoGenerate = true)
     val wishlistId: Int? = null,
-    val productId: Int,
+    val productId: String,
     val itemName: String,
     val itemSold: String,
     val itemPrice: Int,

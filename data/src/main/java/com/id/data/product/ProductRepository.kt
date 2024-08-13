@@ -44,7 +44,7 @@ class ProductRepository @Inject constructor(
 
     override suspend fun fetchProductDetail(id: Int): Resource<ProductDetailModel> {
         val dummyValue = ProductDetailModel(
-            id = 5797,
+            id = "5797",
             productName = "Macbook",
             productDesc = "Loremipsdfudjfsdfndsf",
             productVariance = listOf(

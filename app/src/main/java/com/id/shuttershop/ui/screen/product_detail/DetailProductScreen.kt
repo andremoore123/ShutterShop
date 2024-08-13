@@ -420,7 +420,7 @@ internal fun DetailImages(
 internal fun DetailProductScreenPreview() {
     ShutterShopTheme {
         val dummyData = ProductDetailModel(
-            id = 8569,
+            id = "8569",
             productName = "Ira Jenkins",
             productDesc = "phasellus",
             productVariance = listOf(
