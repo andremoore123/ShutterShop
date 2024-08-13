@@ -45,4 +45,7 @@ dependencies {
     // hilt
     api(libs.hilt.android)
     api(libs.androidx.hilt.work)
+
+    api(libs.androidx.paging.runtime.ktx)
+    api(libs.androidx.paging.compose)
 }

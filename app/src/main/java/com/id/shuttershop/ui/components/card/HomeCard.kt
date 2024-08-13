@@ -1,6 +1,5 @@
-package com.id.shuttershop.ui.components.card;
+package com.id.shuttershop.ui.components.card
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,11 +21,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.id.domain.ext.formatToRupiah
 import com.id.domain.product.ProductModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.theme.ShutterShopTheme
@@ -62,14 +63,16 @@ fun HomeCard(
             ) {
                 Column {
                     Box(modifier = Modifier, contentAlignment = Alignment.TopEnd) {
-                        Box(
+                        AsyncImage(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(170.dp)
                                 .clip(
                                     RoundedCornerShape(16.dp)
-                                )
-                                .background(Color.Black)
+                                ),
+                            contentScale = ContentScale.FillBounds,
+                            model = productModel.imageUrl,
+                            contentDescription = productModel.itemName
                         )
                     }
                     Column(
@@ -99,11 +102,13 @@ fun HomeCard(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
+                AsyncImage(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color.Black)
-                        .size(130.dp)
+                        .size(130.dp),
+                    contentScale = ContentScale.FillBounds,
+                    model = productModel.imageUrl,
+                    contentDescription = productModel.itemName
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -132,7 +137,8 @@ internal fun ItemText(
     ) {
         Text(text = productModel.itemName, style = MaterialTheme.typography.bodyMedium)
         Text(
-            text = productModel.itemPrice, style = MaterialTheme.typography.labelLarge.copy(
+            text = productModel.itemPrice.formatToRupiah(),
+            style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.Bold
             )
         )

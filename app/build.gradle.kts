@@ -151,4 +151,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     kapt(libs.androidx.hilt.compiler)
     kapt(libs.hilt.android.compiler)
+
+    // COIL
+    implementation(libs.coil.compose)
 }

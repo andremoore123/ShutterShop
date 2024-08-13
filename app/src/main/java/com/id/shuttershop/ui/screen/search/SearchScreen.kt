@@ -2,18 +2,22 @@ package com.id.shuttershop.ui.screen.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,17 +25,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.id.domain.product.ProductModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.SearchTextField
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
 import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
+import com.id.shuttershop.ui.components.state.LoadingState
 import com.id.shuttershop.ui.theme.ShutterShopTheme
-import com.id.shuttershop.utils.UiState
-import com.id.shuttershop.utils.onSuccess
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 /**
  * Created by: andre.
@@ -45,11 +55,13 @@ fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
     navigateBack: () -> Unit = {},
-    navigateToDetail: (Int) -> Unit = {},
+    navigateToDetail: (String) -> Unit = {},
 ) {
-    val searchState by viewModel.searchState.collectAsState()
+    val searchData = viewModel.searchData.collectAsLazyPagingItems()
     val searchValue by viewModel.searchValue.collectAsState()
+    val messageValue by viewModel.messageValue.collectAsState()
     val coroutine = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = searchValue) {
         delay(500)
@@ -57,23 +69,42 @@ fun SearchScreen(
         coroutine.coroutineContext.cancel()
     }
 
-    SearchContent(
-        modifier = modifier.padding(horizontal = 16.dp),
-        searchState = searchState,
-        searchValue = searchValue,
-        onSearchValueChange = viewModel::onSearchValueChange,
-        onProductClick = navigateToDetail,
-        onNavigateBack = navigateBack
-    )
+    LaunchedEffect(key1 = messageValue) {
+        if (messageValue.isNotEmpty()) {
+            coroutine.launch {
+                snackBarHostState.showSnackbar(messageValue)
+            }
+        }
+    }
+
+    Scaffold(
+        modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        }
+    ) { innerPadding ->
+        SearchContent(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .padding(innerPadding),
+            searchState = searchData,
+            searchValue = searchValue,
+            onSearchValueChange = viewModel::onSearchValueChange,
+            onProductClick = navigateToDetail,
+            onNavigateBack = navigateBack,
+            onMessageChange = viewModel::setMessageValue
+        )
+    }
 }
 
 @Composable
 internal fun SearchContent(
     modifier: Modifier = Modifier,
-    searchState: UiState<List<ProductModel>>,
+    searchState: LazyPagingItems<ProductModel>,
     searchValue: String,
     onSearchValueChange: (String) -> Unit,
-    onProductClick: (Int) -> Unit,
+    onMessageChange: (String) -> Unit,
+    onProductClick: (String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     Column(modifier = modifier) {
@@ -95,17 +126,28 @@ internal fun SearchContent(
                 enabled = true
             )
         }
-        searchState.onSuccess {
+        val isLoading =
+            searchState.loadState.refresh is LoadState.Loading || searchState.loadState.append is LoadState.Loading
+        val isError = searchState.loadState.refresh is LoadState.Error
+        Box(modifier = Modifier) {
+            if (isLoading && isError.not()) {
+                LoadingState()
+            }
+            if (isError && isLoading.not()) {
+                onMessageChange((searchState.loadState.refresh as LoadState.Error).error.message.toString())
+            }
             LazyColumn(
                 modifier = Modifier.padding(top = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(it) {
-                    HomeCard(
-                        modifier = Modifier.clickable { onProductClick(it.id) },
-                        productModel = it,
-                        cardOrientation = HomeCardOrientation.COLUMN
-                    )
+                items(searchState.itemCount) { index ->
+                    searchState[index]?.let {
+                        HomeCard(
+                            modifier = Modifier.clickable { onProductClick(it.id) },
+                            productModel = it,
+                            cardOrientation = HomeCardOrientation.COLUMN
+                        )
+                    }
                 }
             }
         }
@@ -117,11 +159,22 @@ internal fun SearchContent(
 internal fun SearchScreenPreview() {
     ShutterShopTheme {
         SearchContent(
-            searchState = UiState.Success(listOf()),
+            searchState = flowOf(
+                PagingData.from(
+                    listOf<ProductModel>(),
+                    sourceLoadStates =
+                    LoadStates(
+                        refresh = LoadState.NotLoading(false),
+                        append = LoadState.NotLoading(false),
+                        prepend = LoadState.NotLoading(false),
+                    ),
+                ),
+            ).collectAsLazyPagingItems(),
             searchValue = "sdf",
             onSearchValueChange = {},
             onProductClick = {},
-            onNavigateBack = {}
+            onNavigateBack = {},
+            onMessageChange = {}
         )
     }
 }

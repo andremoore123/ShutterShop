@@ -1,6 +1,8 @@
 package com.id.domain.product
 
+import androidx.paging.PagingData
 import com.id.domain.ext.Resource
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by: andreputras.
@@ -9,9 +11,10 @@ import com.id.domain.ext.Resource
  * Email: andremoore431@gmail.com
  */
 interface IProductRepository {
-    suspend fun fetchProducts(productFilterParams: ProductFilterParams? = null): Resource<List<ProductModel>>
 
-    suspend fun searchProduct(query: String): Resource<List<ProductModel>>
+    fun fetchProducts(productFilterParams: ProductFilterParams): Flow<PagingData<ProductModel>>
+
+    fun searchProduct(query: String): Flow<PagingData<ProductModel>>
 
     suspend fun fetchProductDetail(id: Int): Resource<ProductDetailModel>
 }
