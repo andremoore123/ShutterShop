@@ -16,10 +16,12 @@ data class CartModel(
     val cartId: Int? = null,
     val itemId: String,
     val itemName: String,
-    val itemVariantName: String = "",
+    val itemPrice: Int,
     val itemStock: Int = 0,
     val itemCount: Int = 1,
-    val itemPrice: Int,
+    val itemVariantName: String = "",
+    val imageUrl: String = ""
+
 ) : Parcelable {
     fun getFormattedCurrency(): String {
         return itemPrice.formatToRupiah()

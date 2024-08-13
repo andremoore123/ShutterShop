@@ -128,7 +128,8 @@ class ProductDetailViewModel @Inject constructor(
                 itemId = data.id,
                 itemName = data.productName,
                 itemVariantName = selectedVariant.title,
-                itemPrice = data.productPrice + selectedVariant.additionalPrice
+                itemPrice = data.productPrice + selectedVariant.additionalPrice,
+                imageUrl = data.imageUrl.firstOrNull().orEmpty()
             )
             addToCartUseCase.invoke(dataCart)
         }

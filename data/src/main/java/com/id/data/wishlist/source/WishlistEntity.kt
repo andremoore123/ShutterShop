@@ -21,6 +21,7 @@ data class WishlistEntity(
     val itemVariantName: String,
     val itemRating: String,
     val itemSeller: String,
+    val imageUrl: String,
 )
 
 fun WishlistEntity.mapToModel(): WishlistModel = WishlistModel(
@@ -31,7 +32,8 @@ fun WishlistEntity.mapToModel(): WishlistModel = WishlistModel(
     itemPrice = itemPrice,
     itemRating = itemRating,
     itemSeller = itemSeller,
-    itemVariantName = itemVariantName
+    itemVariantName = itemVariantName,
+    itemImageUrl = imageUrl
 )
 
 fun WishlistModel.mapToEntity(): WishlistEntity = WishlistEntity(
@@ -42,5 +44,6 @@ fun WishlistModel.mapToEntity(): WishlistEntity = WishlistEntity(
     itemPrice = itemPrice,
     itemRating = itemRating,
     itemSeller = itemSeller,
-    itemVariantName = itemVariantName
+    itemVariantName = itemVariantName,
+    imageUrl = itemImageUrl
 )

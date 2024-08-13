@@ -18,8 +18,9 @@ data class CartEntity(
     val itemId: String,
     val itemName: String,
     val itemVariantName: String,
+    val itemPrice: Int,
     val itemCount: Int = 1,
-    val itemPrice: Int
+    val imageUrl: String = ""
 )
 
 fun CartEntity.toModel() = CartModel(
@@ -28,7 +29,8 @@ fun CartEntity.toModel() = CartModel(
     itemName = itemName,
     itemCount = itemCount,
     itemVariantName = itemVariantName,
-    itemPrice = itemPrice
+    itemPrice = itemPrice,
+    imageUrl = imageUrl
 )
 
 fun CartModel.toEntity() = CartEntity(
@@ -37,5 +39,6 @@ fun CartModel.toEntity() = CartEntity(
     itemName = itemName,
     itemCount = itemCount,
     itemVariantName = itemVariantName,
-    itemPrice = itemPrice
+    itemPrice = itemPrice,
+    imageUrl = imageUrl
 )
