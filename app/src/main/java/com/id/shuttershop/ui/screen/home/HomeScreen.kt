@@ -187,7 +187,7 @@ internal fun HomeContent(
             navigateToCart = homeEvent.navigateToCart
         )
         val loadItemLoading =
-            products.loadState.append is LoadState.Loading && products.itemCount != 0
+            products.loadState.append is LoadState.Loading && products.itemCount == 0
         Box {
             if (products.loadState.refresh is LoadState.Loading) {
                 LoadingBar()

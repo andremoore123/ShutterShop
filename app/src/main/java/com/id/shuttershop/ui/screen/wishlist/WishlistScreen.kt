@@ -1,5 +1,6 @@
 package com.id.shuttershop.ui.screen.wishlist;
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,6 +57,7 @@ import kotlinx.coroutines.launch
 fun WishlistScreen(
     modifier: Modifier = Modifier,
     viewModel: WishlistViewModel = hiltViewModel(),
+    navigateToDetail: (productId: String) -> Unit,
 ) {
     val wishlists by viewModel.wishlists.collectAsState()
     val currentLayoutType by viewModel.isColumnLayout.collectAsState()
@@ -78,6 +80,13 @@ fun WishlistScreen(
         }
     }
 
+    val wishlistEvent = WishlistEvent(
+        onLayoutChange = viewModel::setLayoutType,
+        onDeleteClick = viewModel::deleteWishlist,
+        addToCart = addProductToCart,
+        navigateToDetail = navigateToDetail
+    )
+
     Scaffold(
         modifier = modifier,
         snackbarHost = {
@@ -88,9 +97,7 @@ fun WishlistScreen(
             modifier = Modifier.padding(innerPadding),
             currentLayoutType = currentLayoutType,
             wishlists = wishlists,
-            onLayoutChange = viewModel::setLayoutType,
-            onDeleteClick = viewModel::deleteWishlist,
-            addToCart = addProductToCart,
+            wishlistEvent = wishlistEvent,
         )
     }
 
@@ -101,9 +108,7 @@ internal fun WishlistContent(
     modifier: Modifier = Modifier,
     currentLayoutType: String,
     wishlists: List<WishlistModel>,
-    onLayoutChange: (String) -> Unit,
-    onDeleteClick: (WishlistModel) -> Unit = {},
-    addToCart: (WishlistModel) -> Unit = {},
+    wishlistEvent: WishlistEvent,
 ) {
     Column(
         modifier = modifier.padding(horizontal = 16.dp)
@@ -121,7 +126,7 @@ internal fun WishlistContent(
             Spacer(modifier = Modifier.weight(1f))
             VerticalDivider(modifier = Modifier.height(30.dp))
             IconButton(onClick = {
-                onLayoutChange(currentLayoutType)
+                wishlistEvent.onLayoutChange(currentLayoutType)
             }) {
                 if (currentLayoutType == GRID_LAYOUT) {
                     Icon(imageVector = Icons.Default.Menu, contentDescription = null)
@@ -142,9 +147,12 @@ internal fun WishlistContent(
                 ) {
                     items(wishlists) {
                         WishlistCard(
+                            modifier = Modifier.clickable {
+                                wishlistEvent.navigateToDetail(it.itemId)
+                            },
                             data = it,
-                            onDeleteClick = { onDeleteClick(it) },
-                            onAddClick = { addToCart(it) },
+                            onDeleteClick = { wishlistEvent.onDeleteClick(it) },
+                            onAddClick = { wishlistEvent.addToCart(it) },
                             wishlistType = WishlistCardType.GRID
                         )
                     }
@@ -157,9 +165,12 @@ internal fun WishlistContent(
                 ) {
                     items(wishlists) {
                         WishlistCard(
+                            modifier = Modifier.clickable {
+                                wishlistEvent.navigateToDetail(it.itemId)
+                            },
                             data = it,
-                            onDeleteClick = { onDeleteClick(it) },
-                            onAddClick = { addToCart(it) },
+                            onDeleteClick = { wishlistEvent.onDeleteClick(it) },
+                            onAddClick = { wishlistEvent.addToCart(it) },
                             wishlistType = WishlistCardType.COLUMN
                         )
                     }
@@ -180,8 +191,13 @@ internal fun ShowWishlistScreenPreview() {
                 WishlistModel.dummyData,
                 WishlistModel.dummyData,
             ),
-            onLayoutChange = {},
-            currentLayoutType = COLUMN_LAYOUT
+            currentLayoutType = COLUMN_LAYOUT,
+            wishlistEvent = WishlistEvent(
+                onLayoutChange = {},
+                onDeleteClick = {},
+                addToCart = {},
+                navigateToDetail = {}
+            )
         )
     }
 }

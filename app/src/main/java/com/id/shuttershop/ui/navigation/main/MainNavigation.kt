@@ -21,6 +21,14 @@ import com.id.shuttershop.ui.screen.search.SearchScreen
  */
 
 fun NavGraphBuilder.mainNavigation(navController: NavController) {
+    fun navigateToCartDetail(navController: NavController, productId: String) {
+        navController.navigate(
+            MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
+                USER_WITH_BRACKET, productId
+            )
+        )
+    }
+
     navigation(
         startDestination = MainNavRoute.LAUNCHPAD_SCREEN.route,
         route = MainRoute.MainNavigation.route
@@ -80,10 +88,4 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
     }
 }
 
-fun navigateToCartDetail(navController: NavController, productId: String) {
-    navController.navigate(
-        MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
-            USER_WITH_BRACKET, productId
-        )
-    )
-}
+
