@@ -14,13 +14,14 @@ import com.id.domain.wishlist.WishlistModel
 data class WishlistEntity(
     @PrimaryKey(autoGenerate = true)
     val wishlistId: Int? = null,
-    val productId: Int,
+    val productId: String,
     val itemName: String,
     val itemSold: String,
     val itemPrice: Int,
     val itemVariantName: String,
     val itemRating: String,
     val itemSeller: String,
+    val imageUrl: String,
 )
 
 fun WishlistEntity.mapToModel(): WishlistModel = WishlistModel(
@@ -31,7 +32,8 @@ fun WishlistEntity.mapToModel(): WishlistModel = WishlistModel(
     itemPrice = itemPrice,
     itemRating = itemRating,
     itemSeller = itemSeller,
-    itemVariantName = itemVariantName
+    itemVariantName = itemVariantName,
+    itemImageUrl = imageUrl
 )
 
 fun WishlistModel.mapToEntity(): WishlistEntity = WishlistEntity(
@@ -42,5 +44,6 @@ fun WishlistModel.mapToEntity(): WishlistEntity = WishlistEntity(
     itemPrice = itemPrice,
     itemRating = itemRating,
     itemSeller = itemSeller,
-    itemVariantName = itemVariantName
+    itemVariantName = itemVariantName,
+    imageUrl = itemImageUrl
 )

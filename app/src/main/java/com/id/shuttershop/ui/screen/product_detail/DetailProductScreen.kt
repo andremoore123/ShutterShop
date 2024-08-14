@@ -53,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.id.domain.cart.CartModel
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
@@ -60,9 +61,12 @@ import com.id.domain.rating.RatingModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
+import com.id.shuttershop.ui.components.state.LoadingBar
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.onError
+import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
 import kotlinx.coroutines.launch
 
@@ -76,7 +80,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DetailProductScreen(
     modifier: Modifier = Modifier,
-    idProduct: Int,
+    idProduct: String,
     onCheckoutClick: (CartModel) -> Unit,
     viewModel: ProductDetailViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {},
@@ -95,6 +99,10 @@ fun DetailProductScreen(
         viewModel.addItemToCart(product, variance)
         val newMessage = currentContext.getString(R.string.text_add_cart_success)
         viewModel.updateMessage(newMessage)
+    }
+
+    productState.onError {
+        viewModel.updateMessage(it.errorMessage)
     }
 
     val detailEvent = DetailProductEvent(
@@ -226,6 +234,9 @@ internal fun DetailProductContent(
                 }
             }
         }
+            .onLoading {
+                LoadingBar()
+            }
     }
 }
 
@@ -246,7 +257,7 @@ internal fun DetailTitle(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = detailModel.getFormattedCurrency(),
+                text = detailModel.getFormattedCurrency(selectedVariant),
                 style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -385,10 +396,10 @@ internal fun DetailImages(
 
     Box(modifier = modifier) {
         HorizontalPager(state = pagerState) {
-            Box(
-                modifier = Modifier
-                    .aspectRatio(1.4f)
-                    .background(Color.Black)
+            AsyncImage(
+                modifier = Modifier.aspectRatio(1.4f),
+                model = imageUrls[it],
+                contentDescription = null
             )
         }
         Row(
@@ -420,13 +431,12 @@ internal fun DetailImages(
 internal fun DetailProductScreenPreview() {
     ShutterShopTheme {
         val dummyData = ProductDetailModel(
-            id = 8569,
+            id = "8569",
             productName = "Ira Jenkins",
             productDesc = "phasellus",
             productVariance = listOf(
-                VarianceModel(id = 4447, title = "a"), VarianceModel(
-                    id = 9198,
-                    title = "mea"
+                VarianceModel(id = 4447, title = "a", additionalPrice = 0), VarianceModel(
+                    id = 9198, title = "mea", additionalPrice = 0
                 )
             ), productPrice = 230232323,
             productSold = "23",

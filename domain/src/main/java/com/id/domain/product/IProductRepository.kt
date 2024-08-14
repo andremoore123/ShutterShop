@@ -16,5 +16,5 @@ interface IProductRepository {
 
     fun searchProduct(query: String): Flow<PagingData<ProductModel>>
 
-    suspend fun fetchProductDetail(id: Int): Resource<ProductDetailModel>
+    suspend fun fetchProductDetail(id: String): Resource<ProductDetailModel>
 }

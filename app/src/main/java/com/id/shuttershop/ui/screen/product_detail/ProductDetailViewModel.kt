@@ -64,7 +64,7 @@ class ProductDetailViewModel @Inject constructor(
         savedStateHandle[IS_SHEET_SHOW_VALUE] = value
     }
 
-    fun fetchProduct(id: Int) {
+    fun fetchProduct(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             with(_productState) {
                 handleUpdateUiState(UiState.Loading)
@@ -77,7 +77,7 @@ class ProductDetailViewModel @Inject constructor(
         }
     }
 
-    fun fetchProductRating(productId: Int) {
+    fun fetchProductRating(productId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _ratingState.run {
                 handleUpdateUiState(UiState.Loading)
@@ -127,7 +127,9 @@ class ProductDetailViewModel @Inject constructor(
             val dataCart = CartModel(
                 itemId = data.id,
                 itemName = data.productName,
-                itemVariantName = selectedVariant.title
+                itemVariantName = selectedVariant.title,
+                itemPrice = data.productPrice + selectedVariant.additionalPrice,
+                imageUrl = data.imageUrl.firstOrNull().orEmpty()
             )
             addToCartUseCase.invoke(dataCart)
         }

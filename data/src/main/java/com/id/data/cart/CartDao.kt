@@ -29,7 +29,7 @@ interface CartDao {
     suspend fun deleteCart(data: CartEntity)
 
     @Query("SELECT * FROM cart WHERE itemId = :itemId AND itemVariantName = :variantName")
-    suspend fun findCartByItemIdAndVariant(itemId: Int, variantName: String): CartEntity?
+    suspend fun findCartByItemIdAndVariant(itemId: String, variantName: String): CartEntity?
 
     @Delete
     suspend fun deleteCarts(vararg data: CartEntity)

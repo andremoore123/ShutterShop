@@ -14,12 +14,14 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CartModel(
     val cartId: Int? = null,
-    val itemId: Int,
+    val itemId: String,
     val itemName: String,
-    val itemVariantName: String = "",
-    val itemStock: Int = 5,
+    val itemPrice: Int,
+    val itemStock: Int = 0,
     val itemCount: Int = 1,
-    val itemPrice: Int = 250000,
+    val itemVariantName: String = "",
+    val imageUrl: String = ""
+
 ) : Parcelable {
     fun getFormattedCurrency(): String {
         return itemPrice.formatToRupiah()

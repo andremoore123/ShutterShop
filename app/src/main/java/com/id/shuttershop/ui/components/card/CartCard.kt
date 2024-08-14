@@ -1,10 +1,8 @@
 package com.id.shuttershop.ui.components.card
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,13 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.id.domain.cart.CartModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
@@ -73,11 +71,12 @@ fun CartCard(
                 .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
+            AsyncImage(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .size(70.dp)
-                    .background(Color.Black)
+                    .size(70.dp),
+                model = cartModel.imageUrl,
+                contentDescription = cartModel.itemName
             )
             Column(
                 modifier = Modifier.padding(start = 10.dp)
@@ -181,11 +180,12 @@ internal fun CartCardPreview() {
     ShutterShopTheme {
         CartCard(
             onCheckClick = {}, cartModel = CartModel(
-                itemId = 0,
+                itemId = "",
                 itemName = "Perfect Camera",
                 itemVariantName = "16GB, 1TB SSD",
                 itemStock = 1,
-                itemCount = 1
+                itemCount = 1,
+                itemPrice = 0
             )
         )
     }

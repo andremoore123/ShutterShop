@@ -1,8 +1,11 @@
 package com.id.data.product
 
 import com.id.data.network.ApiResponse
+import com.id.data.product.response.ProductDetailResponse
 import com.id.data.product.response.ProductResponse
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -21,4 +24,9 @@ interface ProductApiService {
         @Query("limit") limit: Int?,
         @Query("page") page: Int?
     ): ApiResponse<ProductResponse>
+
+    @GET("products/{id}")
+    suspend fun fetchProductDetail(
+        @Path("id") productId: String
+    ): ApiResponse<ProductDetailResponse>
 }

@@ -29,13 +29,18 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             LaunchpadScreen(mainNavController = navController)
         }
         composable(MainNavRoute.SEARCH_SCREEN.route) {
-            SearchScreen(navigateBack = { navController.popBackStack() })
+            SearchScreen(
+                navigateBack = { navController.popBackStack() },
+                navigateToDetail = {
+                    navigateToCartDetail(navController, it)
+                }
+            )
         }
         composable(MainNavRoute.NOTIFICATION_SCREEN.route) {
             NotificationScreen(onBackClick = {navController.popBackStack()})
         }
         composable(MainNavRoute.PRODUCT_DETAIL_SCREEN.route) { navBackStackEntry ->
-            val productId = navBackStackEntry.arguments?.getInt(USER_ID)
+            val productId = navBackStackEntry.arguments?.getString(USER_ID)
             productId?.let {
                 DetailProductScreen(
                     idProduct = it,
@@ -53,6 +58,9 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
                 navigateToCheckout = { carts: List<CartModel> ->
                     navController.navigate(route = MainNavRoute.CHECKOUT_SCREEN.route)
                     navBackStackEntry.savedStateHandle[CHECKOUT_DATA] = ArrayList(carts)
+                },
+                navigateToProductDetail = {
+                    navigateToCartDetail(navController, it)
                 }
             )
         }
@@ -70,4 +78,12 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             )
         }
     }
+}
+
+fun navigateToCartDetail(navController: NavController, productId: String) {
+    navController.navigate(
+        MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
+            USER_WITH_BRACKET, productId
+        )
+    )
 }

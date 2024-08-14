@@ -86,11 +86,12 @@ internal fun CheckoutCardPreview() {
     ShutterShopTheme {
         CheckoutCard(
             cartModel = CartModel(
-                itemId = 0,
+                itemId = "0",
                 itemName = "Perfect Camera",
                 itemVariantName = "16GB, 1TB SSD",
                 itemStock = 1,
-                itemCount = 1
+                itemCount = 1,
+                itemPrice = 0
             )
         )
     }

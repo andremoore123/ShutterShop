@@ -10,7 +10,7 @@ import com.id.domain.wishlist.WishlistModel
  * Email: andremoore431@gmail.com
  */
 data class ProductDetailModel(
-    val id: Int,
+    val id: String,
     val productName: String,
     val productDesc: String,
     val productVariance: List<VarianceModel>,
@@ -20,9 +20,10 @@ data class ProductDetailModel(
     val totalRating: String,
     val imageUrl: List<String>,
     val productStore: String,
+    val productStock: Int = 0
 ) {
-    fun getFormattedCurrency(): String {
-        return productPrice.formatToRupiah()
+    fun getFormattedCurrency(selectedVariant: VarianceModel?): String {
+        return (productPrice + (selectedVariant?.additionalPrice ?: 0)).formatToRupiah()
     }
 }
 
@@ -32,7 +33,7 @@ fun ProductDetailModel.toWishlist(selectedVariant: VarianceModel): WishlistModel
         itemId = id,
         itemName = productName,
         itemSold = productSold,
-        itemPrice = productPrice,
+        itemPrice = productPrice + selectedVariant.additionalPrice,
         itemVariantName = selectedVariant.title,
         itemRating = productRating,
         itemSeller = productStore,

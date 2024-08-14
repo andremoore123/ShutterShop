@@ -55,7 +55,7 @@ fun SearchScreen(
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel(),
     navigateBack: () -> Unit = {},
-    navigateToDetail: (String) -> Unit = {},
+    navigateToDetail: (String) -> Unit,
 ) {
     val searchData = viewModel.searchData.collectAsLazyPagingItems()
     val searchValue by viewModel.searchValue.collectAsState()

@@ -33,7 +33,7 @@ class WishlistRepository @Inject constructor(
     override suspend fun findWishlistById(id: Int): WishlistModel? =
         wishlistDao.findWishlistById(id)?.mapToModel()
 
-    override suspend fun findWishlistByIdAndVariant(productId: Int, variantName: String): WishlistModel? =
+    override suspend fun findWishlistByIdAndVariant(productId: String, variantName: String): WishlistModel? =
         wishlistDao.findWishlistByIdAndVariant(productId, variantName)?.mapToModel()
 
     override suspend fun addToWishlist(data: WishlistModel) {
