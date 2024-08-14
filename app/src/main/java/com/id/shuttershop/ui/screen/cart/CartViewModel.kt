@@ -54,6 +54,7 @@ class CartViewModel @Inject constructor(
     fun updateCartStockFromNetwork() {
         viewModelScope.launch(Dispatchers.IO) {
             _screenState.run {
+                handleUpdateUiState(UiState.Loading)
                 val response = updateCartStockUseCase.invoke()
                 response.onSuccess {
                     handleUpdateUiState(UiState.Success(it))
