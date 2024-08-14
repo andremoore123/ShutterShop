@@ -6,6 +6,7 @@ import com.id.data.network.authenticator.UserAuthenticator
 import com.id.data.network.interceptor.AuthInterceptor
 import com.id.data.network.interceptor.SessionInterceptor
 import com.id.data.product.ProductApiService
+import com.id.data.transaction.TransactionApiService
 import com.id.domain.session.ISessionRepository
 import dagger.Module
 import dagger.Provides
@@ -29,6 +30,10 @@ object NetworkModule {
     @Provides
     fun provideProductApiService(networkClient: NetworkClient) =
         networkClient.create<ProductApiService>()
+
+    @Provides
+    fun provideTransactionApiService(networkClient: NetworkClient) =
+        networkClient.create<TransactionApiService>()
 
     @Provides
     fun provideLoggingInterceptor() =
