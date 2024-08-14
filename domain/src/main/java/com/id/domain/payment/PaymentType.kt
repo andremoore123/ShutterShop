@@ -6,7 +6,9 @@ package com.id.domain.payment
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
-enum class PaymentType(val title: String) {
-    VIRTUAL_ACCOUNT("Virtual Account"),
-    INSTANT_PAYMENT("Instant Payment")
+enum class PaymentType(val title: String, val value: String = "") {
+    VIRTUAL_ACCOUNT("Transfer Virtual Account", "Transfer Virtual Account"),
+    INSTANT_PAYMENT("Instant Payment", "Pembayaran Instan"),
+    TRANSFER_BANK("Transfer Bank","Transfer Bank"),
+    OTHERS("Others", "")
 }

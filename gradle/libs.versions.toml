@@ -29,6 +29,7 @@ googleFirebaseCrashlytics = "3.0.2"
 firebaseAnalytics = "22.0.2"
 okHttpVer = "4.12.0"
 retrofitVer = "2.9.0"
+firebaseConfig = "22.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,6 +73,7 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 retrofit-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofitVer" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttpVer" }
 okhttp = {module = "com.squareup.okhttp3:okhttp", name = "okhttp", version.ref = "okHttpVer"}
+firebase-config = { group = "com.google.firebase", name = "firebase-config", version.ref = "firebaseConfig" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
