@@ -36,7 +36,8 @@ import com.id.shuttershop.ui.components.SearchTextField
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
 import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
-import com.id.shuttershop.ui.components.state.LoadingState
+import com.id.shuttershop.ui.components.state.LoadingBar
+import com.id.shuttershop.ui.components.state.LoadingCard
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -77,6 +78,14 @@ fun SearchScreen(
         }
     }
 
+    LaunchedEffect(key1 = searchData.loadState) {
+        if (searchData.loadState.refresh is LoadState.Error) {
+            val errorMessage =
+                (searchData.loadState.refresh as LoadState.Error).error.message.toString()
+            viewModel.setMessageValue(errorMessage)
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         snackbarHost = {
@@ -92,10 +101,10 @@ fun SearchScreen(
             onSearchValueChange = viewModel::onSearchValueChange,
             onProductClick = navigateToDetail,
             onNavigateBack = navigateBack,
-            onMessageChange = viewModel::setMessageValue
         )
     }
 }
+
 
 @Composable
 internal fun SearchContent(
@@ -103,7 +112,6 @@ internal fun SearchContent(
     searchState: LazyPagingItems<ProductModel>,
     searchValue: String,
     onSearchValueChange: (String) -> Unit,
-    onMessageChange: (String) -> Unit,
     onProductClick: (String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
@@ -126,15 +134,12 @@ internal fun SearchContent(
                 enabled = true
             )
         }
-        val isLoading =
-            searchState.loadState.refresh is LoadState.Loading || searchState.loadState.append is LoadState.Loading
-        val isError = searchState.loadState.refresh is LoadState.Error
+        val loadItemLoading =
+            searchState.loadState.refresh is LoadState.Loading && searchState.itemCount == 0
+
         Box(modifier = Modifier) {
-            if (isLoading && isError.not()) {
-                LoadingState()
-            }
-            if (isError && isLoading.not()) {
-                onMessageChange((searchState.loadState.refresh as LoadState.Error).error.message.toString())
+            if (loadItemLoading) {
+                LoadingBar()
             }
             LazyColumn(
                 modifier = Modifier.padding(top = 24.dp),
@@ -147,6 +152,11 @@ internal fun SearchContent(
                             productModel = it,
                             cardOrientation = HomeCardOrientation.COLUMN
                         )
+                    }
+                }
+                item {
+                    if (searchState.loadState.append is LoadState.Loading) {
+                        LoadingCard()
                     }
                 }
             }
@@ -174,7 +184,6 @@ internal fun SearchScreenPreview() {
             onSearchValueChange = {},
             onProductClick = {},
             onNavigateBack = {},
-            onMessageChange = {}
         )
     }
 }

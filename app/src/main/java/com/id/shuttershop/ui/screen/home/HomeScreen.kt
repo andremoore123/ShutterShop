@@ -101,7 +101,7 @@ fun HomeScreen(
         viewModel.fetchUserData()
     }
 
-    LaunchedEffect(key1 = products) {
+    LaunchedEffect(key1 = products.loadState) {
         if (products.loadState.hasError) {
             val newMessage =
                 (products.loadState.refresh as LoadState.Error).error.message.toString()
