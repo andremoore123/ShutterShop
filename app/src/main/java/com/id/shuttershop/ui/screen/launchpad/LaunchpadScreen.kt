@@ -97,7 +97,15 @@ fun LaunchpadScreen(
                 TransactionScreen()
             }
             composable(LaunchpadRoute.WishlistRoute.route) {
-                WishlistScreen()
+                WishlistScreen(
+                    navigateToDetail = {
+                        mainNavController.navigate(
+                            MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
+                                USER_WITH_BRACKET, it
+                            )
+                        )
+                    }
+                )
             }
             composable(LaunchpadRoute.ProfileRoute.route) {
                 ProfileScreen()
