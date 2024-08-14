@@ -23,6 +23,7 @@ import com.id.shuttershop.utils.analytics.AnalyticsConstants.PRODUCT_NAME
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_HOME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
@@ -52,6 +53,8 @@ class HomeViewModel @Inject constructor(
     private val _userData = MutableStateFlow(UserModel.emptyModel)
     val userData = _userData.asStateFlow()
 
+    val message = savedStateHandle.getStateFlow(MESSAGE_VALUE, "")
+
     val isBottomShowValue = savedStateHandle.getStateFlow(IS_SHEET_SHOW_VALUE, false)
 
     val isColumnLayout = savedStateHandle.getStateFlow(
@@ -69,6 +72,14 @@ class HomeViewModel @Inject constructor(
     }
     fun modifySheetValue(value: Boolean) {
         savedStateHandle[IS_SHEET_SHOW_VALUE] = value
+    }
+
+    fun setMessage(value: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            savedStateHandle[MESSAGE_VALUE] = value
+            delay(5_00)
+            savedStateHandle[MESSAGE_VALUE] = ""
+        }
     }
 
     fun onFilterChange(filterParams: ProductFilterParams) {
@@ -134,5 +145,6 @@ class HomeViewModel @Inject constructor(
         const val COLUMN_LAYOUT = "columnLayout"
         private const val LAYOUT_TYPE = "layoutType"
         private const val IS_SHEET_SHOW_VALUE = "isSheetShow"
+        private const val MESSAGE_VALUE = "messageValue"
     }
 }

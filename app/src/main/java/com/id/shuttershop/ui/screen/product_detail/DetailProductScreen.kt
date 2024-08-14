@@ -65,6 +65,7 @@ import com.id.shuttershop.ui.components.state.LoadingBar
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
 import kotlinx.coroutines.launch
@@ -98,6 +99,10 @@ fun DetailProductScreen(
         viewModel.addItemToCart(product, variance)
         val newMessage = currentContext.getString(R.string.text_add_cart_success)
         viewModel.updateMessage(newMessage)
+    }
+
+    productState.onError {
+        viewModel.updateMessage(it.errorMessage)
     }
 
     val detailEvent = DetailProductEvent(

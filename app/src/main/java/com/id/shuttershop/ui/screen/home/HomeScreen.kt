@@ -20,12 +20,17 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -47,12 +52,14 @@ import com.id.shuttershop.ui.components.SearchTextField
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
 import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
-import com.id.shuttershop.ui.components.state.LoadingState
+import com.id.shuttershop.ui.components.state.LoadingBar
+import com.id.shuttershop.ui.components.state.LoadingCard
 import com.id.shuttershop.ui.components.topbar.HomeTopBar
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 /**
  * Created by: andreputras.
@@ -74,6 +81,12 @@ fun HomeScreen(
     val userState by viewModel.userData.collectAsState()
     val isBottomSheetShow by viewModel.isBottomShowValue.collectAsState()
     val productFilterParams by viewModel.productFilter.collectAsState()
+    val message by viewModel.message.collectAsState()
+    val coroutine = rememberCoroutineScope()
+    val snackBarHostState = remember {
+        SnackbarHostState()
+    }
+
 
     val navigateToDetail: (ProductModel) -> Unit = {
         viewModel.logHomeDetailProduct(it.itemName)
@@ -88,6 +101,22 @@ fun HomeScreen(
         viewModel.fetchUserData()
     }
 
+    LaunchedEffect(key1 = products) {
+        if (products.loadState.hasError) {
+            val newMessage =
+                (products.loadState.refresh as LoadState.Error).error.message.toString()
+            viewModel.setMessage(newMessage)
+        }
+    }
+
+    LaunchedEffect(key1 = message) {
+        if (message.isNotEmpty()) {
+            coroutine.launch {
+                snackBarHostState.showSnackbar(message)
+            }
+        }
+    }
+
     val homeEvent = HomeEvent(
         navigateToSearch = navigateToSearch,
         navigateToCart = navigateToCart,
@@ -98,21 +127,28 @@ fun HomeScreen(
         onShowProduct = viewModel::onFilterChange
     )
 
-    HomeContent(
+    Scaffold(
         modifier = modifier.padding(horizontal = 16.dp),
-        currentLayoutType = currentLayoutType,
-        userName = userState.name,
-        userImageUrl = userState.email,
-        logEvent = HomeLogEvent(
-            logSearchButton = viewModel::logSearchButton,
-            logNotificationButton = viewModel::logNotificationButton,
-            logCartButton = viewModel::logCartButton
-        ),
-        homeEvent = homeEvent,
-        isBottomSheetShow = isBottomSheetShow,
-        products = products,
-        filterParams = productFilterParams
-    )
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        }
+    ) { innerPadding ->
+        HomeContent(
+            modifier = Modifier.padding(innerPadding),
+            currentLayoutType = currentLayoutType,
+            userName = userState.name,
+            userImageUrl = userState.email,
+            logEvent = HomeLogEvent(
+                logSearchButton = viewModel::logSearchButton,
+                logNotificationButton = viewModel::logNotificationButton,
+                logCartButton = viewModel::logCartButton
+            ),
+            homeEvent = homeEvent,
+            isBottomSheetShow = isBottomSheetShow,
+            products = products,
+            filterParams = productFilterParams
+        )
+    }
 }
 
 @Composable
@@ -129,13 +165,14 @@ internal fun HomeContent(
 ) {
     if (isBottomSheetShow) {
         FilterBottomSheet(
+            modifier = modifier,
             onShowProduct = homeEvent.onShowProduct,
             changeBottomSheetValue = homeEvent.changeBottomSheetValue,
             filterParams = filterParams
         )
     }
     Column(
-        modifier = modifier,
+        modifier = Modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         HomeHeader(
@@ -149,12 +186,11 @@ internal fun HomeContent(
             navigateToNotification = homeEvent.navigateToNotification,
             navigateToCart = homeEvent.navigateToCart
         )
-
+        val loadItemLoading =
+            products.loadState.append is LoadState.Loading && products.itemCount != 0
         Box {
-            val isLoading =
-                products.loadState.append is LoadState.Loading || products.loadState.refresh is LoadState.Loading
-            if (isLoading) {
-                LoadingState()
+            if (products.loadState.refresh is LoadState.Loading) {
+                LoadingBar()
             }
             when (currentLayoutType) {
                 GRID_LAYOUT -> {
@@ -180,6 +216,14 @@ internal fun HomeContent(
                                 }
                             }
                         )
+                        if (loadItemLoading) {
+                            item {
+                                LoadingCard()
+                            }
+                            item {
+                                LoadingCard()
+                            }
+                        }
                     }
                 }
 
@@ -204,6 +248,11 @@ internal fun HomeContent(
                                 }
                             }
                         )
+                        item {
+                            if (loadItemLoading) {
+                                LoadingCard()
+                            }
+                        }
                     }
                 }
             }
