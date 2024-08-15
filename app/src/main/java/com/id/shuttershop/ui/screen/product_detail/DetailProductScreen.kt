@@ -348,7 +348,10 @@ internal fun DetailReview(
             Column(
                 modifier = Modifier.padding(start = 35.dp)
             ) {
-                Text(text = "100% Pembeli Merasa Puas", style = MaterialTheme.typography.labelLarge)
+                Text(text = stringResource(
+                    R.string.text_buyers_satisfied,
+                    detailModel.totalSatisfaction
+                ), style = MaterialTheme.typography.labelLarge)
                 Row {
                     Text(
                         text = stringResource(R.string.text_user_review, detailModel.totalRating),

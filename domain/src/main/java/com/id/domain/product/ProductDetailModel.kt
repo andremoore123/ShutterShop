@@ -20,7 +20,8 @@ data class ProductDetailModel(
     val totalRating: String,
     val imageUrl: List<String>,
     val productStore: String,
-    val productStock: Int = 0
+    val productStock: Int = 0,
+    val totalSatisfaction: Int = 0
 ) {
     fun getFormattedCurrency(selectedVariant: VarianceModel?): String {
         return (productPrice + (selectedVariant?.additionalPrice ?: 0)).formatToRupiah()
