@@ -3,7 +3,6 @@ package com.id.shuttershop.ui.components.card
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,17 +21,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.id.domain.transaction.ItemStatus
 import com.id.domain.transaction.TransactionModel
 import com.id.domain.transaction.TransactionStatus
 import com.id.domain.utils.formatToRupiah
 import com.id.shuttershop.R
-import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 
 /**
@@ -45,8 +43,17 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
 fun TransactionCard(
     modifier: Modifier = Modifier,
     transactionModel: TransactionModel,
-    onRateClick: () -> Unit = {},
 ) {
+    val itemDesc = when (transactionModel.itemStatus) {
+        ItemStatus.ONE_TYPE_ITEM -> {
+            stringResource(id = R.string.text_total_item, transactionModel.itemTotal)
+        }
+
+        ItemStatus.MORE_THAN_ONE_TYPE_ITEM -> {
+            stringResource(R.string.other_products, transactionModel.itemTotal)
+        }
+    }
+
     Column(
         modifier = modifier
             .border(2.dp, DividerDefaults.color, RoundedCornerShape(16.dp))
@@ -74,11 +81,12 @@ fun TransactionCard(
             modifier = Modifier.padding(15.dp)
         ) {
             Row {
-                Box(
+                AsyncImage(
                     modifier = Modifier
                         .clip(RoundedCornerShape(10.dp))
-                        .size(60.dp)
-                        .background(Color.Black)
+                        .size(60.dp),
+                    model = transactionModel.itemImageUrl,
+                    contentDescription = transactionModel.itemName
                 )
                 Column(
                     modifier = Modifier.padding(start = 10.dp)
@@ -88,10 +96,7 @@ fun TransactionCard(
                         style = MaterialTheme.typography.labelLarge
                     )
                     Text(
-                        text = stringResource(
-                            id = R.string.text_total_item,
-                            transactionModel.itemTotal
-                        ), style = MaterialTheme.typography.bodySmall
+                        text = itemDesc, style = MaterialTheme.typography.bodySmall
                     )
                 }
             }
@@ -110,8 +115,6 @@ fun TransactionCard(
                     )
 
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                PrimaryButton(text = stringResource(R.string.text_rating), onClick = onRateClick)
             }
         }
     }
@@ -146,10 +149,10 @@ internal fun ShowTransactionCardPreview() {
                 itemTotal = 7737,
                 itemImageUrl = "http://www.bing.com/search?q=populo",
                 transactionTotal = 3778,
-                transactionStatus = TransactionStatus.FAILED,
+                transactionStatus = TransactionStatus.SUCCESS,
                 transactionDate = "dis",
-                itemStatus = ItemStatus.ONE_TYPE_ITEM
-            ), onRateClick = {}
+                itemStatus = ItemStatus.MORE_THAN_ONE_TYPE_ITEM
+            ),
 
         )
     }

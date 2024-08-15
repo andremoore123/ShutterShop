@@ -72,5 +72,11 @@
     <string name="text_done">Selesai</string>
     <string name="text_title_empty_cart">Cart Kamu Masih Kosong Nih</string>
     <string name="text_desc_empty_cart">Ayo Tambah Dulu Produknya ke Cart</string>
+    <string name="text_title_wishlist_empty">Wishlist Kamu Masih Kosong</string>
+    <string name="text_desc_wishlist_empty">Barang impian kamu akan ada di sini. Mulai tambahkan sekarang!</string>
+    <string name="other_products">+%1$s Produk Lainnya</string>
+    <string name="text_unknown_error">Terjadi Kesalahan</string>
+    <string name="text_title_empty_transaction">Belum Ada Transaksi</string>
+    <string name="text_desc_empty_transaction">Bagian ini akan terisi setelah kamu melakukan transaksi</string>
 
 </resources>

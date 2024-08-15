@@ -1,6 +1,7 @@
 package com.id.domain.transaction
 
 import com.id.domain.utils.ErrorType
+import com.id.domain.utils.network_response.onEmptyValueError
 import com.id.domain.utils.network_response.onHttpError
 import com.id.domain.utils.network_response.onSuccess
 import com.id.domain.utils.network_response.onUnknownError
@@ -21,11 +22,17 @@ class FetchTransactionsUseCase @Inject constructor(
 
         val response = transactionRepository.fetchTransaction()
         response.onSuccess {
-            result = Resource.Success(it)
+            result = if (it.isEmpty()) {
+                Resource.Error(ErrorType.EmptyDataError)
+            } else {
+                Resource.Success(it)
+            }
         }.onHttpError { code, message ->
             result = Resource.Error(ErrorType.HTTPError(code, message))
         }.onUnknownError {
             result = Resource.Error(ErrorType.UnknownError(it.message.toString()))
+        }.onEmptyValueError {
+            Resource.Error(ErrorType.EmptyDataError)
         }
         return result
     }
