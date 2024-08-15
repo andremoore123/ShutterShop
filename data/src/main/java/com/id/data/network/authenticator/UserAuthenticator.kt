@@ -35,6 +35,7 @@ class UserAuthenticator(
                         .header("Authorization", "Bearer $newAccessToken")
                         .build()
                 } else {
+                    response.close()
                     null
                 }
             }
@@ -42,11 +43,11 @@ class UserAuthenticator(
     }
 
     private suspend fun refreshToken(): AuthResponse? {
-        val interceptor = Interceptor.invoke {
-            val response = Response.Builder()
-                .addHeader("API_KEY", BuildConfig.API_KEY)
+        val interceptor = Interceptor.invoke { chain ->
+            val request = chain.request().newBuilder()
+                .header("API_KEY", BuildConfig.API_KEY)
                 .build()
-            response
+            chain.proceed(request)
         }
 
         val okHttpClient = OkHttpClient.Builder()

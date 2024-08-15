@@ -70,14 +70,28 @@ fun RegisterScreen(
         }
     }
 
+    val registerEvent = RegisterEvent(
+        onNameChange = viewModel::onNameChange,
+        onEmailChange = viewModel::onEmailValueChange,
+        onPasswordChange = viewModel::onPasswordChange,
+        onRegisterClick = {
+            viewModel.register(nameValue, emailValue, passwordValue)
+        },
+        onLoginClick = navigateToLogin
+    )
+
     Box(modifier = modifier.fillMaxSize()) {
         registerUiState.onLoading {
             LoadingState()
         }.onSuccess {
-            viewModel.onMessageValueChange("Register Success")
-            navigateToLogin()
+            LaunchedEffect(key1 = Unit) {
+                viewModel.onMessageValueChange("Register Success")
+                navigateToLogin()
+            }
         }.onError {
-            viewModel.onMessageValueChange(it.errorMessage)
+            LaunchedEffect(key1 = Unit) {
+                viewModel.onMessageValueChange(it.errorMessage)
+            }
         }
         Scaffold(
             modifier = Modifier,
@@ -91,14 +105,7 @@ fun RegisterScreen(
                     .verticalScroll(rememberScrollState()),
                 nameValue = nameValue,
                 emailValue = emailValue,
-                passwordValue = passwordValue,
-                onNameChange = viewModel::onNameChange,
-                onEmailChange = viewModel::onEmailValueChange,
-                onPasswordChange = viewModel::onPasswordChange,
-                onLoginClick = {
-                    viewModel.register(nameValue, emailValue, passwordValue)
-                },
-                onRegisterClick = navigateToLogin
+                passwordValue = passwordValue, registerEvent = registerEvent
             )
         }
     }
@@ -110,11 +117,7 @@ internal fun RegisterContent(
     nameValue: String = "",
     emailValue: String = "",
     passwordValue: String = "",
-    onNameChange: (String) -> Unit = {},
-    onEmailChange: (String) -> Unit = {},
-    onPasswordChange: (String) -> Unit = {},
-    onLoginClick: () -> Unit = {},
-    onRegisterClick: () -> Unit = {},
+    registerEvent: RegisterEvent,
 ) {
     Column(
         modifier = modifier
@@ -140,27 +143,23 @@ internal fun RegisterContent(
             modifier = Modifier
                 .padding(top = 30.dp),
             title = stringResource(R.string.text_name),
-            value = nameValue,
-            onTextChange = onNameChange
+            value = nameValue, onTextChange = registerEvent.onNameChange
         )
         PrimaryTextField(
             modifier = Modifier.padding(vertical = 20.dp),
             title = stringResource(R.string.text_email),
-            value = emailValue,
-            onTextChange = onEmailChange
+            value = emailValue, onTextChange = registerEvent.onEmailChange
         )
         PrimaryTextField(
             modifier = Modifier.padding(bottom = 40.dp),
             title = stringResource(R.string.text_password),
-            value = passwordValue,
-            onTextChange = onPasswordChange,
+            value = passwordValue, onTextChange = registerEvent.onPasswordChange,
             inputType = PrimaryTextField.PASSwORD
         )
 
         PrimaryButton(
             text = stringResource(id = R.string.text_register),
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onLoginClick
+            modifier = Modifier.fillMaxWidth(), onClick = registerEvent.onRegisterClick
         )
         Row(
             modifier = Modifier.padding(top = 30.dp),
@@ -168,8 +167,7 @@ internal fun RegisterContent(
         ) {
             Text(text = stringResource(R.string.text_have_account))
             PrimaryTextButton(
-                text = stringResource(R.string.text_login_now),
-                onClick = onRegisterClick
+                text = stringResource(R.string.text_login_now), onClick = registerEvent.onLoginClick
             )
         }
     }
@@ -179,6 +177,8 @@ internal fun RegisterContent(
 @Preview(showBackground = true, showSystemUi = true)
 internal fun ShowRegisterScreenPreview() {
     ShutterShopTheme {
-        RegisterContent()
+        RegisterContent(
+            registerEvent = RegisterEvent(), nameValue = "", emailValue = "", passwordValue = ""
+        )
     }
 }
