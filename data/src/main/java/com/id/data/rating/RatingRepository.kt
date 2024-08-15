@@ -3,6 +3,7 @@ package com.id.data.rating
 import com.id.domain.rating.IRatingRepository
 import com.id.domain.rating.RatingModel
 import com.id.domain.utils.ErrorType
+import com.id.domain.utils.network_response.NetworkResponse
 import com.id.domain.utils.resource.Resource
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -16,8 +17,19 @@ import javax.inject.Inject
 class RatingRepository @Inject constructor(
     private val apiService: RatingApiService
 ) : IRatingRepository {
-    override suspend fun fetchRatings(productId: String): Resource<List<RatingModel>> {
-        return Resource.Success(RatingModel.dummyList)
+    override suspend fun fetchRatings(productId: String): NetworkResponse<List<RatingModel>> {
+        return try {
+            val response = apiService.fetchProductReview(productId).data
+            response?.let { ratingResponses ->
+                NetworkResponse.Success(ratingResponses.map { it.mapToModel() })
+            } ?: throw NullPointerException()
+        } catch (e: NullPointerException) {
+            NetworkResponse.EmptyValueError
+        } catch (e: HttpException) {
+            NetworkResponse.HttpError(e.code(), e.message())
+        } catch (e: Exception) {
+            NetworkResponse.UnknownError(e)
+        }
     }
 
     override suspend fun insertRating(

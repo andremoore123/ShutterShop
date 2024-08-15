@@ -15,8 +15,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.id.domain.rating.RatingModel
 import com.id.shuttershop.ui.components.card.RatingReviewCard
+import com.id.shuttershop.ui.components.state.EmptyState
+import com.id.shuttershop.ui.components.state.LoadingBar
+import com.id.shuttershop.ui.components.state.UnknownErrorState
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.OnEmptyError
+import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.onError
+import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
 
 /**
@@ -32,6 +39,7 @@ fun RateBottomSheet(
     modifier: Modifier = Modifier,
     ratingState: UiState<List<RatingModel>>,
     changeBottomSheetValue: (Boolean) -> Unit,
+    onRetryError: () -> Unit = {},
 ) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     ModalBottomSheet(
@@ -40,7 +48,8 @@ fun RateBottomSheet(
         onDismissRequest = { changeBottomSheetValue(false) }) {
         RateBottomSheetContent(
             modifier = Modifier.padding(vertical = 16.dp, horizontal = 10.dp),
-            ratingState = ratingState
+            ratingState = ratingState,
+            onRetryError = onRetryError
         )
     }
 }
@@ -50,6 +59,7 @@ fun RateBottomSheet(
 internal fun RateBottomSheetContent(
     modifier: Modifier = Modifier,
     ratingState: UiState<List<RatingModel>>,
+    onRetryError: () -> Unit = {},
 ) {
     ratingState.onSuccess {
         LazyColumn(
@@ -61,6 +71,18 @@ internal fun RateBottomSheetContent(
                 HorizontalDivider(modifier = Modifier.padding(top = 10.dp))
             }
         }
+    }.onError {
+        it.OnEmptyError {
+            EmptyState(
+                title = "Currently There's No Review",
+                desc = "Buy This Product and Make A Review"
+            )
+        }
+        it.OnUnknownError {
+            UnknownErrorState(onRetryClick = onRetryError)
+        }
+    }.onLoading {
+        LoadingBar()
     }
 }
 

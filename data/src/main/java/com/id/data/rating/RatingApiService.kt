@@ -1,7 +1,10 @@
 package com.id.data.rating
 
+import com.id.data.network.ApiResponse
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 /**
  * Created by: andre.
@@ -14,4 +17,9 @@ interface RatingApiService {
     suspend fun sendRating(
         @Body request: RatingRequest
     )
+
+    @GET("review/{productId}")
+    suspend fun fetchProductReview(
+        @Path("productId") productId: String
+    ): ApiResponse<List<RatingResponse>>
 }

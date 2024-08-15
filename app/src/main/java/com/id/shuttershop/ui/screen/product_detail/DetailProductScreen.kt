@@ -115,7 +115,8 @@ fun DetailProductScreen(
         onWishlistClick = viewModel::checkOnWishlist,
         onShareClick = {},
         checkIsOnWishlist = viewModel::checkIsInWishlist,
-        changeBottomSheetValue = viewModel::modifySheetValue
+        changeBottomSheetValue = viewModel::modifySheetValue,
+        onRetryRating = { viewModel.fetchProductRating(idProduct) }
     )
 
 
@@ -166,7 +167,8 @@ internal fun DetailProductContent(
         if (isBottomSheetShow) {
             RateBottomSheet(
                 ratingState = ratingState,
-                changeBottomSheetValue = detailEvent.changeBottomSheetValue
+                changeBottomSheetValue = detailEvent.changeBottomSheetValue,
+                onRetryError = detailEvent.onRetryRating
             )
         }
         TitleTopBar(
@@ -465,7 +467,8 @@ internal fun DetailProductScreenPreview() {
                 onWishlistClick = { _, _ -> },
                 onShareClick = {},
                 checkIsOnWishlist = { _, _ -> },
-                changeBottomSheetValue = {}
+                changeBottomSheetValue = {},
+                onRetryRating = {}
                 ),
             selectedVariant = null,
             isInWishlist = false,
