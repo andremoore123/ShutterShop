@@ -1,6 +1,8 @@
 package com.id.domain.cart
 
 import com.id.domain.product.IProductRepository
+import com.id.domain.utils.ErrorType
+import com.id.domain.utils.network_response.NetworkResponse
 import com.id.domain.utils.resource.Resource
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -21,17 +23,17 @@ class UpdateCartStockUseCase @Inject constructor(
         val data = cartRepository.fetchCarts().first()
         data.forEach { cartModel ->
             when (val response = productRepository.fetchProductDetail(cartModel.itemId)) {
-                is Resource.Error -> {
-                    dataState = Resource.Error(response.errorType)
-                    return@forEach
-                }
-                is Resource.Success -> {
+                is NetworkResponse.Success -> {
                     val newCartModel = cartModel.copy(
                         itemStock = response.data.productStock
                     )
                     cartRepository.updateCart(newCartModel)
                 }
-                else -> {}
+
+                else -> {
+                    dataState = Resource.Error(ErrorType.EmptyDataError)
+                    return@forEach
+                }
             }
             if (cartModel == data.last()) {
                 dataState = Resource.Success(true)

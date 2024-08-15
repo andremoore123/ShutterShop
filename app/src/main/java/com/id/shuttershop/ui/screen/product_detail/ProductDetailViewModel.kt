@@ -5,12 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.cart.AddToCartUseCase
 import com.id.domain.cart.CartModel
-import com.id.domain.product.IProductRepository
+import com.id.domain.product.FetchProductDetailUseCase
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
 import com.id.domain.product.toWishlist
-import com.id.domain.rating.IRatingRepository
+import com.id.domain.rating.FetchRatingUseCase
 import com.id.domain.rating.RatingModel
+import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
 import com.id.domain.wishlist.AddToWishlistUseCase
 import com.id.domain.wishlist.CheckInWishlistUseCase
@@ -35,8 +36,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailViewModel @Inject constructor(
-    private val productRepository: IProductRepository,
-    private val ratingRepository: IRatingRepository,
+    private val fetchProductDetailUseCase: FetchProductDetailUseCase,
+    private val fetchRatingUseCase: FetchRatingUseCase,
     private val addToCartUseCase: AddToCartUseCase,
     private val addToWishlistUseCase: AddToWishlistUseCase,
     private val removeFromWishlistUseCase: RemoveFromWishlistUseCase,
@@ -68,10 +69,11 @@ class ProductDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             with(_productState) {
                 handleUpdateUiState(UiState.Loading)
-                val response = productRepository.fetchProductDetail(id)
+                val response = fetchProductDetailUseCase.invoke(id)
                 response.onSuccess {
-                    setSelectedVariant(it, it.productVariance.first())
                     handleUpdateUiState(UiState.Success(it))
+                }.onError {
+                    handleUpdateUiState(UiState.Error(it))
                 }
             }
         }
@@ -81,9 +83,11 @@ class ProductDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _ratingState.run {
                 handleUpdateUiState(UiState.Loading)
-                val response = ratingRepository.fetchRatings(productId)
+                val response = fetchRatingUseCase.invoke(productId)
                 response.onSuccess {
                     handleUpdateUiState(UiState.Success(it))
+                }.onError {
+                    handleUpdateUiState(UiState.Error(it))
                 }
             }
         }

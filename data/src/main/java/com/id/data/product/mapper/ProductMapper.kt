@@ -23,7 +23,8 @@ fun ProductDetailResponse.mapToModel() = ProductDetailModel(
     totalRating = (totalRating ?: 0).toString(),
     imageUrl = image ?: listOf(),
     productStore = store.orEmpty(),
-    productStock = stock ?: 0
+    productStock = stock ?: 0,
+    totalSatisfaction = totalSatisfaction ?: 0
 )
 
 fun ProductVariantResponse.mapToModel() = VarianceModel(
