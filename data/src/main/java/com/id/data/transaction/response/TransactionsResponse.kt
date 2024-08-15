@@ -42,7 +42,7 @@ data class TransactionsResponse(
 )
 
 fun TransactionsResponse.mapToModel() = TransactionModel(
-    itemName = name ?: "",
+    itemName = "${name.orEmpty()} ${items?.firstOrNull()?.variantName}",
     itemImageUrl = image ?: "",
     itemTotal = determineTotalItem(items ?: listOf()),
     transactionTotal = total ?: 0,
