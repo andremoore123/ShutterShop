@@ -10,5 +10,5 @@ import com.id.domain.ext.Resource
  */
 interface IRatingRepository {
     suspend fun fetchRatings(productId: String): Resource<List<RatingModel>>
-    suspend fun insertRating(data: RatingModel): Resource<Boolean>
+    suspend fun insertRating(invoiceId: String, rating: Int, review: String): Resource<Boolean>
 }

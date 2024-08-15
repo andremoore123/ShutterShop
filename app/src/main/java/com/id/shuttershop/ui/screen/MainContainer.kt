@@ -14,6 +14,7 @@ import com.id.shuttershop.ui.navigation.auth.authNavigation
 import com.id.shuttershop.ui.navigation.main.mainNavigation
 import com.id.shuttershop.ui.navigation.splash.SplashRoute
 import com.id.shuttershop.ui.navigation.splash.splashNavigation
+import com.id.shuttershop.ui.navigation.transaction.transactionNavigation
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.navigateAndPopUpAll
 import kotlinx.coroutines.delay
@@ -58,6 +59,7 @@ fun MainContainer(
         splashNavigation(mainNavController)
         authNavigation(mainNavController)
         mainNavigation(mainNavController)
+        transactionNavigation(mainNavController)
     }
 }
 
