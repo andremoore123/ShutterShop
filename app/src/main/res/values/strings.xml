@@ -72,5 +72,7 @@
     <string name="text_done">Done</string>
     <string name="text_title_empty_cart">Your Cart is Still Empty</string>
     <string name="text_desc_empty_cart">Let\'s Add Some Products to the Cart</string>
+    <string name="text_title_wishlist_empty">Your Wishlist is Still Empty</string>
+    <string name="text_desc_wishlist_empty">Your dream items will be here. Start adding them now!</string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.id.shuttershop.ui.screen.wishlist;
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +43,7 @@ import com.id.domain.wishlist.WishlistModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.card.WishlistCard
 import com.id.shuttershop.ui.components.card.WishlistCardType
+import com.id.shuttershop.ui.components.state.EmptyState
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
 import com.id.shuttershop.ui.theme.ShutterShopTheme
@@ -88,17 +90,25 @@ fun WishlistScreen(
     )
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.padding(horizontal = 16.dp),
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }
     ) { innerPadding ->
-        WishlistContent(
-            modifier = Modifier.padding(innerPadding),
-            currentLayoutType = currentLayoutType,
-            wishlists = wishlists,
-            wishlistEvent = wishlistEvent,
-        )
+        Box(modifier = Modifier.padding(innerPadding)) {
+            if (wishlists.isEmpty()) {
+                EmptyState(
+                    title = stringResource(R.string.text_title_wishlist_empty),
+                    desc = stringResource(R.string.text_desc_wishlist_empty)
+                )
+            } else {
+                WishlistContent(
+                    currentLayoutType = currentLayoutType,
+                    wishlists = wishlists,
+                    wishlistEvent = wishlistEvent,
+                )
+            }
+        }
     }
 
 }
@@ -111,7 +121,7 @@ internal fun WishlistContent(
     wishlistEvent: WishlistEvent,
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 16.dp)
+        modifier = modifier
     ) {
         Row(
             modifier = Modifier
