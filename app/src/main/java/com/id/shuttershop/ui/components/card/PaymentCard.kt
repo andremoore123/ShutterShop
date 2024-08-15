@@ -1,6 +1,5 @@
 package com.id.shuttershop.ui.components.card
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,12 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.id.domain.payment.PaymentModel
 import com.id.domain.payment.PaymentType
 import com.id.shuttershop.R
@@ -49,10 +49,12 @@ fun PaymentCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (paymentModel != null) {
-            Box(
+            AsyncImage(
                 modifier = Modifier
-                    .size(30.dp)
-                    .background(Color.Black)
+                    .size(30.dp),
+                model = paymentModel.paymentImageUrl,
+                contentDescription = paymentModel.paymentName,
+                contentScale = ContentScale.Fit
             )
             Text(text = paymentModel.paymentName, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.weight(1f))

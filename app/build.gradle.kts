@@ -154,4 +154,7 @@ dependencies {
 
     // COIL
     implementation(libs.coil.compose)
+
+    // Lottie
+    implementation("com.airbnb.android:lottie-compose:6.5.0")
 }

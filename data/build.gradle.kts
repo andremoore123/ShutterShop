@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.material)
     implementation(project(":domain"))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.config)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

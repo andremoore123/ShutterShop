@@ -21,6 +21,7 @@ import com.id.shuttershop.ui.navigation.launchpad.LaunchpadMenus
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadRoute
 import com.id.shuttershop.ui.navigation.main.MainNavRoute
 import com.id.shuttershop.ui.navigation.main.USER_WITH_BRACKET
+import com.id.shuttershop.ui.navigation.transaction.TransactionRoute
 import com.id.shuttershop.ui.screen.home.HomeScreen
 import com.id.shuttershop.ui.screen.profile.ProfileScreen
 import com.id.shuttershop.ui.screen.transaction.TransactionScreen
@@ -90,7 +91,7 @@ fun LaunchpadScreen(
                         )
                     },
                     navigateToNotification = { mainNavController.navigate(MainNavRoute.NOTIFICATION_SCREEN.route) },
-                    navigateToCart = { mainNavController.navigate(MainNavRoute.CART_SCREEN.route) }
+                    navigateToCart = { mainNavController.navigate(TransactionRoute.CART_SCREEN.route) }
                 )
             }
             composable(LaunchpadRoute.TransactionRoute.route) {

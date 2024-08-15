@@ -62,4 +62,15 @@
     <string name="text_lowest">Lowest</string>
     <string name="text_highest">Highest</string>
     <string name="text_show_product">Show Products</string>
+    <string name="text_transaction_rate">Transaction Rate</string>
+    <string name="text_out_of_stock">Product Out of Stock</string>
+    <string name="text_transaction_id">Transaction ID</string>
+    <string name="text_transaction_status">Transaction Status</string>
+    <string name="text_date">Date</string>
+    <string name="text_time">Time</string>
+    <string name="text_payment_method">Payment Method</string>
+    <string name="text_done">Done</string>
+    <string name="text_title_empty_cart">Your Cart is Still Empty</string>
+    <string name="text_desc_empty_cart">Let\'s Add Some Products to the Cart</string>
+
 </resources>

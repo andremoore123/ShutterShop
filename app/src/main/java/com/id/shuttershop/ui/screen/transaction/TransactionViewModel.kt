@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.transaction.ITransactionRepository
+import com.id.domain.transaction.CheckoutModel
 import com.id.domain.transaction.TransactionModel
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_RATE_PRODUCT

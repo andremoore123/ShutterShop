@@ -8,8 +8,8 @@ import com.id.domain.cart.ICartRepository
 import com.id.domain.ext.formatToRupiah
 import com.id.domain.payment.IPaymentRepository
 import com.id.domain.payment.PaymentModel
+import com.id.domain.transaction.CheckoutModel
 import com.id.domain.transaction.PayUseCase
-import com.id.domain.transaction.TransactionModel
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
 import com.id.shuttershop.utils.onError
@@ -38,7 +38,7 @@ class CheckoutViewModel @Inject constructor(
     private val payUseCase: PayUseCase
 ) : ViewModel() {
 
-    private val _paymentState = MutableStateFlow<UiState<TransactionModel>>(UiState.Initiate)
+    private val _paymentState = MutableStateFlow<UiState<CheckoutModel>>(UiState.Initiate)
     val paymentState = _paymentState.asStateFlow()
 
     val isBottomShowValue = savedStateHandle.getStateFlow(IS_SHEET_SHOW_VALUE, false)

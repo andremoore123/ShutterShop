@@ -70,7 +70,7 @@ fun HomeCard(
                                 .clip(
                                     RoundedCornerShape(16.dp)
                                 ),
-                            contentScale = ContentScale.FillBounds,
+                            contentScale = ContentScale.Fit,
                             model = productModel.imageUrl,
                             contentDescription = productModel.itemName
                         )
@@ -106,7 +106,7 @@ fun HomeCard(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
                         .size(130.dp),
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.Fit,
                     model = productModel.imageUrl,
                     contentDescription = productModel.itemName
                 )

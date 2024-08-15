@@ -2,7 +2,6 @@ package com.id.shuttershop.ui.screen.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
@@ -58,6 +58,9 @@ import com.id.shuttershop.ui.components.topbar.HomeTopBar
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.onAddContentLoading
+import com.id.shuttershop.utils.onLoaded
+import com.id.shuttershop.utils.onLoadingState
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
@@ -186,12 +189,9 @@ internal fun HomeContent(
             navigateToNotification = homeEvent.navigateToNotification,
             navigateToCart = homeEvent.navigateToCart
         )
-        val loadItemLoading =
-            products.loadState.append is LoadState.Loading && products.itemCount == 0
-        Box {
-            if (products.loadState.refresh is LoadState.Loading) {
-                LoadingBar()
-            }
+        products.onLoadingState {
+            LoadingBar()
+        }.onLoaded {
             when (currentLayoutType) {
                 GRID_LAYOUT -> {
                     LazyVerticalGrid(
@@ -216,7 +216,7 @@ internal fun HomeContent(
                                 }
                             }
                         )
-                        if (loadItemLoading) {
+                        products.onAddContentLoading {
                             item {
                                 LoadingCard()
                             }
@@ -248,8 +248,8 @@ internal fun HomeContent(
                                 }
                             }
                         )
-                        item {
-                            if (loadItemLoading) {
+                        products.onAddContentLoading {
+                            item {
                                 LoadingCard()
                             }
                         }

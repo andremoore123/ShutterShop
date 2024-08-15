@@ -4,7 +4,6 @@ import com.id.domain.cart.CartModel
 import com.id.domain.cart.ICartRepository
 import com.id.domain.ext.Resource
 import com.id.domain.payment.PaymentModel
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 /**
@@ -20,19 +19,11 @@ class PayUseCase @Inject constructor(
     suspend operator fun invoke(
         data: List<CartModel>,
         paymentModel: PaymentModel
-    ): Resource<TransactionModel> {
-        delay(2_00)
-        cartRepository.deleteAllCart()
-        return Resource.Success(
-            TransactionModel(
-                itemName = "Roosevelt Chase",
-                itemTotal = "pretium",
-                itemPrice = "habeo",
-                itemImageUrl = "https://search.yahoo.com/search?p=habitant",
-                transactionTotal = "hac",
-                transactionStatus = TransactionStatus.FAILED,
-                transactionDate = "gubergren"
-            )
-        )
+    ): Resource<CheckoutModel> {
+        val response = transactionRepository.checkout(paymentModel.paymentType, data)
+        if (response is Resource.Success) {
+            cartRepository.deleteCarts(data = data.toTypedArray())
+        }
+        return response
     }
 }

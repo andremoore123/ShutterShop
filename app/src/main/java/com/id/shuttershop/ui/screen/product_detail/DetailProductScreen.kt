@@ -222,11 +222,18 @@ internal fun DetailProductContent(
                         .align(Alignment.BottomCenter),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    val checkoutNowState = it.productStock > 0
+                    val checkoutButtonText = if (checkoutNowState) {
+                        R.string.text_buy_now
+                    } else {
+                        R.string.text_out_of_stock
+                    }
                     OutlinedButton(
+                        enabled = checkoutNowState,
                         onClick = { detailEvent.onCheckoutClick(it) },
                         modifier = Modifier.fillMaxWidth(0.5f)
                     ) {
-                        Text(text = stringResource(R.string.text_buy_now))
+                        Text(text = stringResource(checkoutButtonText))
                     }
                     PrimaryButton(text = stringResource(id = R.string.text_button_add_cart),
                         modifier = Modifier.fillMaxWidth(1f),
