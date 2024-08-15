@@ -1,6 +1,6 @@
 package com.id.domain.history
 
-import com.id.domain.ext.Resource
+import com.id.domain.utils.resource.Resource
 
 /**
  * Created by: andre.

@@ -1,7 +1,7 @@
 package com.id.domain.cart
 
 import android.os.Parcelable
-import com.id.domain.ext.formatToRupiah
+import com.id.domain.utils.formatToRupiah
 import kotlinx.parcelize.Parcelize
 
 /**

@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.analytic.IAnalyticRepository
-import com.id.domain.transaction.ITransactionRepository
-import com.id.domain.transaction.CheckoutModel
+import com.id.domain.transaction.FetchTransactionsUseCase
 import com.id.domain.transaction.TransactionModel
+import com.id.domain.utils.resource.onError
+import com.id.domain.utils.resource.onSuccess
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_RATE_PRODUCT
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.PARAM_BUTTON
@@ -15,8 +16,6 @@ import com.id.shuttershop.utils.analytics.AnalyticsConstants.PRODUCT_NAME
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.RATE_BUTTON
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_TRANSACTION
 import com.id.shuttershop.utils.handleUpdateUiState
-import com.id.shuttershop.utils.onError
-import com.id.shuttershop.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +31,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
-    private val transactionRepository: ITransactionRepository,
+    private val fetchTransactionsUseCase: FetchTransactionsUseCase,
     private val analyticRepository: IAnalyticRepository,
 ) : ViewModel() {
     private val _transactionState =
@@ -43,7 +42,7 @@ class TransactionViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             with(_transactionState) {
                 handleUpdateUiState(UiState.Loading)
-                val response = transactionRepository.fetchTransaction()
+                val response = fetchTransactionsUseCase.invoke()
                 response.onSuccess {
                     handleUpdateUiState(UiState.Success(it))
                 }.onError {

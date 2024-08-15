@@ -1,8 +1,8 @@
 package com.id.data.history
 
-import com.id.domain.ext.Resource
 import com.id.domain.history.HistoryModel
 import com.id.domain.history.IHistoryRepository
+import com.id.domain.utils.resource.Resource
 import javax.inject.Inject
 
 /**

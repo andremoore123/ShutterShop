@@ -27,8 +27,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.id.domain.ext.formatToRupiah
 import com.id.domain.product.ProductModel
+import com.id.domain.utils.formatToRupiah
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 

@@ -1,6 +1,6 @@
 package com.id.domain.rating
 
-import com.id.domain.ext.Resource
+import com.id.domain.utils.resource.Resource
 
 /**
  * Created by: andre.

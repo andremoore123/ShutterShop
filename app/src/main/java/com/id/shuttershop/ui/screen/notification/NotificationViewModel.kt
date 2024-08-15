@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.history.HistoryModel
 import com.id.domain.history.IHistoryRepository
+import com.id.domain.utils.resource.onError
+import com.id.domain.utils.resource.onSuccess
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
-import com.id.shuttershop.utils.onError
-import com.id.shuttershop.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

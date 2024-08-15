@@ -2,7 +2,7 @@ package com.id.shuttershop.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import com.id.domain.ext.ErrorType
+import com.id.domain.utils.ErrorType
 
 @Stable
 sealed class UiState<out T> {

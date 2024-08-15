@@ -11,12 +11,12 @@ import com.id.domain.product.VarianceModel
 import com.id.domain.product.toWishlist
 import com.id.domain.rating.IRatingRepository
 import com.id.domain.rating.RatingModel
+import com.id.domain.utils.resource.onSuccess
 import com.id.domain.wishlist.AddToWishlistUseCase
 import com.id.domain.wishlist.CheckInWishlistUseCase
 import com.id.domain.wishlist.RemoveFromWishlistUseCase
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
-import com.id.shuttershop.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

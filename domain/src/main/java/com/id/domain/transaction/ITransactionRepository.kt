@@ -1,8 +1,9 @@
 package com.id.domain.transaction
 
 import com.id.domain.cart.CartModel
-import com.id.domain.ext.Resource
 import com.id.domain.payment.PaymentType
+import com.id.domain.utils.network_response.NetworkResponse
+import com.id.domain.utils.resource.Resource
 
 /**
  * Created by: andreputras.
@@ -12,5 +13,5 @@ import com.id.domain.payment.PaymentType
  */
 interface ITransactionRepository {
     suspend fun checkout(paymentType: PaymentType, items: List<CartModel>): Resource<CheckoutModel>
-    suspend fun fetchTransaction(): Resource<List<TransactionModel>>
+    suspend fun fetchTransaction(): NetworkResponse<List<TransactionModel>>
 }

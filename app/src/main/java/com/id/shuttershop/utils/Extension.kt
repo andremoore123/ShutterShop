@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.id.domain.ext.ErrorType
-import com.id.domain.ext.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
@@ -17,20 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 fun <T> MutableStateFlow<UiState<T>>.handleUpdateUiState(newState: UiState<T>) {
     this.value = newState
-}
-
-suspend fun <T> Resource<T>.onSuccess(handleResource: suspend (T) -> Unit): Resource<T> {
-    if (this is Resource.Success) {
-        handleResource(data)
-    }
-    return this
-}
-
-fun <T> Resource<T>.onError(handleError: (ErrorType) -> Unit): Resource<T> {
-    if (this is Resource.Error) {
-        handleError(errorType)
-    }
-    return this
 }
 
 fun NavController.navigateAndPopUpAll(destination: String) {

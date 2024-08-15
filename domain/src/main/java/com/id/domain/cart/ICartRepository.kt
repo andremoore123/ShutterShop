@@ -1,6 +1,6 @@
 package com.id.domain.cart
 
-import com.id.domain.ext.Resource
+import com.id.domain.utils.resource.Resource
 import kotlinx.coroutines.flow.Flow
 
 /**

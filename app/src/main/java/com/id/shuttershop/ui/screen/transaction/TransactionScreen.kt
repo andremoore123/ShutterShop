@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.screen.transaction;
+package com.id.shuttershop.ui.screen.transaction
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,14 +11,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.domain.transaction.TransactionModel
-import com.id.domain.transaction.TransactionStatus
+import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.card.TransactionCard
+import com.id.shuttershop.ui.components.state.EmptyErrorState
+import com.id.shuttershop.ui.components.state.LoadingBar
+import com.id.shuttershop.ui.components.state.UnknownErrorState
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.OnEmptyError
+import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.onError
+import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
 
 /**
@@ -40,7 +48,7 @@ fun TransactionScreen(
     TransactionContent(
         modifier = modifier.padding(horizontal = 16.dp),
         transactionState = transactionState,
-        onRateClick = viewModel::rateTransaction
+        onRetryClick = { viewModel.fetchTransaction() }
     )
 }
 
@@ -48,7 +56,7 @@ fun TransactionScreen(
 internal fun TransactionContent(
     modifier: Modifier = Modifier,
     transactionState: UiState<List<TransactionModel>>,
-    onRateClick: (TransactionModel) -> Unit,
+    onRetryClick: () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize()
@@ -58,8 +66,22 @@ internal fun TransactionContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(it) {
-                    TransactionCard(transactionModel = it, onRateClick = { onRateClick(it) })
+                    TransactionCard(transactionModel = it)
                 }
+            }
+        }.onLoading {
+            LoadingBar()
+        }.onError {
+            it.OnUnknownError {
+                UnknownErrorState(onRetryClick = onRetryClick)
+            }
+            it.OnEmptyError {
+                EmptyErrorState(
+                    title = stringResource(R.string.text_title_empty_transaction),
+                    desc = stringResource(
+                        R.string.text_desc_empty_transaction
+                    )
+                )
             }
         }
     }
@@ -72,26 +94,7 @@ internal fun ShowTransactionScreenPreview() {
         TransactionContent(
             modifier = Modifier.padding(horizontal = 16.dp),
             transactionState = UiState.Success(
-                listOf(
-                    TransactionModel(
-                        itemName = "Ruthie Gibbs",
-                        itemTotal = "nihil",
-                        itemPrice = "sanctus",
-                        itemImageUrl = "https://duckduckgo.com/?q=mnesarchum",
-                        transactionTotal = "voluptaria",
-                        transactionStatus = TransactionStatus.FAILED,
-                        transactionDate = "augue"
-                    ),
-                    TransactionModel(
-                        itemName = "Ruthie Gibbs",
-                        itemTotal = "nihil",
-                        itemPrice = "sanctus",
-                        itemImageUrl = "https://duckduckgo.com/?q=mnesarchum",
-                        transactionTotal = "voluptaria",
-                        transactionStatus = TransactionStatus.FAILED,
-                        transactionDate = "augue"
-                    ),
-                )
+                listOf()
             ), {}
         )
     }

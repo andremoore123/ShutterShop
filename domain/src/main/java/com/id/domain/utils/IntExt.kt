@@ -1,4 +1,4 @@
-package com.id.domain.ext
+package com.id.domain.utils
 
 /**
  * Created by: andre.

@@ -2,8 +2,8 @@ package com.id.domain.transaction
 
 import com.id.domain.cart.CartModel
 import com.id.domain.cart.ICartRepository
-import com.id.domain.ext.Resource
 import com.id.domain.payment.PaymentModel
+import com.id.domain.utils.resource.Resource
 import javax.inject.Inject
 
 /**

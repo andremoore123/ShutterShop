@@ -5,7 +5,7 @@ import com.id.data.auth.model.request.RegisterRequest
 import com.id.data.auth.model.response.toModel
 import com.id.domain.auth.IAuthRepository
 import com.id.domain.auth.model.AuthDataModel
-import com.id.domain.ext.NetworkResponse
+import com.id.domain.utils.network_response.NetworkResponse
 import javax.inject.Inject
 
 /**
