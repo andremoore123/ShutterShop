@@ -94,7 +94,8 @@ class ProductDetailViewModel @Inject constructor(
             itemId = data.id,
             itemName = data.productName,
             itemVariantName = variant?.title ?: data.productVariance.first().title,
-            itemPrice = data.productPrice
+            itemPrice = data.productPrice,
+            itemStock = data.productStock
         )
         return cartModel
     }
