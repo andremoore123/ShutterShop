@@ -1,4 +1,4 @@
-package com.id.domain.ext
+package com.id.domain.utils
 
 /**
  * Created by: andreputras.
@@ -8,6 +8,7 @@ package com.id.domain.ext
  */
 sealed class ErrorType(val errorMessage: String) {
     data class NetworkError(val message: String) : ErrorType(message)
-    data class HTTPError(val message: String) : ErrorType(message)
+    data class HTTPError(val code: Int, val message: String) : ErrorType(message)
     data class UnknownError(val message: String) : ErrorType(message)
+    data object EmptyDataError : ErrorType("Error Empty")
 }

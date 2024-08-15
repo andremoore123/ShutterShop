@@ -1,11 +1,11 @@
 package com.id.domain.auth
 
-import com.id.domain.ext.ErrorType
-import com.id.domain.ext.Resource
-import com.id.domain.ext.onSuccess
-import com.id.domain.ext.onUnknownError
 import com.id.domain.session.ISessionRepository
 import com.id.domain.session.UserModel
+import com.id.domain.utils.ErrorType
+import com.id.domain.utils.network_response.onSuccess
+import com.id.domain.utils.network_response.onUnknownError
+import com.id.domain.utils.resource.Resource
 import javax.inject.Inject
 
 /**

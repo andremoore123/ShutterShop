@@ -8,10 +8,10 @@ package com.id.domain.transaction
  */
 data class TransactionModel(
     val itemName: String,
-    val itemTotal: String,
-    val itemPrice: String,
+    val itemTotal: Int,
     val itemImageUrl: String,
-    val transactionTotal: String,
+    val transactionTotal: Int,
     val transactionStatus: TransactionStatus,
     val transactionDate: String,
+    val itemStatus: ItemStatus
 )

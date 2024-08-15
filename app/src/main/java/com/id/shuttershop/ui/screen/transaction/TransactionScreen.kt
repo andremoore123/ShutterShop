@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.screen.transaction;
+package com.id.shuttershop.ui.screen.transaction
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,10 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.domain.transaction.TransactionModel
-import com.id.domain.transaction.TransactionStatus
 import com.id.shuttershop.ui.components.card.TransactionCard
+import com.id.shuttershop.ui.components.state.LoadingBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
 
 /**
@@ -61,6 +62,8 @@ internal fun TransactionContent(
                     TransactionCard(transactionModel = it, onRateClick = { onRateClick(it) })
                 }
             }
+        }.onLoading {
+            LoadingBar()
         }
     }
 }
@@ -72,26 +75,7 @@ internal fun ShowTransactionScreenPreview() {
         TransactionContent(
             modifier = Modifier.padding(horizontal = 16.dp),
             transactionState = UiState.Success(
-                listOf(
-                    TransactionModel(
-                        itemName = "Ruthie Gibbs",
-                        itemTotal = "nihil",
-                        itemPrice = "sanctus",
-                        itemImageUrl = "https://duckduckgo.com/?q=mnesarchum",
-                        transactionTotal = "voluptaria",
-                        transactionStatus = TransactionStatus.FAILED,
-                        transactionDate = "augue"
-                    ),
-                    TransactionModel(
-                        itemName = "Ruthie Gibbs",
-                        itemTotal = "nihil",
-                        itemPrice = "sanctus",
-                        itemImageUrl = "https://duckduckgo.com/?q=mnesarchum",
-                        transactionTotal = "voluptaria",
-                        transactionStatus = TransactionStatus.FAILED,
-                        transactionDate = "augue"
-                    ),
-                )
+                listOf()
             ), {}
         )
     }

@@ -6,12 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.auth.LoginUseCase
+import com.id.domain.utils.resource.onError
+import com.id.domain.utils.resource.onSuccess
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.analytics.AnalyticsConstants
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_LOGIN
 import com.id.shuttershop.utils.handleUpdateUiState
-import com.id.shuttershop.utils.onError
-import com.id.shuttershop.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -4,16 +4,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.cart.CartModel
-import com.id.domain.cart.ICartRepository
-import com.id.domain.ext.formatToRupiah
 import com.id.domain.payment.IPaymentRepository
 import com.id.domain.payment.PaymentModel
 import com.id.domain.transaction.CheckoutModel
 import com.id.domain.transaction.PayUseCase
+import com.id.domain.utils.formatToRupiah
+import com.id.domain.utils.resource.onError
+import com.id.domain.utils.resource.onSuccess
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
-import com.id.shuttershop.utils.onError
-import com.id.shuttershop.utils.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +33,6 @@ import javax.inject.Inject
 class CheckoutViewModel @Inject constructor(
     paymentRepository: IPaymentRepository,
     private val savedStateHandle: SavedStateHandle,
-    cartRepository: ICartRepository,
     private val payUseCase: PayUseCase
 ) : ViewModel() {
 

@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.components.card;
+package com.id.shuttershop.ui.components.card
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.id.domain.ext.formatToRupiah
+import com.id.domain.utils.formatToRupiah
 import com.id.domain.wishlist.WishlistModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton

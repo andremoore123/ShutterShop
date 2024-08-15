@@ -1,7 +1,7 @@
 package com.id.domain.auth
 
 import com.id.domain.auth.model.AuthDataModel
-import com.id.domain.ext.NetworkResponse
+import com.id.domain.utils.network_response.NetworkResponse
 
 /**
  * Created by: andreputras.

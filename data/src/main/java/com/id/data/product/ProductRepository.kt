@@ -6,12 +6,12 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.id.data.product.mapper.mapToModel
 import com.id.data.product.response.mapToModel
-import com.id.domain.ext.ErrorType
-import com.id.domain.ext.Resource
 import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.ProductFilterParams
 import com.id.domain.product.ProductModel
+import com.id.domain.utils.ErrorType
+import com.id.domain.utils.resource.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

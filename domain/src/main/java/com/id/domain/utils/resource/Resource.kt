@@ -1,4 +1,6 @@
-package com.id.domain.ext
+package com.id.domain.utils.resource
+
+import com.id.domain.utils.ErrorType
 
 sealed class Resource<out T> {
     data object Initiate: Resource<Nothing>()

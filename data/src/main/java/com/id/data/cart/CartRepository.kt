@@ -2,7 +2,7 @@ package com.id.data.cart
 
 import com.id.domain.cart.CartModel
 import com.id.domain.cart.ICartRepository
-import com.id.domain.ext.Resource
+import com.id.domain.utils.resource.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

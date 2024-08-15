@@ -1,6 +1,6 @@
 package com.id.domain.product
 
-import com.id.domain.ext.formatToRupiah
+import com.id.domain.utils.formatToRupiah
 import com.id.domain.wishlist.WishlistModel
 
 /**

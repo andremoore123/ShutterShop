@@ -1,9 +1,9 @@
 package com.id.data.rating
 
-import com.id.domain.ext.ErrorType
-import com.id.domain.ext.Resource
 import com.id.domain.rating.IRatingRepository
 import com.id.domain.rating.RatingModel
+import com.id.domain.utils.ErrorType
+import com.id.domain.utils.resource.Resource
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class RatingRepository @Inject constructor(
             apiService.sendRating(request)
             Resource.Success(true)
         } catch (e: HttpException) {
-            Resource.Error(ErrorType.HTTPError(e.message().toString()))
+            Resource.Error(ErrorType.HTTPError(code = e.code(), e.message()))
         } catch (e: Exception) {
             Resource.Error(ErrorType.NetworkError(e.message.toString()))
         }

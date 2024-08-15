@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.id.domain.ext.formatToRupiah
+import com.id.domain.utils.formatToRupiah
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.theme.ShutterShopTheme

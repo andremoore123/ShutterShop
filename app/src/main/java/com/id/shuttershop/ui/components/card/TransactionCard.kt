@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.components.card;
+package com.id.shuttershop.ui.components.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,8 +27,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.id.domain.transaction.ItemStatus
 import com.id.domain.transaction.TransactionModel
 import com.id.domain.transaction.TransactionStatus
+import com.id.domain.utils.formatToRupiah
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.theme.ShutterShopTheme
@@ -103,7 +105,7 @@ fun TransactionCard(
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = transactionModel.transactionTotal,
+                        text = transactionModel.transactionTotal.formatToRupiah(),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
 
@@ -140,14 +142,15 @@ internal fun ShowTransactionCardPreview() {
     ShutterShopTheme {
         TransactionCard(
             transactionModel = TransactionModel(
-                itemName = "Juliet Cleveland",
-                itemTotal = "2",
-                itemPrice = "faucibus",
-                itemImageUrl = "https://duckduckgo.com/?q=gloriatur",
-                transactionTotal = "Rp 23.000.000",
+                itemName = "Aurelia Craig",
+                itemTotal = 7737,
+                itemImageUrl = "http://www.bing.com/search?q=populo",
+                transactionTotal = 3778,
                 transactionStatus = TransactionStatus.FAILED,
-                transactionDate = "23 Januari 2024"
-            )
+                transactionDate = "dis",
+                itemStatus = ItemStatus.ONE_TYPE_ITEM
+            ), onRateClick = {}
+
         )
     }
 }
