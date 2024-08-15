@@ -5,6 +5,7 @@ import com.id.domain.ext.Resource
 import com.id.domain.ext.onSuccess
 import com.id.domain.ext.onUnknownError
 import com.id.domain.session.ISessionRepository
+import com.id.domain.session.UserModel
 import javax.inject.Inject
 
 /**
@@ -22,6 +23,7 @@ class RegisterUseCase @Inject constructor(
         var result: Resource<String> = Resource.Initiate
         response.onSuccess {
             sessionRepository.insertUserToken(it.accessToken, it.refreshToken)
+            sessionRepository.setUserData(UserModel(name = name, email = email))
         }.onUnknownError {
             result = Resource.Error(ErrorType.UnknownError(it.message.toString()))
         }
