@@ -36,9 +36,15 @@ import com.id.shuttershop.ui.components.SearchTextField
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
 import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
+import com.id.shuttershop.ui.components.state.HttpErrorState
 import com.id.shuttershop.ui.components.state.LoadingBar
 import com.id.shuttershop.ui.components.state.LoadingCard
+import com.id.shuttershop.ui.components.state.UnknownErrorState
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.onEmptyResultError
+import com.id.shuttershop.utils.onLoaded
+import com.id.shuttershop.utils.onLoadingState
+import com.id.shuttershop.utils.onUnknownError
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
@@ -115,6 +121,9 @@ internal fun SearchContent(
     onProductClick: (String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
+    val onRetry = {
+        searchState.retry()
+    }
     Column(modifier = modifier) {
         Row(
             verticalAlignment = Alignment.Bottom,
@@ -134,31 +143,34 @@ internal fun SearchContent(
                 enabled = true
             )
         }
-        val loadItemLoading =
-            searchState.loadState.refresh is LoadState.Loading && searchState.itemCount == 0
 
         Box(modifier = Modifier) {
-            if (loadItemLoading) {
+            searchState.onLoadingState {
                 LoadingBar()
-            }
-            LazyColumn(
-                modifier = Modifier.padding(top = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(searchState.itemCount) { index ->
-                    searchState[index]?.let {
-                        HomeCard(
-                            modifier = Modifier.clickable { onProductClick(it.id) },
-                            productModel = it,
-                            cardOrientation = HomeCardOrientation.COLUMN
-                        )
+            }.onLoaded {
+                LazyColumn(
+                    modifier = Modifier.padding(top = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(searchState.itemCount) { index ->
+                        searchState[index]?.let {
+                            HomeCard(
+                                modifier = Modifier.clickable { onProductClick(it.id) },
+                                productModel = it,
+                                cardOrientation = HomeCardOrientation.COLUMN
+                            )
+                        }
+                    }
+                    item {
+                        if (searchState.loadState.append is LoadState.Loading) {
+                            LoadingCard()
+                        }
                     }
                 }
-                item {
-                    if (searchState.loadState.append is LoadState.Loading) {
-                        LoadingCard()
-                    }
-                }
+            }.onEmptyResultError {
+                HttpErrorState(errorCode = it, onRetryClick = onRetry)
+            }.onUnknownError {
+                UnknownErrorState(onRetryClick = onRetry)
             }
         }
     }

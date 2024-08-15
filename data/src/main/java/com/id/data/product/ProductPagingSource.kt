@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.id.data.product.response.ProductDataResponse
 import com.id.domain.product.ProductFilterParams
+import retrofit2.HttpException
 
 /**
  * Created by: andre.
@@ -42,6 +43,12 @@ class ProductPagingSource(
                 prevKey = if (currentPage > 1) currentPage - 1 else null,
                 nextKey = if (currentPage < totalPages) currentPage + 1 else null
             )
+        } catch (e: HttpException) {
+            if (e.code() == 404) {
+                LoadResult.Error(NullPointerException())
+            } else {
+                LoadResult.Error(e)
+            }
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

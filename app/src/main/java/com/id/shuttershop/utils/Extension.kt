@@ -46,21 +46,38 @@ fun <T: Any>LazyPagingItems<T>.onLoaded(
     return this
 }
 
-fun <T : Any>LazyPagingItems<T>.onAddContentLoading(
-    loadingHandling: () -> Unit
+@Composable
+fun <T : Any> LazyPagingItems<T>.onEmptyResultError(
+    content: @Composable (Int) -> Unit
 ): LazyPagingItems<T> {
-    if (this.loadState.append is LoadState.Loading) {
-        loadingHandling()
+    if (this.loadState.refresh is LoadState.Error) {
+        val error = (loadState.refresh as LoadState.Error).error
+
+        if (error is NullPointerException) {
+            content(404)
+        }
     }
     return this
 }
 
 @Composable
-fun <T: Any>LazyPagingItems<T>.onErrorState(
-    errorState: @Composable () -> Unit
+fun <T : Any> LazyPagingItems<T>.onUnknownError(
+    content: @Composable () -> Unit
 ): LazyPagingItems<T> {
-    if (this.loadState.hasError) {
-        errorState()
+    if (this.loadState.refresh is LoadState.Error) {
+        val error = (loadState.refresh as LoadState.Error).error
+        if ((error is NullPointerException).not()) {
+            content()
+        }
+    }
+    return this
+}
+
+fun <T : Any>LazyPagingItems<T>.onAddContentLoading(
+    loadingHandling: () -> Unit
+): LazyPagingItems<T> {
+    if (this.loadState.append is LoadState.Loading) {
+        loadingHandling()
     }
     return this
 }
