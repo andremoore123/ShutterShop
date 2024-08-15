@@ -34,6 +34,7 @@ import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
 import com.id.shuttershop.ui.components.card.CartCard
+import com.id.shuttershop.ui.components.state.EmptyState
 import com.id.shuttershop.ui.components.state.LoadingState
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
@@ -62,7 +63,9 @@ fun CartScreen(
     val totalPayment by viewModel.totalPaymentValue.collectAsState()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.updateCartStockFromNetwork()
+        if (cartList.isNotEmpty()) {
+            viewModel.updateCartStockFromNetwork()
+        }
     }
 
     LaunchedEffect(key1 = cartList, key2 = selectedCart) {
@@ -109,66 +112,74 @@ internal fun CartContent(
             onBackClickListener = onBackClick,
             showNavigation = true
         )
-        Box(modifier = Modifier.fillMaxSize()) {
-            screenState.onLoading {
-                LoadingState()
-            }.onSuccess {
-                Column(modifier = Modifier.padding(bottom = 100.dp)) {
-                    val showSelectOption = productList.isNotEmpty()
-                    AnimatedVisibility(visible = showSelectOption) {
-                        Row(
+        if (productList.isNotEmpty()) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                screenState.onLoading {
+                    LoadingState()
+                }.onSuccess {
+                    Column(modifier = Modifier.padding(bottom = 100.dp)) {
+                        val showSelectOption = productList.isNotEmpty()
+                        AnimatedVisibility(visible = showSelectOption) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 16.dp, start = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Checkbox(
+                                    enabled = cartEvent.isAllChartSelected() != null,
+                                    checked = cartEvent.isAllChartSelected() == true,
+                                    onCheckedChange = { state ->
+                                        cartEvent.onSelectAllCart(state)
+                                    })
+                                Text(
+                                    text = stringResource(R.string.text_select_all),
+                                    modifier = Modifier.padding(start = 5.dp)
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                PrimaryTextButton(
+                                    text = stringResource(id = R.string.text_delete),
+                                    enabled = selectedCart.isNotEmpty(),
+                                    onClick = { cartEvent.removeCarts(listOf()) }
+                                )
+                            }
+                            HorizontalDivider()
+                        }
+                        LazyColumn(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(end = 16.dp, start = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .padding(top = 16.dp)
+                                .padding(start = 4.dp, end = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            Checkbox(
-                                enabled = cartEvent.isAllChartSelected() != null,
-                                checked = cartEvent.isAllChartSelected() == true,
-                                onCheckedChange = { state ->
-                                    cartEvent.onSelectAllCart(state)
-                                })
-                            Text(
-                                text = stringResource(R.string.text_select_all),
-                                modifier = Modifier.padding(start = 5.dp)
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            PrimaryTextButton(
-                                text = stringResource(id = R.string.text_delete),
-                                enabled = selectedCart.isNotEmpty(),
-                                onClick = { cartEvent.removeCarts(listOf()) }
-                            )
-                        }
-                        HorizontalDivider()
-                    }
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .padding(start = 4.dp, end = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(productList) { cart ->
-                            CartCard(
-                                modifier = Modifier.clickable {
-                                    cartEvent.navigateToProductDetail(cart.itemId)
-                                },
-                                cartModel = cart,
-                                isSelected = selectedCart.any { cart.cartId == it },
-                                onCheckClick = { cartEvent.onSelectCart.invoke(it, cart) },
-                                onItemAdd = { cartEvent.addCartQuantity(cart) },
-                                onItemMinus = { cartEvent.reduceCartQuantity(cart) },
-                                onRemoveClick = { cartEvent.removeCarts(listOf(cart.cartId ?: 0)) },
-                            )
+                            items(productList) { cart ->
+                                CartCard(
+                                    modifier = Modifier.clickable {
+                                        cartEvent.navigateToProductDetail(cart.itemId)
+                                    },
+                                    cartModel = cart,
+                                    isSelected = selectedCart.any { cart.cartId == it },
+                                    onCheckClick = { cartEvent.onSelectCart.invoke(it, cart) },
+                                    onItemAdd = { cartEvent.addCartQuantity(cart) },
+                                    onItemMinus = { cartEvent.reduceCartQuantity(cart) },
+                                    onRemoveClick = { cartEvent.removeCarts(listOf(cart.cartId ?: 0)) },
+                                )
+                            }
                         }
                     }
+                    CartBottom(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        totalPrice = totalPrice,
+                        enabled = selectedCart.isNotEmpty(),
+                        onCheckoutClick = cartEvent.onCheckoutClick
+                    )
                 }
-                CartBottom(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    totalPrice = totalPrice,
-                    enabled = selectedCart.isNotEmpty(),
-                    onCheckoutClick = cartEvent.onCheckoutClick
-                )
             }
+
+        } else {
+            EmptyState(title = stringResource(R.string.text_title_empty_cart), desc = stringResource(
+                R.string.text_desc_empty_cart
+            )
+            )
         }
     }
 }

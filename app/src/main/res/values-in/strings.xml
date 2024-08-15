@@ -62,4 +62,15 @@
     <string name="text_lowest">Terendah</string>
     <string name="text_highest">Tertinggi</string>
     <string name="text_show_product">Tampilkan Produk</string>
+    <string name="text_transaction_rate">Tarif Transaksi</string>
+    <string name="text_out_of_stock">Produk Habis</string>
+    <string name="text_transaction_id">ID Transaksi</string>
+    <string name="text_transaction_status">Status Transaksi</string>
+    <string name="text_date">Tanggal</string>
+    <string name="text_time">Waktu</string>
+    <string name="text_payment_method">Metode Pembayaran</string>
+    <string name="text_done">Selesai</string>
+    <string name="text_title_empty_cart">Cart Kamu Masih Kosong Nih</string>
+    <string name="text_desc_empty_cart">Ayo Tambah Dulu Produknya ke Cart</string>
+
 </resources>
