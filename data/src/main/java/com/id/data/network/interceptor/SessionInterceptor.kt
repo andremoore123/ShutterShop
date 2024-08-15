@@ -17,6 +17,6 @@ class SessionInterceptor(
                 session.clearUserSession()
             }
         }
-        return chain.proceed(request)
+        return response
     }
 }
