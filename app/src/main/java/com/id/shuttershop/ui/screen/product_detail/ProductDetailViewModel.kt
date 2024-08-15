@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.cart.AddToCartUseCase
 import com.id.domain.cart.CartModel
-import com.id.domain.product.IProductRepository
+import com.id.domain.product.FetchProductDetailUseCase
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.VarianceModel
 import com.id.domain.product.toWishlist
@@ -36,7 +36,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductDetailViewModel @Inject constructor(
-    private val productRepository: IProductRepository,
+    private val fetchProductDetailUseCase: FetchProductDetailUseCase,
     private val fetchRatingUseCase: FetchRatingUseCase,
     private val addToCartUseCase: AddToCartUseCase,
     private val addToWishlistUseCase: AddToWishlistUseCase,
@@ -69,10 +69,11 @@ class ProductDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             with(_productState) {
                 handleUpdateUiState(UiState.Loading)
-                val response = productRepository.fetchProductDetail(id)
+                val response = fetchProductDetailUseCase.invoke(id)
                 response.onSuccess {
-                    setSelectedVariant(it, it.productVariance.first())
                     handleUpdateUiState(UiState.Success(it))
+                }.onError {
+                    handleUpdateUiState(UiState.Error(it))
                 }
             }
         }

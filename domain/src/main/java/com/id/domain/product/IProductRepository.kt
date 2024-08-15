@@ -1,7 +1,7 @@
 package com.id.domain.product
 
 import androidx.paging.PagingData
-import com.id.domain.utils.resource.Resource
+import com.id.domain.utils.network_response.NetworkResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -16,5 +16,5 @@ interface IProductRepository {
 
     fun searchProduct(query: String): Flow<PagingData<ProductModel>>
 
-    suspend fun fetchProductDetail(id: String): Resource<ProductDetailModel>
+    suspend fun fetchProductDetail(id: String): NetworkResponse<ProductDetailModel>
 }

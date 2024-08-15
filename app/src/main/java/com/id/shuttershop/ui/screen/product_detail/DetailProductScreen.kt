@@ -61,9 +61,13 @@ import com.id.domain.rating.RatingModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.button.PrimaryTextButton
+import com.id.shuttershop.ui.components.state.HttpErrorState
 import com.id.shuttershop.ui.components.state.LoadingBar
+import com.id.shuttershop.ui.components.state.UnknownErrorState
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.OnHttpError
+import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
@@ -101,10 +105,6 @@ fun DetailProductScreen(
         viewModel.updateMessage(newMessage)
     }
 
-    productState.onError {
-        viewModel.updateMessage(it.errorMessage)
-    }
-
     val detailEvent = DetailProductEvent(
         onVarianceChange = viewModel::setSelectedVariant,
         onCheckoutClick = {
@@ -116,7 +116,8 @@ fun DetailProductScreen(
         onShareClick = {},
         checkIsOnWishlist = viewModel::checkIsInWishlist,
         changeBottomSheetValue = viewModel::modifySheetValue,
-        onRetryRating = { viewModel.fetchProductRating(idProduct) }
+        onRetryRating = { viewModel.fetchProductRating(idProduct) },
+        onRetryProduct = { viewModel.fetchProduct(idProduct) }
     )
 
 
@@ -245,6 +246,16 @@ internal fun DetailProductContent(
         }
             .onLoading {
                 LoadingBar()
+            }.onError { errorType ->
+                errorType.OnUnknownError {
+                    UnknownErrorState(onRetryClick = detailEvent.onRetryProduct)
+                }
+                errorType.OnHttpError {
+                    HttpErrorState(
+                        errorCode = it,
+                        onRetryClick = detailEvent.onRetryProduct
+                    )
+                }
             }
     }
 }
@@ -468,7 +479,8 @@ internal fun DetailProductScreenPreview() {
                 onShareClick = {},
                 checkIsOnWishlist = { _, _ -> },
                 changeBottomSheetValue = {},
-                onRetryRating = {}
+                onRetryRating = {},
+                onRetryProduct = {}
                 ),
             selectedVariant = null,
             isInWishlist = false,

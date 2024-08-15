@@ -10,10 +10,10 @@ import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductDetailModel
 import com.id.domain.product.ProductFilterParams
 import com.id.domain.product.ProductModel
-import com.id.domain.utils.ErrorType
-import com.id.domain.utils.resource.Resource
+import com.id.domain.utils.network_response.NetworkResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import retrofit2.HttpException
 import javax.inject.Inject
 
 /**
@@ -43,14 +43,18 @@ class ProductRepository @Inject constructor(
         }
     }
 
-    override suspend fun fetchProductDetail(id: String): Resource<ProductDetailModel> {
+    override suspend fun fetchProductDetail(id: String): NetworkResponse<ProductDetailModel> {
         return try {
             val response = apiService.fetchProductDetail(id).data
             response?.let {
-                Resource.Success(it.mapToModel())
+                NetworkResponse.Success(it.mapToModel())
             } ?: throw NullPointerException()
+        } catch (e: NullPointerException) {
+            NetworkResponse.EmptyValueError
+        } catch (e: HttpException) {
+            NetworkResponse.HttpError(e.code(), e.message())
         } catch (e: Exception) {
-            Resource.Error(ErrorType.NetworkError(e.message.toString()))
+            NetworkResponse.UnknownError(e)
         }
     }
 }

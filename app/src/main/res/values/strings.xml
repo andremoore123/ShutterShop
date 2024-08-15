@@ -80,5 +80,6 @@
     <string name="text_title_empty_transaction">There\'s No Transaction Yet</string>
     <string name="text_desc_empty_transaction">This Section Will be Filled After You Make A Transaction</string>
     <string name="text_buyers_satisfied">%1$s%% Buyers Are Satisfied</string>
+    <string name="text_not_found_error">The Page You Are Looking For Is Not Found</string>
 
 </resources>

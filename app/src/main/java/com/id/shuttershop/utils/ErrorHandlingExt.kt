@@ -23,3 +23,10 @@ fun ErrorType.OnEmptyError(content: @Composable () -> Unit) {
         content()
     }
 }
+
+@Composable
+fun ErrorType.OnHttpError(content: @Composable (Int) -> Unit) {
+    if (this is ErrorType.HTTPError) {
+        content(this.code)
+    }
+}
