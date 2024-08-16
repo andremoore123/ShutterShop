@@ -13,6 +13,7 @@ import com.id.shuttershop.ui.screen.notification.NotificationScreen
 import com.id.shuttershop.ui.screen.product_detail.DetailProductScreen
 import com.id.shuttershop.ui.screen.search.SearchScreen
 import com.id.shuttershop.utils.Deeplink.LINK_URL
+import com.id.shuttershop.utils.Deeplink.NOTIFICATION_URL
 
 /**
  * Created by: andreputras.
@@ -47,7 +48,12 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
                 }
             )
         }
-        composable(MainNavRoute.NOTIFICATION_SCREEN.route) {
+        composable(
+            route = MainNavRoute.NOTIFICATION_SCREEN.route,
+            deepLinks = listOf(navDeepLink {
+                uriPattern = NOTIFICATION_URL
+            })
+        ) {
             NotificationScreen(onBackClick = {navController.popBackStack()})
         }
         composable(
@@ -60,7 +66,7 @@ fun NavGraphBuilder.mainNavigation(navController: NavController) {
             productId?.let {
                 DetailProductScreen(
                     idProduct = it,
-                    onBackClick = { },
+                    onBackClick = { navController.popBackStack() },
                     onCheckoutClick = { cart ->
                         navController.navigate(route = TransactionRoute.CHECKOUT_SCREEN.route)
                         navBackStackEntry.savedStateHandle[CHECKOUT_DATA] = ArrayList(listOf(cart))

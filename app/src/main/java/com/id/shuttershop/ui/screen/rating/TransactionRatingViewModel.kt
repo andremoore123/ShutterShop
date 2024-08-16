@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.screen.transaction_detail.rating
+package com.id.shuttershop.ui.screen.rating
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

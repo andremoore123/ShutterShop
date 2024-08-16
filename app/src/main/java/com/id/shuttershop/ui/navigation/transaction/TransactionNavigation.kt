@@ -11,7 +11,7 @@ import com.id.shuttershop.ui.navigation.main.MainNavRoute
 import com.id.shuttershop.ui.navigation.main.PRODUCT_WITH_BRACKET
 import com.id.shuttershop.ui.screen.cart.CartScreen
 import com.id.shuttershop.ui.screen.checkout.CheckoutScreen
-import com.id.shuttershop.ui.screen.transaction_detail.rating.TransactionRatingScreen
+import com.id.shuttershop.ui.screen.rating.TransactionRatingScreen
 import com.id.shuttershop.utils.navigateAndPopUpAll
 
 /**
