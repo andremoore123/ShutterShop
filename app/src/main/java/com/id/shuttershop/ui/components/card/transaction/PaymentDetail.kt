@@ -1,5 +1,6 @@
 package com.id.shuttershop.ui.components.card.transaction
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.id.domain.utils.formatToRupiah
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.button.PrimaryButton
+import com.id.shuttershop.ui.components.button.PrimaryTextButton
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 
 /**
@@ -34,10 +36,15 @@ fun PaymentDetail(
     transactionTime: String = "",
     paymentMethod: String = "",
     nominalTransaction: Int = 0,
-    onDoneClick: () -> Unit = {}
+    doneEnabled: Boolean,
+    onDoneClick: () -> Unit = {},
+    onBackToHomeClick: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
-        Text(text = "Transaction Detail", style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = stringResource(R.string.text_transaction_detail),
+            style = MaterialTheme.typography.titleMedium
+        )
         Column(
             modifier = Modifier.padding(top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -112,8 +119,17 @@ fun PaymentDetail(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            onClick = onDoneClick
+            onClick = onDoneClick,
+            enabled = doneEnabled
         )
+        AnimatedVisibility(visible = doneEnabled.not()) {
+            PrimaryTextButton(
+                text = stringResource(R.string.text_back_to_home), modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp, top = 10.dp), onClick = onBackToHomeClick
+            )
+        }
+
     }
 }
 
@@ -121,6 +137,6 @@ fun PaymentDetail(
 @Preview(showBackground = true, showSystemUi = true)
 internal fun PaymentDetailPreview() {
     ShutterShopTheme {
-        PaymentDetail()
+        PaymentDetail(doneEnabled = false)
     }
 }

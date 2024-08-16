@@ -83,5 +83,9 @@
     <string name="text_not_found_error">The Page You Are Looking For Is Not Found</string>
     <string name="text_title_empty_notification">There is no notification of your transaction yet</string>
     <string name="text_desc_empty_notification">Make a Transaction First</string>
+    <string name="text_error_checkout">There\'s Problem When Process Your Transaction</string>
+    <string name="text_back_to_home">Back To Home</string>
+    <string name="text_transaction_detail">Transaction Detail</string>
+    <string name="text_success">Success</string>
 
 </resources>

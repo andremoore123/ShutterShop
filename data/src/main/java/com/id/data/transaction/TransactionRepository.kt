@@ -9,9 +9,7 @@ import com.id.domain.payment.PaymentType
 import com.id.domain.transaction.CheckoutModel
 import com.id.domain.transaction.ITransactionRepository
 import com.id.domain.transaction.TransactionModel
-import com.id.domain.utils.ErrorType
 import com.id.domain.utils.network_response.NetworkResponse
-import com.id.domain.utils.resource.Resource
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -26,16 +24,20 @@ class TransactionRepository @Inject constructor(
 ) : ITransactionRepository {
     override suspend fun checkout(
         paymentType: PaymentType, items: List<CartModel>
-    ): Resource<CheckoutModel> {
+    ): NetworkResponse<CheckoutModel> {
         return try {
             val checkoutRequest = CheckoutRequest(paymentName = paymentType.value,
                 data = items.map { it.toItemCheckoutRequest() })
             val response = apiService.checkoutItems(checkoutRequest)
             response.data?.let {
-                Resource.Success(it.toModel())
+                NetworkResponse.Success(it.toModel())
             } ?: throw NullPointerException()
+        } catch (e: NullPointerException) {
+            NetworkResponse.EmptyValueError
+        } catch (e: HttpException) {
+            NetworkResponse.HttpError(e.code(), e.message())
         } catch (e: Exception) {
-            Resource.Error(ErrorType.NetworkError(e.message.toString()))
+            NetworkResponse.UnknownError(e)
         }
     }
 

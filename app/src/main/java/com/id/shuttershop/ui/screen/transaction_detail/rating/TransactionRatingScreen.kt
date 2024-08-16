@@ -16,10 +16,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.domain.transaction.CheckoutModel
+import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.card.transaction.PaymentDetail
 import com.id.shuttershop.ui.components.card.transaction.PaymentRatingCard
 import com.id.shuttershop.ui.components.state.LoadingState
@@ -42,7 +45,7 @@ fun TransactionRatingScreen(
     modifier: Modifier = Modifier,
     viewModel: TransactionRatingViewModel = hiltViewModel(),
     checkoutModel: CheckoutModel,
-    navigateSuccess: () -> Unit,
+    navigateToHome: () -> Unit,
 ) {
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -54,6 +57,7 @@ fun TransactionRatingScreen(
     val ratingValue by viewModel.rating.collectAsState()
     val reviewValue by viewModel.review.collectAsState()
     val ratingState by viewModel.reviewState.collectAsState()
+    val localContext = LocalContext.current
 
     val transactionRatingEvent = TransactionRatingEvent(
         onRatingChange = viewModel::updateRating,
@@ -61,10 +65,11 @@ fun TransactionRatingScreen(
         onDoneClick = {
             viewModel.sendRating(
                 invoiceId = checkoutModel.invoiceId,
-                rating = ratingValue,
+                rating = ratingValue ?: 0,
                 review = reviewValue
             )
-        }
+        },
+        onBackToHomeClick = navigateToHome
     )
 
     LaunchedEffect(key1 = message) {
@@ -83,13 +88,14 @@ fun TransactionRatingScreen(
     ) { innerPadding ->
         ratingState.onSuccess {
             LaunchedEffect(key1 = Unit) {
-                navigateSuccess()
+                navigateToHome()
             }
         }.onLoading {
             LoadingState()
         }.onError {
             LaunchedEffect(key1 = Unit) {
-                viewModel.updateMessage(it.errorMessage)
+                viewModel.updateMessage(localContext.getString(R.string.text_unknown_error))
+                viewModel.updateRating(null)
             }
         }
         TransactionRatingContent(
@@ -108,12 +114,14 @@ fun TransactionRatingScreen(
 internal fun TransactionRatingContent(
     modifier: Modifier = Modifier,
     checkoutModel: CheckoutModel,
-    ratingValue: Int,
+    ratingValue: Int?,
     reviewValue: String,
     ratingEvent: TransactionRatingEvent
 ) {
+    val doneEnabled = ratingValue != null
+
     Column(modifier = modifier) {
-        TitleTopBar(title = "Transaction Status")
+        TitleTopBar(title = stringResource(id = R.string.text_transaction_status))
         Column(
             modifier = Modifier
                 .padding(top = 16.dp)
@@ -123,7 +131,7 @@ internal fun TransactionRatingContent(
             PaymentRatingCard(
                 modifier = Modifier.padding(16.dp),
                 reviewValue = reviewValue,
-                ratingValue = ratingValue,
+                ratingValue = ratingValue ?: 0,
                 onReviewChange = ratingEvent.onReviewChange,
                 onRatingChange = ratingEvent.onRatingChange
             )
@@ -131,12 +139,14 @@ internal fun TransactionRatingContent(
             PaymentDetail(
                 modifier = Modifier.padding(16.dp),
                 transactionId = checkoutModel.invoiceId,
-                transactionStatus = "Success",
+                transactionStatus = stringResource(R.string.text_success),
                 transactionDate = checkoutModel.date,
                 transactionTime = checkoutModel.time,
                 paymentMethod = checkoutModel.paymentName,
                 nominalTransaction = checkoutModel.total,
-                onDoneClick = ratingEvent.onDoneClick
+                onDoneClick = ratingEvent.onDoneClick,
+                doneEnabled = doneEnabled,
+                onBackToHomeClick = ratingEvent.onBackToHomeClick
             )
         }
     }
@@ -155,12 +165,14 @@ internal fun TransactionRatingScreenPreview() {
                 paymentName = "Helena Baker",
                 total = 7852
             ),
-            ratingValue = 0,
+            ratingValue = null,
             reviewValue = "",
             ratingEvent = TransactionRatingEvent(
                 onRatingChange = {},
                 onReviewChange = {},
-                onDoneClick = {}),
+                onDoneClick = {},
+                onBackToHomeClick = {}
+            ),
         )
     }
 }

@@ -12,6 +12,6 @@ import com.id.domain.utils.resource.Resource
  * Email: andremoore431@gmail.com
  */
 interface ITransactionRepository {
-    suspend fun checkout(paymentType: PaymentType, items: List<CartModel>): Resource<CheckoutModel>
+    suspend fun checkout(paymentType: PaymentType, items: List<CartModel>): NetworkResponse<CheckoutModel>
     suspend fun fetchTransaction(): NetworkResponse<List<TransactionModel>>
 }

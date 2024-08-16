@@ -82,5 +82,8 @@
     <string name="text_not_found_error">Halaman yang Kamu Cari Tidak Ditemukan</string>
     <string name="text_title_empty_notification">Tidak ada notifikasi untuk kamu saat ini</string>
     <string name="text_desc_empty_notification">Belanja terlebih dahulu</string>
+    <string name="text_back_to_home">Balik ke Halaman Utama</string>
+    <string name="text_transaction_detail">Detail Transaksi</string>
+    <string name="text_success">Sukses</string>
 
 </resources>

@@ -3,6 +3,11 @@ package com.id.domain.transaction
 import com.id.domain.cart.CartModel
 import com.id.domain.cart.ICartRepository
 import com.id.domain.payment.PaymentModel
+import com.id.domain.utils.ErrorType
+import com.id.domain.utils.network_response.onEmptyValueError
+import com.id.domain.utils.network_response.onHttpError
+import com.id.domain.utils.network_response.onSuccess
+import com.id.domain.utils.network_response.onUnknownError
 import com.id.domain.utils.resource.Resource
 import javax.inject.Inject
 
@@ -20,10 +25,20 @@ class PayUseCase @Inject constructor(
         data: List<CartModel>,
         paymentModel: PaymentModel
     ): Resource<CheckoutModel> {
+        var result: Resource<CheckoutModel> = Resource.Initiate
         val response = transactionRepository.checkout(paymentModel.paymentType, data)
-        if (response is Resource.Success) {
-            cartRepository.deleteCarts(data = data.toTypedArray())
+
+        response.onSuccess {
+            result = Resource.Success(it)
+            cartRepository.deleteCarts(*data.toTypedArray())
+        }.onUnknownError {
+            result = Resource.Error(ErrorType.UnknownError(it.message.toString()))
+        }.onEmptyValueError {
+            result = Resource.Error(ErrorType.EmptyDataError)
+        }.onHttpError { code, message ->
+            result = Resource.Error(ErrorType.HTTPError(code, message))
         }
-        return response
+
+        return result
     }
 }

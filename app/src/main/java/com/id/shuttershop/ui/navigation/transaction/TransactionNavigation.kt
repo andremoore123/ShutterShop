@@ -66,7 +66,7 @@ fun NavGraphBuilder.transactionNavigation(navController: NavController) {
                     CHECKOUT_DATA_RESPONSE
                 )
             checkoutModel?.let {
-                TransactionRatingScreen(checkoutModel = it, navigateSuccess = {
+                TransactionRatingScreen(checkoutModel = it, navigateToHome = {
                     navController.navigateAndPopUpAll(MainNavRoute.LAUNCHPAD_SCREEN.route)
                 })
             }

@@ -28,7 +28,7 @@ class TransactionRatingViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     val message = savedStateHandle.getStateFlow(MESSAGE_VALUE, "")
-    val rating = savedStateHandle.getStateFlow(RATING_VALUE, 0)
+    val rating = savedStateHandle.getStateFlow<Int?>(RATING_VALUE, null)
     val review = savedStateHandle.getStateFlow(REVIEW_VALUE, "")
 
     private val _reviewState = MutableStateFlow<UiState<Boolean>>(UiState.Initiate)
@@ -51,7 +51,7 @@ class TransactionRatingViewModel @Inject constructor(
         }
     }
 
-    fun updateRating(value: Int) {
+    fun updateRating(value: Int?) {
         savedStateHandle[RATING_VALUE] = value
     }
 
