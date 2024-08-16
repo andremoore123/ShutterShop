@@ -15,7 +15,7 @@ data class DetailProductEvent(
     val addItemToCart: (ProductDetailModel, VarianceModel?) -> Unit,
     val onWishlistClick: (ProductDetailModel, VarianceModel?) -> Unit,
     val checkIsOnWishlist: (ProductDetailModel, VarianceModel?) -> Unit,
-    val onShareClick: () -> Unit,
+    val onShareClick: (ProductDetailModel) -> Unit,
     val changeBottomSheetValue: (Boolean) -> Unit,
     val onRetryRating: () -> Unit,
     val onRetryProduct: () -> Unit,

@@ -35,7 +35,6 @@ class UserAuthenticator(
                         .header("Authorization", "Bearer $newAccessToken")
                         .build()
                 } else {
-                    response.close()
                     null
                 }
             }

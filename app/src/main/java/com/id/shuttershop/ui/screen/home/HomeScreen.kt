@@ -124,7 +124,9 @@ fun HomeScreen(
     )
 
     Scaffold(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .padding(top = 16.dp),
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }

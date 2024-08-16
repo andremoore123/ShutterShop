@@ -7,14 +7,14 @@ package com.id.shuttershop.ui.navigation.main
  * Email: andremoore431@gmail.com
  */
 
-const val USER_ID = "userID"
-const val USER_WITH_BRACKET = "{${USER_ID}}"
+const val PRODUCT_ID = "productId"
+const val PRODUCT_WITH_BRACKET = "{${PRODUCT_ID}}"
 
 
 enum class MainNavRoute(val route: String) {
     LAUNCHPAD_SCREEN("launchpadScreen"),
     SEARCH_SCREEN("searchScreen"),
     NOTIFICATION_SCREEN("notificationScreen"),
-    PRODUCT_DETAIL_SCREEN("productDetailScreen/${USER_WITH_BRACKET}"),
+    PRODUCT_DETAIL_SCREEN("productDetailScreen?$PRODUCT_ID=$PRODUCT_WITH_BRACKET"),
 
 }
