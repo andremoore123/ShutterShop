@@ -10,4 +10,5 @@ data class TransactionRatingEvent(
     val onRatingChange: (Int) -> Unit,
     val onReviewChange: (String) -> Unit,
     val onDoneClick: () -> Unit,
+    val onBackToHomeClick: () -> Unit,
 )
