@@ -85,5 +85,8 @@
     <string name="text_back_to_home">Balik ke Halaman Utama</string>
     <string name="text_transaction_detail">Detail Transaksi</string>
     <string name="text_success">Sukses</string>
+    <string name="text_error_checkout">Terjadi Kesalahan Saat Memproses Transaksi Kamu</string>
+    <string name="text_transaction_success">Transaksi Sukses</string>
+    <string name="text_subtitle_transaction_success">Transaksi kamu berhasil nih. Pembelian kamu segera diproses penjual!!</string>
 
 </resources>
