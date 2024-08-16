@@ -15,12 +15,23 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.ShutterShop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <data
+                    android:host="mymarket.phincon.site"
+                    android:scheme="https" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
         </activity>
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
