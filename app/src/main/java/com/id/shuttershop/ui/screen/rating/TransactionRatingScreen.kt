@@ -1,4 +1,4 @@
-package com.id.shuttershop.ui.screen.transaction_detail.rating
+package com.id.shuttershop.ui.screen.rating
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

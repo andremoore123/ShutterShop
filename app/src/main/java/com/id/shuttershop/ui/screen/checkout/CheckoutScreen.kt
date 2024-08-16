@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,12 +37,14 @@ import com.id.domain.cart.CartModel
 import com.id.domain.payment.PaymentModel
 import com.id.domain.transaction.CheckoutModel
 import com.id.shuttershop.R
+import com.id.shuttershop.notification.ShutterNotification
 import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.components.card.CheckoutCard
 import com.id.shuttershop.ui.components.card.PaymentCard
 import com.id.shuttershop.ui.components.state.LoadingState
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.Deeplink.pendingIntentTransaction
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
@@ -66,7 +69,7 @@ fun CheckoutScreen(
     val isBottomShowValue by viewModel.isBottomShowValue.collectAsState()
     val selectedPaymentValue by viewModel.selectedPaymentValue.collectAsState()
     val paymentState by viewModel.paymentState.collectAsState()
-
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -83,6 +86,14 @@ fun CheckoutScreen(
         }
     }
 
+    val showNotification = {
+        ShutterNotification(context).invoke(
+            title = context.getString(R.string.text_transaction_success),
+            description = context.getString(R.string.text_subtitle_transaction_success),
+            pendingIntent = pendingIntentTransaction(context)
+        )
+    }
+
     Scaffold(
         modifier = modifier,
         snackbarHost = {
@@ -96,6 +107,7 @@ fun CheckoutScreen(
                 showSnackBar(stringResource(R.string.text_error_checkout))
             }.onSuccess {
                 LaunchedEffect(key1 = Unit) {
+                    showNotification()
                     navigateToPaymentStatus(it)
                 }
             }
