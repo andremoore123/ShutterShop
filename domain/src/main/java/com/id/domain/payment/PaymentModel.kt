@@ -16,4 +16,5 @@ data class PaymentModel(
     val paymentName: String,
     val paymentImageUrl: String,
     val paymentType: PaymentType,
+    val paymentStatus: Boolean,
 ) : Parcelable
