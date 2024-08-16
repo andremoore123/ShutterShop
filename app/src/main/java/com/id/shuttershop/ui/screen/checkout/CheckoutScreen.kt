@@ -42,7 +42,6 @@ import com.id.shuttershop.ui.components.card.PaymentCard
 import com.id.shuttershop.ui.components.state.LoadingState
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
-import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
@@ -94,7 +93,7 @@ fun CheckoutScreen(
             paymentState.onLoading {
                 LoadingState()
             }.onError {
-                showSnackBar((paymentState as UiState.Error).errorType.errorMessage)
+                showSnackBar(stringResource(R.string.text_error_checkout))
             }.onSuccess {
                 LaunchedEffect(key1 = Unit) {
                     navigateToPaymentStatus(it)

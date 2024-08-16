@@ -94,11 +94,12 @@ class ProductDetailViewModel @Inject constructor(
     }
 
     fun convertDetailToCart(data: ProductDetailModel, variant: VarianceModel?): CartModel {
+        val additionalPrice = variant?.additionalPrice ?: data.productVariance.firstOrNull()?.additionalPrice ?: 0
         val cartModel = CartModel(
             itemId = data.id,
             itemName = data.productName,
             itemVariantName = variant?.title ?: data.productVariance.first().title,
-            itemPrice = data.productPrice,
+            itemPrice = data.productPrice + additionalPrice,
             itemStock = data.productStock,
             imageUrl = data.imageUrl.firstOrNull().orEmpty()
         )
