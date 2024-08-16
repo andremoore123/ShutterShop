@@ -108,20 +108,9 @@ internal fun PreviewPaymentBottomSheetContent() {
                     idPayment = 234,
                     paymentName = "Colin Hopkins",
                     paymentImageUrl = "https://www.google.com/#q=magnis",
-                    paymentType = PaymentType.INSTANT_PAYMENT
-                ),
-                PaymentModel(
-                    idPayment = 343,
-                    paymentName = "Colin Hopkins",
-                    paymentImageUrl = "https://www.google.com/#q=magnis",
-                    paymentType = PaymentType.INSTANT_PAYMENT
-                ),
-                PaymentModel(
-                    idPayment = 234,
-                    paymentName = "Colin Hopkins",
-                    paymentImageUrl = "https://www.google.com/#q=magnis",
-                    paymentType = PaymentType.VIRTUAL_ACCOUNT
-                ),
+                    paymentType = PaymentType.INSTANT_PAYMENT,
+                    paymentStatus = false
+                )
             )
         )
     }

@@ -2,19 +2,21 @@ package com.id.shuttershop.ui.components.card
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
@@ -41,9 +43,10 @@ fun PaymentCard(
     paymentModel: PaymentModel?,
     onPaymentClick: () -> Unit = {},
 ) {
+
     Row(
         modifier = modifier
-            .clickable(onClick = onPaymentClick)
+            .clickable(onClick = onPaymentClick, enabled = paymentModel?.paymentStatus ?: true)
             .padding(vertical = 18.dp, horizontal = 15.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -54,11 +57,20 @@ fun PaymentCard(
                     .size(30.dp),
                 model = paymentModel.paymentImageUrl,
                 contentDescription = paymentModel.paymentName,
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Fit,
+                colorFilter = if (paymentModel.paymentStatus) null else ColorFilter.tint(
+                    DividerDefaults.color
+                )
             )
-            Text(text = paymentModel.paymentName, style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = paymentModel.paymentName, style = MaterialTheme.typography.titleMedium.copy(
+                    color = if (paymentModel.paymentStatus) Color.Unspecified else DividerDefaults.color
+                )
+            )
             Spacer(modifier = Modifier.weight(1f))
-            PrimaryIconButton(icon = Icons.AutoMirrored.Default.ArrowForward)
+            if (paymentModel.paymentStatus) {
+                PrimaryIconButton(icon = Icons.AutoMirrored.Default.ArrowForward)
+            }
         } else {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.baseline_payments_24),
@@ -71,7 +83,7 @@ fun PaymentCard(
                 )
             )
             Spacer(modifier = Modifier.weight(1f))
-            PrimaryIconButton(icon = Icons.AutoMirrored.Default.ArrowForward, enabled = false)
+            PrimaryIconButton(icon = Icons.AutoMirrored.Default.ArrowForward)
         }
     }
 }
@@ -85,7 +97,8 @@ internal fun PaymentCardPreview() {
                 idPayment = 4545,
                 paymentName = "Lesley Harrison",
                 paymentImageUrl = "https://search.yahoo.com/search?p=parturient",
-                paymentType = PaymentType.INSTANT_PAYMENT
+                paymentType = PaymentType.INSTANT_PAYMENT,
+                paymentStatus = true
             )
         )
     }

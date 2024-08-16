@@ -13,5 +13,6 @@ fun PaymentItemResponse.toModel(paymentType: String) = PaymentModel(
     idPayment = 0,
     paymentName = label ?: "",
     paymentImageUrl = image ?: "",
-    paymentType = PaymentType.entries.find { it.value == paymentType } ?: PaymentType.OTHERS
+    paymentType = PaymentType.entries.find { it.value == paymentType } ?: PaymentType.OTHERS,
+    paymentStatus = status ?: false
 )
