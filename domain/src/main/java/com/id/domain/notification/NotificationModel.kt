@@ -1,4 +1,4 @@
-package com.id.domain.history
+package com.id.domain.notification
 
 /**
  * Created by: andre.
@@ -6,7 +6,7 @@ package com.id.domain.history
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
-data class HistoryModel(
+data class NotificationModel(
     val id: String,
     val title: String,
     val subTitle: String,

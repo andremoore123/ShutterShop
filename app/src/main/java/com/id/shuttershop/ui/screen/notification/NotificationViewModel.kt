@@ -2,8 +2,8 @@ package com.id.shuttershop.ui.screen.notification
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.id.domain.history.HistoryModel
-import com.id.domain.history.IHistoryRepository
+import com.id.domain.notification.FetchNotificationUseCase
+import com.id.domain.notification.NotificationModel
 import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
 import com.id.shuttershop.utils.UiState
@@ -24,16 +24,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
-    private val historyRepository: IHistoryRepository
+    private val fetchNotificationUseCase: FetchNotificationUseCase
 ) : ViewModel() {
-    private val _notificationState = MutableStateFlow<UiState<List<HistoryModel>>>(UiState.Initiate)
+    private val _notificationState = MutableStateFlow<UiState<List<NotificationModel>>>(UiState.Initiate)
     val notificationState = _notificationState.asStateFlow()
 
     fun fetchNotifications() {
         viewModelScope.launch(Dispatchers.IO) {
             _notificationState.run {
                 handleUpdateUiState(UiState.Loading)
-                val response = historyRepository.fetchHistories()
+                val response = fetchNotificationUseCase.invoke()
                 response.onSuccess {
                     handleUpdateUiState(UiState.Success(it))
                 }.onError {

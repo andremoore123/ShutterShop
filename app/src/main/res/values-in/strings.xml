@@ -80,6 +80,7 @@
     <string name="text_desc_empty_transaction">Bagian ini akan terisi setelah kamu melakukan transaksi</string>
     <string name="text_buyers_satisfied">%1$s%% Pembeli Merasa Puas</string>
     <string name="text_not_found_error">Halaman yang Kamu Cari Tidak Ditemukan</string>
-
+    <string name="text_title_empty_notification">Tidak ada notifikasi untuk kamu saat ini</string>
+    <string name="text_desc_empty_notification">Belanja terlebih dahulu</string>
 
 </resources>

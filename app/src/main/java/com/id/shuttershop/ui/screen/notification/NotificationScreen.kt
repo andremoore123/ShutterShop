@@ -2,6 +2,7 @@ package com.id.shuttershop.ui.screen.notification
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,12 +16,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.id.domain.history.HistoryModel
+import com.id.domain.notification.NotificationModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.card.NotificationCard
+import com.id.shuttershop.ui.components.state.EmptyState
+import com.id.shuttershop.ui.components.state.HttpErrorState
+import com.id.shuttershop.ui.components.state.LoadingBar
+import com.id.shuttershop.ui.components.state.UnknownErrorState
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.OnEmptyError
+import com.id.shuttershop.utils.OnHttpError
+import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.onError
+import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
 
 /**
@@ -45,7 +55,8 @@ fun NotificationScreen(
     NotificationContent(
         modifier = modifier,
         notificationState = notificationState,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onRetry = { viewModel.fetchNotifications() }
     )
 }
 
@@ -53,7 +64,8 @@ fun NotificationScreen(
 internal fun NotificationContent(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
-    notificationState: UiState<List<HistoryModel>>
+    onRetry: () -> Unit = {},
+    notificationState: UiState<List<NotificationModel>>
 ) {
     Column(
         modifier = modifier
@@ -65,8 +77,8 @@ internal fun NotificationContent(
         )
         notificationState.onSuccess {
             LazyColumn(
-                modifier = Modifier.padding(top = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 items(it) {
                     NotificationCard(
@@ -80,6 +92,22 @@ internal fun NotificationContent(
                 }
             }
         }
+            .onLoading {
+                LoadingBar()
+            }.onError { errorType ->
+                errorType.OnHttpError {
+                    HttpErrorState(errorCode = it, onRetryClick = onRetry)
+                }
+                errorType.OnEmptyError {
+                    EmptyState(
+                        title = stringResource(R.string.text_title_empty_notification),
+                        desc = stringResource(R.string.text_desc_empty_notification)
+                    )
+                }
+                errorType.OnUnknownError {
+                    UnknownErrorState(onRetryClick = onRetry)
+                }
+            }
     }
 }
 
@@ -88,9 +116,9 @@ internal fun NotificationContent(
 internal fun NotificationScreenPreview() {
     ShutterShopTheme {
         val dummyData = listOf(
-            HistoryModel(id = "postea", title = "elaboraret", subTitle = "signiferumque"),
-            HistoryModel(id = "postea", title = "elaboraret", subTitle = "signiferumque"),
-            HistoryModel(id = "postea", title = "elaboraret", subTitle = "signiferumque"),
+            NotificationModel(id = "postea", title = "elaboraret", subTitle = "signiferumque"),
+            NotificationModel(id = "postea", title = "elaboraret", subTitle = "signiferumque"),
+            NotificationModel(id = "postea", title = "elaboraret", subTitle = "signiferumque"),
         )
         NotificationContent(
             notificationState = UiState.Success(
