@@ -8,7 +8,7 @@ import com.id.domain.cart.CartModel
 import com.id.domain.transaction.CheckoutModel
 import com.id.shuttershop.ui.navigation.MainRoute
 import com.id.shuttershop.ui.navigation.main.MainNavRoute
-import com.id.shuttershop.ui.navigation.main.USER_WITH_BRACKET
+import com.id.shuttershop.ui.navigation.main.PRODUCT_WITH_BRACKET
 import com.id.shuttershop.ui.screen.cart.CartScreen
 import com.id.shuttershop.ui.screen.checkout.CheckoutScreen
 import com.id.shuttershop.ui.screen.transaction_detail.rating.TransactionRatingScreen
@@ -25,7 +25,7 @@ fun NavGraphBuilder.transactionNavigation(navController: NavController) {
     fun navigateToCartDetail(navController: NavController, productId: String) {
         navController.navigate(
             MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
-                USER_WITH_BRACKET, productId
+                PRODUCT_WITH_BRACKET, productId
             )
         )
     }

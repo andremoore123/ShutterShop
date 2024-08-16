@@ -1,5 +1,8 @@
 package com.id.shuttershop.ui.screen;
 
+import android.net.Uri
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,6 +32,7 @@ import kotlinx.coroutines.delay
 fun MainContainer(
     modifier: Modifier = Modifier,
     viewModel: MainContainerViewModel = hiltViewModel(),
+    uriData: Uri?
 ) {
     val mainNavController = rememberNavController()
     val isOnboardShowed by viewModel.isOnboardShowed.collectAsState()
@@ -38,10 +42,23 @@ fun MainContainer(
         viewModel.fetchIsOnboardShowed()
     }
 
-    LaunchedEffect(key1 = isUserLogin) {
+    LaunchedEffect(key1 = isUserLogin, key2 = uriData) {
         delay(1_500)
         if (isUserLogin == true) {
-            mainNavController.navigateAndPopUpAll(MainRoute.MainNavigation.route)
+            if (uriData == null) {
+                mainNavController.navigateAndPopUpAll(MainRoute.MainNavigation.route)
+            } else {
+                val onBackPressedDispatcher = OnBackPressedDispatcher().apply {
+                    addCallback(onBackPressedCallback = object :
+                        OnBackPressedCallback(enabled = true) {
+                        override fun handleOnBackPressed() {
+                            mainNavController.navigateAndPopUpAll(MainRoute.MainNavigation.route)
+                        }
+                    })
+                }
+
+                mainNavController.setOnBackPressedDispatcher(onBackPressedDispatcher)
+            }
         } else {
             if (isOnboardShowed) {
                 mainNavController.navigateAndPopUpAll(MainRoute.AuthNavigation.route)
@@ -67,6 +84,6 @@ fun MainContainer(
 @Preview
 internal fun ShowMainContainerPreview() {
     ShutterShopTheme {
-        MainContainer()
+        MainContainer(uriData = null)
     }
 }

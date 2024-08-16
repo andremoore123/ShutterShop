@@ -66,6 +66,7 @@ import com.id.shuttershop.ui.components.state.LoadingBar
 import com.id.shuttershop.ui.components.state.UnknownErrorState
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.Deeplink.shareProductDetail
 import com.id.shuttershop.utils.OnHttpError
 import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.UiState
@@ -113,7 +114,13 @@ fun DetailProductScreen(
         },
         addItemToCart = addItemToCart,
         onWishlistClick = viewModel::checkOnWishlist,
-        onShareClick = {},
+        onShareClick = {
+            shareProductDetail(
+                context = currentContext,
+                productName = it.productName,
+                productId = it.id
+            )
+        },
         checkIsOnWishlist = viewModel::checkIsInWishlist,
         changeBottomSheetValue = viewModel::modifySheetValue,
         onRetryRating = { viewModel.fetchProductRating(idProduct) },
@@ -197,7 +204,7 @@ internal fun DetailProductContent(
                         detailModel = it,
                         isInWishlist = isInWishlist,
                         onAddToWishlist = detailEvent.onWishlistClick,
-                        onShareClick = detailEvent.onShareClick,
+                        onShareClick = { detailEvent.onShareClick.invoke(it) },
                         selectedVariant = selectedVariant
                     )
                     HorizontalDivider()

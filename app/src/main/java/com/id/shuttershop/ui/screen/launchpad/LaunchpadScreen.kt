@@ -20,7 +20,7 @@ import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadMenus
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadRoute
 import com.id.shuttershop.ui.navigation.main.MainNavRoute
-import com.id.shuttershop.ui.navigation.main.USER_WITH_BRACKET
+import com.id.shuttershop.ui.navigation.main.PRODUCT_WITH_BRACKET
 import com.id.shuttershop.ui.navigation.transaction.TransactionRoute
 import com.id.shuttershop.ui.screen.home.HomeScreen
 import com.id.shuttershop.ui.screen.profile.ProfileScreen
@@ -86,7 +86,7 @@ fun LaunchpadScreen(
                     navigateToDetailProduct = {
                         mainNavController.navigate(
                             MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
-                                USER_WITH_BRACKET, it
+                                PRODUCT_WITH_BRACKET, it
                             )
                         )
                     },
@@ -102,7 +102,7 @@ fun LaunchpadScreen(
                     navigateToDetail = {
                         mainNavController.navigate(
                             MainNavRoute.PRODUCT_DETAIL_SCREEN.route.replace(
-                                USER_WITH_BRACKET, it
+                                PRODUCT_WITH_BRACKET, it
                             )
                         )
                     }
