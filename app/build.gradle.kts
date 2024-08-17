@@ -27,6 +27,9 @@ android {
             useSupportLibrary = true
         }
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 
     buildTypes {
         release {
@@ -141,7 +144,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Testing
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+
+    // Detekt
     detektPlugins(libs.detekt.compose)
+
     // Work
     api(libs.androidx.work.runtime.ktx)
 
@@ -156,5 +168,5 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Lottie
-    implementation("com.airbnb.android:lottie-compose:6.5.0")
+    implementation(libs.lottie.compose)
 }
