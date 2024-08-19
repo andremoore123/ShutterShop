@@ -19,7 +19,11 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     preferenceRepository: IPreferenceRepository,
 ) : ViewModel() {
-    val isDarkMode = preferenceRepository.isDarkMode
+    val isDarkMode = preferenceRepository.isDarkMode.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
     val isIndonesia = preferenceRepository.isIndonesiaLanguage.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),

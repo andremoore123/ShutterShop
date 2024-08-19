@@ -27,9 +27,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
-    private val requiredPermissions = arrayOf(
-        Manifest.permission.POST_NOTIFICATIONS,
-    )
+    private val requiredPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        arrayOf(
+            Manifest.permission.POST_NOTIFICATIONS,
+        )
+    } else {
+        arrayOf()
+    }
 
     /**
      * If Not Granted, Show Not Granted with Toast
@@ -70,8 +74,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun setLanguage(isIndonesia: Boolean) {
-        var languageTag = ""
-        languageTag = when (isIndonesia) {
+        val languageTag: String = when (isIndonesia) {
             true -> {
                 "in"
             }
