@@ -15,6 +15,7 @@ import com.id.shuttershop.utils.MainDispatcherRule
 import com.id.shuttershop.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -94,6 +95,20 @@ class CheckoutViewModelTest {
         dispatcherProvider = mainDispatcherRule.dispatcherProvider
     )
 
+    @Test
+    fun `fetch payment methods`() = runTest {
+        Mockito.`when`(paymentRepository.fetchPaymentMethods())
+            .thenReturn(flowOf(listOf(paymentModel)))
+        val viewModel = createCheckoutVieWModel()
+        advanceUntilIdle()
+
+        viewModel.paymentMethods.test {
+            assertEquals(emptyList<PaymentModel>(), awaitItem())
+            assertEquals(listOf(paymentModel), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+
+    }
 
     @Test
     fun `on payment success`() = runTest {
