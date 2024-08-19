@@ -8,6 +8,7 @@ import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.cart.AddToCartUseCase
 import com.id.domain.wishlist.IWishlistRepository
 import com.id.domain.wishlist.WishlistModel
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_WISHLIST_ADD_TO_CART
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_WISHLIST_LAYOUT
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_WISHLIST_REMOVE
@@ -16,7 +17,6 @@ import com.id.shuttershop.utils.analytics.AnalyticsConstants.PARAM_SCREEN_NAME
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.WISHLIST_BUTTON
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_WISHLIST
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,12 +38,13 @@ class WishlistViewModel @Inject constructor(
     private val analyticRepository: IAnalyticRepository,
     private val addToCartUseCase: AddToCartUseCase,
     private val savedStateHandle: SavedStateHandle,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
     val isColumnLayout = savedStateHandle.getStateFlow(LAYOUT_TYPE, COLUMN_LAYOUT)
 
     val wishlists = wishlistRepository.fetchWishlists().stateIn(
         scope = viewModelScope,
-        started = SharingStarted.Eagerly,
+        started = SharingStarted.WhileSubscribed(5000L),
         initialValue = listOf()
     )
 
@@ -52,14 +53,14 @@ class WishlistViewModel @Inject constructor(
 
     fun deleteWishlist(data: WishlistModel) {
         logDeleteFromWishlist(data.itemName)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             wishlistRepository.removeWishlist(data)
         }
     }
 
     fun addToCart(data: WishlistModel) {
         logAddToCart(data.itemName)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             addToCartUseCase.invoke(data)
         }
     }
@@ -74,7 +75,7 @@ class WishlistViewModel @Inject constructor(
     }
 
     fun updateMessage(value: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             _message.getAndUpdate {
                 value
             }
