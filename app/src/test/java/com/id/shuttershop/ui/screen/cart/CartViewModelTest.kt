@@ -10,6 +10,7 @@ import com.id.shuttershop.utils.MainDispatcherRule
 import com.id.shuttershop.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -38,6 +39,28 @@ class CartViewModelTest {
 
     private lateinit var updateCartStockUseCase: UpdateCartStockUseCase
 
+    private val cartList = listOf(
+        CartModel(
+            cartId = null,
+            itemId = "magnis",
+            itemName = "Margaret Santiago",
+            itemPrice = 6779,
+            itemStock = 3428,
+            itemCount = 9917,
+            itemVariantName = "Gabriela Merritt",
+            imageUrl = "http://www.bing.com/search?q=tacimates"
+        ),
+        CartModel(
+            cartId = null,
+            itemId = "magnis",
+            itemName = "Margaret Santiago",
+            itemPrice = 6779,
+            itemStock = 3428,
+            itemCount = 9917,
+            itemVariantName = "Gabriela Merritt",
+            imageUrl = "http://www.bing.com/search?q=tacimates"
+        ),
+    )
     @Mock
     private lateinit var cartRepository: ICartRepository
 
@@ -60,6 +83,20 @@ class CartViewModelTest {
     )
 
     @Test
+    fun `fetch cart list`() = runTest {
+        Mockito.`when`(cartRepository.fetchCarts()).thenReturn(flowOf(cartList))
+
+        val viewModel = createCartViewModel()
+        advanceUntilIdle()
+
+        viewModel.cartList.test {
+            assertEquals(emptyList<CartModel>(), awaitItem())
+            assertEquals(cartList, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `on update cart from network success`() = runTest {
         val viewModel = createCartViewModel()
         advanceUntilIdle()
@@ -76,7 +113,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun onAddCartQuantity() = runTest {
+    fun `on add cart quantity`() = runTest {
         val viewModel = createCartViewModel()
 
         val cartModel = CartModel(
@@ -108,7 +145,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun onReduceCartQuantity() = runTest {
+    fun `on reduce cart quantity`() = runTest {
         val viewModel = createCartViewModel()
 
         val cartModel = CartModel(
@@ -140,7 +177,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun onUpdateTotalPayment() = runTest {
+    fun `on update total payment`() = runTest {
         val viewModel = createCartViewModel()
 
         val totalPayment = 230000
@@ -153,7 +190,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun onHandleSelectCart() = runTest {
+    fun `on handle select cart`() = runTest {
         val viewModel = createCartViewModel()
 
         val cartId = 123
@@ -186,7 +223,7 @@ class CartViewModelTest {
     }
 
     @Test
-    fun `is AllCartSelected Return Null`() = runTest {
+    fun `is all cart selected return null`() = runTest {
         val viewModel = createCartViewModel()
         assertEquals(null, viewModel.isAllCartSelected())
     }
