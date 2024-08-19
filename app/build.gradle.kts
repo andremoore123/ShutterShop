@@ -144,6 +144,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // alternatively - without Android dependencies for tests
+    testImplementation(libs.androidx.paging.common)
+    testImplementation(libs.androidx.paging.testing)
+
     // Testing
     testImplementation(libs.junit)
     testImplementation(libs.mockito.kotlin)
