@@ -8,11 +8,11 @@ import com.id.domain.auth.LogoutUseCase
 import com.id.domain.preference.IPreferenceRepository
 import com.id.domain.session.ISessionRepository
 import com.id.domain.session.UserModel
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.analytics.AnalyticsConstants
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.LOGOUT_BUTTON
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_PROFILE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,6 +35,7 @@ class ProfileViewModel @Inject constructor(
     private val sessionRepository: ISessionRepository,
     private val analyticRepository: IAnalyticRepository,
     private val logoutUseCase: LogoutUseCase,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
     val isDarkMode: StateFlow<Boolean> = preferenceRepository.isDarkMode.stateIn(
         scope = viewModelScope,
@@ -48,11 +49,11 @@ class ProfileViewModel @Inject constructor(
         initialValue = false
     )
 
-    private val _userData = MutableStateFlow<UserModel>(UserModel.emptyModel)
+    private val _userData = MutableStateFlow(UserModel.emptyModel)
     val userData = _userData.asStateFlow()
 
     fun fetchUserData() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             val response = sessionRepository.fetchUserData()
             _userData.getAndUpdate {
                 response
@@ -61,14 +62,14 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun logout(userEmail: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             logLogoutAttempt(userEmail)
             logoutUseCase.invoke()
         }
     }
 
     fun setDarkMode(value: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             preferenceRepository.setDarkMode()
         }
     }
@@ -83,7 +84,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun setIndonesiaLanguage(value: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             preferenceRepository.setLanguage()
         }
     }
