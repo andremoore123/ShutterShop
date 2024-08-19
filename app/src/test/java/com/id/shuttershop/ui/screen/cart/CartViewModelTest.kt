@@ -1,29 +1,19 @@
 package com.id.shuttershop.ui.screen.cart
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
-import app.cash.turbine.testIn
-import app.cash.turbine.turbineScope
 import com.id.domain.cart.CartModel
 import com.id.domain.cart.ICartRepository
 import com.id.domain.cart.UpdateCartStockUseCase
 import com.id.domain.product.IProductRepository
-import com.id.domain.product.ProductDetailModel
-import com.id.domain.utils.network_response.NetworkResponse
-import com.id.domain.utils.resource.Resource
 import com.id.shuttershop.utils.MainDispatcherRule
-import com.id.shuttershop.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +21,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import org.junit.Assert.assertEquals
 
 /**
  * Created by: andre.
