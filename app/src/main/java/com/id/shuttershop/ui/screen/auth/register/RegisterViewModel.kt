@@ -8,12 +8,12 @@ import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.auth.RegisterUseCase
 import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.analytics.AnalyticsConstants
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_REGISTER
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,6 +31,7 @@ class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val analyticRepository: IAnalyticRepository,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
     val emailValue = savedStateHandle.getStateFlow(EMAIL, "")
     val nameValue = savedStateHandle.getStateFlow(NAME, "")
@@ -42,7 +43,7 @@ class RegisterViewModel @Inject constructor(
 
 
     fun register(name: String, email: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             with(_registerUiState) {
                 handleUpdateUiState(UiState.Loading)
                 logRegisterAttempt(email)

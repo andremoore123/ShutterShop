@@ -6,10 +6,10 @@ import com.id.domain.notification.FetchNotificationUseCase
 import com.id.domain.notification.NotificationModel
 import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -24,13 +24,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
-    private val fetchNotificationUseCase: FetchNotificationUseCase
+    private val fetchNotificationUseCase: FetchNotificationUseCase,
+    private val coroutineDispatcher: DispatcherProvider
 ) : ViewModel() {
     private val _notificationState = MutableStateFlow<UiState<List<NotificationModel>>>(UiState.Initiate)
     val notificationState = _notificationState.asStateFlow()
 
     fun fetchNotifications() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineDispatcher.io) {
             _notificationState.run {
                 handleUpdateUiState(UiState.Loading)
                 val response = fetchNotificationUseCase.invoke()

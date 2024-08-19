@@ -13,11 +13,9 @@ import com.id.shuttershop.utils.MainDispatcherRule
 import com.id.shuttershop.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -57,8 +55,6 @@ class NotificationViewModelTest {
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(StandardTestDispatcher())
-
         fetchNotificationUseCase = FetchNotificationUseCase(
             transactionRepository = transactionRepository
         )
@@ -70,7 +66,10 @@ class NotificationViewModelTest {
     }
 
     private fun createNotificationVieWModel(): NotificationViewModel =
-        NotificationViewModel(fetchNotificationUseCase = fetchNotificationUseCase)
+        NotificationViewModel(
+            fetchNotificationUseCase = fetchNotificationUseCase,
+            mainDispatcherRule.dispatcherProvider
+        )
 
     @Test
     fun `on fetch notifications success`() = runTest {

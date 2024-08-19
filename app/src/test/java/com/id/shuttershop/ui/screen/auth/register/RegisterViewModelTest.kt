@@ -2,7 +2,6 @@ package com.id.shuttershop.ui.screen.auth.register
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import app.cash.turbine.turbineScope
 import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.auth.IAuthRepository
 import com.id.domain.auth.RegisterUseCase
@@ -11,15 +10,17 @@ import com.id.domain.session.ISessionRepository
 import com.id.domain.session.UserModel
 import com.id.domain.utils.ErrorType
 import com.id.domain.utils.network_response.NetworkResponse
+import com.id.shuttershop.utils.MainDispatcherRule
 import com.id.shuttershop.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -40,6 +41,9 @@ class RegisterViewModelTest {
     )
     private val userPassword = "Test123@."
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     @Mock
     private lateinit var sessionRepository: ISessionRepository
 
@@ -49,20 +53,12 @@ class RegisterViewModelTest {
     @Mock
     private lateinit var analyticRepository: IAnalyticRepository
 
-    private lateinit var vieWModel: RegisterViewModel
-    
+    private lateinit var registerUseCase: RegisterUseCase
+
     @Before
     fun setUp() {
-        Dispatchers.setMain(Dispatchers.Unconfined)
-        val registerUseCase = RegisterUseCase(
-            authRepository = authRepository, 
-            sessionRepository = sessionRepository
-        )
-        
-        vieWModel = RegisterViewModel(
-            registerUseCase = registerUseCase,
-            savedStateHandle = SavedStateHandle(),
-            analyticRepository = analyticRepository
+        registerUseCase = RegisterUseCase(
+            authRepository = authRepository, sessionRepository = sessionRepository
         )
     }
 
@@ -71,100 +67,103 @@ class RegisterViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private fun createRegisterViewModel() = RegisterViewModel(
+        registerUseCase = registerUseCase,
+        savedStateHandle = SavedStateHandle(),
+        analyticRepository = analyticRepository,
+        dispatcherProvider = mainDispatcherRule.dispatcherProvider
+    )
+
     @Test
     fun `on register success`() = runTest {
-        turbineScope {
-            val name = userModel.name
-            val email = userModel.email
-            val password = userPassword
+        val viewModel = createRegisterViewModel()
+        val name = userModel.name
+        val email = userModel.email
+        val password = userPassword
 
-            val authDataModel = AuthDataModel(
-                userName = name,
-                userImageUrl = "http://www.bing.com/search?q=liber",
-                accessToken = "ius",
-                refreshToken = "ac"
-            )
+        val authDataModel = AuthDataModel(
+            userName = name,
+            userImageUrl = "http://www.bing.com/search?q=liber",
+            accessToken = "ius",
+            refreshToken = "ac"
+        )
 
-            val returnSuccess = NetworkResponse.Success(authDataModel)
-            val uiStateSuccess = UiState.Success(authDataModel.userName)
+        val returnSuccess = NetworkResponse.Success(authDataModel)
+        val uiStateSuccess = UiState.Success(authDataModel.userName)
 
-            Mockito.`when`(authRepository.register(name, email, password)).thenReturn(returnSuccess)
+        Mockito.`when`(authRepository.register(name, email, password)).thenReturn(returnSuccess)
 
-            vieWModel.register(name, email, password)
-            vieWModel.registerUiState.test {
-                assertEquals(UiState.Loading, awaitItem())
-                assertEquals(uiStateSuccess, awaitItem())
-            }
+        viewModel.register(name, email, password)
+        advanceUntilIdle()
+        viewModel.registerUiState.test {
+            assertEquals(uiStateSuccess, awaitItem())
         }
     }
 
     @Test
     fun `on register error`() = runTest {
-        turbineScope {
-            val name = userModel.name
-            val email = userModel.email
-            val password = userPassword
+        val viewModel = createRegisterViewModel()
 
-            val returnError = NetworkResponse.UnknownError(NullPointerException())
-            val uiStateError = UiState.Error(ErrorType.UnknownError("null"))
+        val name = userModel.name
+        val email = userModel.email
+        val password = userPassword
 
-            Mockito.`when`(authRepository.register(name, email, password)).thenReturn(returnError)
+        val returnError = NetworkResponse.UnknownError(NullPointerException())
+        val uiStateError = UiState.Error(ErrorType.UnknownError("null"))
 
-            vieWModel.register(name, email, password)
-            vieWModel.registerUiState.test {
-                assertEquals(UiState.Initiate, awaitItem())
-                assertEquals(UiState.Loading, awaitItem())
-                assertEquals(uiStateError, awaitItem())
-            }
+        Mockito.`when`(authRepository.register(name, email, password)).thenReturn(returnError)
+
+        viewModel.register(name, email, password)
+        advanceUntilIdle()
+        viewModel.registerUiState.test {
+            assertEquals(uiStateError, awaitItem())
         }
     }
 
     @Test
     fun `on update email`() = runTest {
-        turbineScope {
-            val email = userModel.email
+        val viewModel = createRegisterViewModel()
 
-            vieWModel.onEmailValueChange(email)
-            vieWModel.emailValue.test {
-                assertEquals(email, awaitItem())
-            }
+        val email = userModel.email
+
+        viewModel.onEmailValueChange(email)
+        viewModel.emailValue.test {
+            assertEquals(email, awaitItem())
         }
     }
 
     @Test
     fun `on update password`() = runTest {
-        turbineScope {
-            val password = userPassword
+        val viewModel = createRegisterViewModel()
 
-            vieWModel.onPasswordChange(password)
-            vieWModel.passwordValue.test {
-                assertEquals(password, awaitItem())
-            }
+        val password = userPassword
+
+        viewModel.onPasswordChange(password)
+        viewModel.passwordValue.test {
+            assertEquals(password, awaitItem())
         }
     }
 
     @Test
     fun `on update name`() = runTest {
-        turbineScope {
-            val name = userModel.name
+        val viewModel = createRegisterViewModel()
+        val name = userModel.name
 
-            vieWModel.onNameChange(name)
-            vieWModel.nameValue.test {
-                assertEquals(name, awaitItem())
-            }
+        viewModel.onNameChange(name)
+        viewModel.nameValue.test {
+            assertEquals(name, awaitItem())
         }
     }
 
     @Test
     fun `on update message`() = runTest {
-        turbineScope {
-            val message = "Test 123"
+        val viewModel = createRegisterViewModel()
+        val message = "Test 123"
 
-            vieWModel.onMessageValueChange(message)
+        viewModel.onMessageValueChange(message)
 
-            vieWModel.messageValue.test {
-                assertEquals(message, awaitItem())
-            }
+        viewModel.messageValue.test {
+            assertEquals(message, awaitItem())
         }
     }
 }

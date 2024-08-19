@@ -19,6 +19,8 @@ import org.junit.runner.Description
 class MainDispatcherRule(
     private val testDispatcher: TestDispatcher = StandardTestDispatcher(),
 ) : TestWatcher() {
+    val dispatcherProvider = DispatcherProvider(testDispatcher, testDispatcher, testDispatcher)
+
     override fun starting(description: Description) {
         Dispatchers.setMain(testDispatcher)
     }
