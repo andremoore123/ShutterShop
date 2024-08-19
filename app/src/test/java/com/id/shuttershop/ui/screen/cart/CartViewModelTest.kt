@@ -5,8 +5,9 @@ import app.cash.turbine.test
 import com.id.domain.cart.CartModel
 import com.id.domain.cart.ICartRepository
 import com.id.domain.cart.UpdateCartStockUseCase
-import com.id.domain.product.IProductRepository
+import com.id.domain.utils.resource.Resource
 import com.id.shuttershop.utils.MainDispatcherRule
+import com.id.shuttershop.utils.UiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -40,15 +41,10 @@ class CartViewModelTest {
     @Mock
     private lateinit var cartRepository: ICartRepository
 
-    @Mock
-    private lateinit var productRepository: IProductRepository
 
     @Before
     fun setUp() {
-        updateCartStockUseCase = UpdateCartStockUseCase(
-            cartRepository = cartRepository,
-            productRepository = productRepository
-        )
+        updateCartStockUseCase = Mockito.mock(UpdateCartStockUseCase::class.java)
     }
 
     @After
@@ -62,6 +58,22 @@ class CartViewModelTest {
         savedStateHandle = SavedStateHandle(),
         dispatcherProvider = mainDispatcherRule.dispatcherProvider
     )
+
+    @Test
+    fun `on update cart from network success`() = runTest {
+        val viewModel = createCartViewModel()
+        advanceUntilIdle()
+        val expectedReturn = Resource.Success(true)
+
+        Mockito.`when`(updateCartStockUseCase.invoke()).thenReturn(expectedReturn)
+
+        viewModel.updateCartStockFromNetwork()
+        advanceUntilIdle()
+
+        viewModel.screenState.test {
+            assertEquals(UiState.Success(true), awaitItem())
+        }
+    }
 
     @Test
     fun onAddCartQuantity() = runTest {
