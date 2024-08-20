@@ -24,7 +24,7 @@ class FetchNotificationUseCase @Inject constructor(
             NotificationModel(
                 id = "0",
                 title = "Transaksi Berhasil",
-                subTitle = "Transaksi anda sedang di proses oleh penjual, mohon ditunggu untuk update selanjutnya di aplikasi. Sambil menunggu, anda bisa cari barang lain terlebih dahulu"
+                subTitle = "Transaksi anda dengan invoice id ${it.transactionId} sedang di proses oleh penjual. Mohon ditunggu untuk update selanjutnya 🤩!"
             )
         }
 
