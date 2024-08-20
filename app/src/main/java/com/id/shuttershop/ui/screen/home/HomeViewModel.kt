@@ -68,6 +68,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
     fun modifySheetValue(value: Boolean) {
         savedStateHandle[IS_SHEET_SHOW_VALUE] = value
     }

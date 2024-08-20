@@ -19,7 +19,8 @@ interface ProductApiService {
     suspend fun fetchProducts(
         @Query("search") searchQuery: String?,
         @Query("brand") brand: String?,
-        @Query("lowest") lowestPrice: Double?,
+        @Query("lowest") lowestPrice: String?,
+        @Query("highest") highestPrice: String?,
         @Query("sort") sortType: String?,
         @Query("limit") limit: Int?,
         @Query("page") page: Int?

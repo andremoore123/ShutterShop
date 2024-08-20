@@ -95,5 +95,9 @@
     <string name="text_email_registered_error">Your Email Has Been Registered</string>
     <string name="text_email_password_not_valid_error">Your Email and Password Is Not Valid</string>
     <string name="text_review">Review</string>
+    <string name="text_filter">Filter</string>
+    <string name="text_sort_by">Sort By: %1$s</string>
+    <string name="text_lowest_price">Lowest Price: %1$s</string>
+    <string name="text_highest_price">Highest Price: %1$s</string>
 
 </resources>
