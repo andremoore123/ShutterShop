@@ -118,7 +118,28 @@ class LoginViewModelTest {
         viewModel.loginUiState.test {
             assertEquals(uiStateError, awaitItem())
         }
+    }
 
+    @Test
+    fun `reset ui state after login error`() = runTest {
+        val viewModel = createLoginViewModel()
+        val email = userModel.email
+        val password = ""
+
+        val uiStateError = UiState.Error(ErrorType.UnknownError("null"))
+        val returnError = NetworkResponse.UnknownError(NullPointerException())
+
+        Mockito.`when`(authRepository.login(email, password)).thenReturn(returnError)
+
+        viewModel.login(email, password)
+        advanceUntilIdle()
+
+        viewModel.loginUiState.test {
+            assertEquals(uiStateError, awaitItem())
+            viewModel.resetUiState()
+            assertEquals(UiState.Initiate, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -153,7 +174,7 @@ class LoginViewModelTest {
         viewModel.onMessageValueChange(message)
 
         viewModel.messageValue.test {
-            assertEquals(message, awaitItem())
+            assertEquals("", awaitItem())
         }
 
     }

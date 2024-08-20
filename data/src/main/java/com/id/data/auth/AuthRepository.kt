@@ -1,11 +1,13 @@
 package com.id.data.auth
 
+import android.util.Log
 import com.id.data.auth.model.request.LoginRequest
 import com.id.data.auth.model.request.RegisterRequest
 import com.id.data.auth.model.response.toModel
 import com.id.domain.auth.IAuthRepository
 import com.id.domain.auth.model.AuthDataModel
 import com.id.domain.utils.network_response.NetworkResponse
+import retrofit2.HttpException
 import javax.inject.Inject
 
 /**
@@ -24,6 +26,9 @@ class AuthRepository @Inject constructor(
             response?.run {
                 NetworkResponse.Success(toModel())
             } ?: throw NullPointerException()
+        } catch (e: HttpException) {
+            Log.d("Login", e.message())
+            NetworkResponse.HttpError(e.code(), e.message())
         } catch (e: Exception) {
             NetworkResponse.UnknownError(e)
         }
@@ -40,6 +45,8 @@ class AuthRepository @Inject constructor(
             response?.run {
                 NetworkResponse.Success(toModel())
             } ?: throw NullPointerException()
+        } catch (e: HttpException) {
+            NetworkResponse.HttpError(e.code(), e.message())
         } catch (e: Exception) {
             NetworkResponse.UnknownError(e)
         }
