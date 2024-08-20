@@ -4,10 +4,13 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.id.domain.analytic.IAnalyticRepository
+import com.id.domain.transaction.CheckoutModel
 import com.id.domain.transaction.FetchTransactionsUseCase
 import com.id.domain.transaction.TransactionModel
+import com.id.domain.transaction.mapToCheckoutModel
 import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.EVENT_RATE_PRODUCT
 import com.id.shuttershop.utils.analytics.AnalyticsConstants.PARAM_BUTTON
@@ -33,13 +36,14 @@ import javax.inject.Inject
 class TransactionViewModel @Inject constructor(
     private val fetchTransactionsUseCase: FetchTransactionsUseCase,
     private val analyticRepository: IAnalyticRepository,
+    private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
     private val _transactionState =
         MutableStateFlow<UiState<List<TransactionModel>>>(UiState.Initiate)
     val transactionState = _transactionState.asStateFlow()
 
     fun fetchTransaction() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             with(_transactionState) {
                 handleUpdateUiState(UiState.Loading)
                 val response = fetchTransactionsUseCase.invoke()
@@ -52,7 +56,9 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    // TODO(): Implement when Rating use case is implemented
+    fun transformTransactionToCheckOutModel(transactionModel: TransactionModel): CheckoutModel =
+        transactionModel.mapToCheckoutModel()
+
     fun rateTransaction(data: TransactionModel) {
         logRateItem(data.itemName)
     }
