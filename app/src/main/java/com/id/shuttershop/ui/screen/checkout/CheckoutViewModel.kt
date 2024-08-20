@@ -11,10 +11,10 @@ import com.id.domain.transaction.PayUseCase
 import com.id.domain.utils.formatToRupiah
 import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +33,8 @@ import javax.inject.Inject
 class CheckoutViewModel @Inject constructor(
     paymentRepository: IPaymentRepository,
     private val savedStateHandle: SavedStateHandle,
-    private val payUseCase: PayUseCase
+    private val payUseCase: PayUseCase,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     private val _paymentState = MutableStateFlow<UiState<CheckoutModel>>(UiState.Initiate)
@@ -46,12 +47,12 @@ class CheckoutViewModel @Inject constructor(
 
     val paymentMethods = paymentRepository.fetchPaymentMethods().stateIn(
         scope = viewModelScope,
-        started = SharingStarted.Eagerly,
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = listOf()
     )
 
     fun payItem(data: List<CartModel>, paymentModel: PaymentModel) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             _paymentState.run {
                 handleUpdateUiState(UiState.Loading)
                 val response = payUseCase.invoke(data, paymentModel)

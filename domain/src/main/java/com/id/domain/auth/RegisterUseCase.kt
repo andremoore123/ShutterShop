@@ -24,6 +24,7 @@ class RegisterUseCase @Inject constructor(
         response.onSuccess {
             sessionRepository.insertUserToken(it.accessToken, it.refreshToken)
             sessionRepository.setUserData(UserModel(name = name, email = email))
+            result = Resource.Success(it.userName)
         }.onUnknownError {
             result = Resource.Error(ErrorType.UnknownError(it.message.toString()))
         }

@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
 
 /**
  * Created by: andreputras.
@@ -14,7 +15,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
  */
 
 fun <T> MutableStateFlow<UiState<T>>.handleUpdateUiState(newState: UiState<T>) {
-    this.value = newState
+    this.getAndUpdate {
+        newState
+    }
 }
 
 fun NavController.navigateAndPopUpAll(destination: String) {

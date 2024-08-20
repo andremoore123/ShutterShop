@@ -8,12 +8,12 @@ import com.id.domain.analytic.IAnalyticRepository
 import com.id.domain.auth.LoginUseCase
 import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.analytics.AnalyticsConstants
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_LOGIN
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -31,6 +31,7 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val analyticRepository: IAnalyticRepository,
+    private val coroutineDispatcher: DispatcherProvider
 ) : ViewModel() {
     val emailValue = savedStateHandle.getStateFlow(EMAIL, "")
     val passwordValue = savedStateHandle.getStateFlow(PASSWORD, "")
@@ -41,7 +42,7 @@ class LoginViewModel @Inject constructor(
 
 
     fun login(email: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineDispatcher.io) {
             with(_loginUiState) {
                 handleUpdateUiState(UiState.Loading)
                 logLoginAttempt(email)

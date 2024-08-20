@@ -16,10 +16,10 @@ import com.id.domain.utils.resource.onSuccess
 import com.id.domain.wishlist.AddToWishlistUseCase
 import com.id.domain.wishlist.CheckInWishlistUseCase
 import com.id.domain.wishlist.RemoveFromWishlistUseCase
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,7 +42,8 @@ class ProductDetailViewModel @Inject constructor(
     private val addToWishlistUseCase: AddToWishlistUseCase,
     private val removeFromWishlistUseCase: RemoveFromWishlistUseCase,
     private val checkInWishlistUseCase: CheckInWishlistUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
     private val _productState = MutableStateFlow<UiState<ProductDetailModel>>(UiState.Initiate)
     val productState = _productState.asStateFlow()
@@ -66,7 +67,7 @@ class ProductDetailViewModel @Inject constructor(
     }
 
     fun fetchProduct(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             with(_productState) {
                 handleUpdateUiState(UiState.Loading)
                 val response = fetchProductDetailUseCase.invoke(id)
@@ -80,7 +81,7 @@ class ProductDetailViewModel @Inject constructor(
     }
 
     fun fetchProductRating(productId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             _ratingState.run {
                 handleUpdateUiState(UiState.Loading)
                 val response = fetchRatingUseCase.invoke(productId)
@@ -98,7 +99,7 @@ class ProductDetailViewModel @Inject constructor(
         val cartModel = CartModel(
             itemId = data.id,
             itemName = data.productName,
-            itemVariantName = variant?.title ?: data.productVariance.first().title,
+            itemVariantName = variant?.title ?: data.productVariance.firstOrNull()?.title.orEmpty(),
             itemPrice = data.productPrice + additionalPrice,
             itemStock = data.productStock,
             imageUrl = data.imageUrl.firstOrNull().orEmpty()
@@ -107,7 +108,7 @@ class ProductDetailViewModel @Inject constructor(
     }
 
     fun checkOnWishlist(data: ProductDetailModel, variant: VarianceModel?) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             val wishlistModel = data.toWishlist(variant ?: data.productVariance.first())
             checkInWishlistUseCase.invoke(wishlistModel)?.let {
                 removeFromWishlistUseCase(it)
@@ -117,7 +118,7 @@ class ProductDetailViewModel @Inject constructor(
     }
 
     fun setSelectedVariant(data: ProductDetailModel, variant: VarianceModel?) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             _selectedVariant.getAndUpdate {
                 variant
             }
@@ -129,7 +130,7 @@ class ProductDetailViewModel @Inject constructor(
      * This Function Handle on Cart Click, whether it's Add or Remove
      */
     fun addItemToCart(data: ProductDetailModel, variant: VarianceModel?) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             val selectedVariant = variant ?: data.productVariance.first()
             val dataCart = CartModel(
                 itemId = data.id,
@@ -143,7 +144,7 @@ class ProductDetailViewModel @Inject constructor(
     }
 
     fun checkIsInWishlist(data: ProductDetailModel, variant: VarianceModel?) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             val inWishlist =
                 checkInWishlistUseCase(data.toWishlist(variant ?: data.productVariance.first()))
             _isInWishlist.getAndUpdate { inWishlist != null}
@@ -151,7 +152,7 @@ class ProductDetailViewModel @Inject constructor(
     }
 
     fun updateMessage(value: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             _message.getAndUpdate {
                 value
             }

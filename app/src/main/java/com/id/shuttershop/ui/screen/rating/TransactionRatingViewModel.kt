@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.id.domain.rating.IRatingRepository
 import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionRatingViewModel @Inject constructor(
     private val ratingRepository: IRatingRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
     val message = savedStateHandle.getStateFlow(MESSAGE_VALUE, "")
     val rating = savedStateHandle.getStateFlow<Int?>(RATING_VALUE, null)
@@ -36,7 +37,7 @@ class TransactionRatingViewModel @Inject constructor(
 
 
     fun sendRating(invoiceId: String, rating: Int, review: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             _reviewState.run {
                 handleUpdateUiState(UiState.Loading)
                 val response = ratingRepository.insertRating(
@@ -60,7 +61,7 @@ class TransactionRatingViewModel @Inject constructor(
     }
 
     fun updateMessage(value: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             savedStateHandle[MESSAGE_VALUE] = value
             delay(1_000)
             savedStateHandle[MESSAGE_VALUE] = ""

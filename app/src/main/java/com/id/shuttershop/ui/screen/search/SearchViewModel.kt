@@ -7,8 +7,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.id.domain.product.IProductRepository
 import com.id.domain.product.ProductModel
+import com.id.shuttershop.utils.DispatcherProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,6 +25,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val productRepository: IProductRepository,
     private val savedStateHandle: SavedStateHandle,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
     val searchValue = savedStateHandle.getStateFlow(SEARCH, "")
     val messageValue = savedStateHandle.getStateFlow(MESSAGE, "")
@@ -33,7 +34,7 @@ class SearchViewModel @Inject constructor(
     val searchData = _searchData.asStateFlow()
 
     fun setMessageValue(value: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             savedStateHandle[MESSAGE] = value
             delay(5_000)
             savedStateHandle[MESSAGE] = ""
@@ -41,7 +42,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun fetchSearch(query: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             if (query.isNotEmpty()) {
                 productRepository.searchProduct(query = query).cachedIn(viewModelScope).collect {
                     _searchData.emit(it)

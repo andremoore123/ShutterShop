@@ -20,16 +20,12 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -63,7 +59,6 @@ import com.id.shuttershop.utils.onLoaded
 import com.id.shuttershop.utils.onLoadingState
 import com.id.shuttershop.utils.onUnknownError
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 
 /**
  * Created by: andreputras.
@@ -85,11 +80,6 @@ fun HomeScreen(
     val userState by viewModel.userData.collectAsState()
     val isBottomSheetShow by viewModel.isBottomShowValue.collectAsState()
     val productFilterParams by viewModel.productFilter.collectAsState()
-    val message by viewModel.message.collectAsState()
-    val coroutine = rememberCoroutineScope()
-    val snackBarHostState = remember {
-        SnackbarHostState()
-    }
 
 
     val navigateToDetail: (ProductModel) -> Unit = {
@@ -103,14 +93,6 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchUserData()
-    }
-
-    LaunchedEffect(key1 = message) {
-        if (message.isNotEmpty()) {
-            coroutine.launch {
-                snackBarHostState.showSnackbar(message)
-            }
-        }
     }
 
     val homeEvent = HomeEvent(
@@ -127,9 +109,6 @@ fun HomeScreen(
         modifier = modifier
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp),
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        }
     ) { innerPadding ->
         HomeContent(
             modifier = Modifier.padding(innerPadding),

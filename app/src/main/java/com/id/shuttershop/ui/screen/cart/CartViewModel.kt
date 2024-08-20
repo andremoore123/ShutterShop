@@ -8,10 +8,10 @@ import com.id.domain.cart.ICartRepository
 import com.id.domain.cart.UpdateCartStockUseCase
 import com.id.domain.utils.resource.onError
 import com.id.domain.utils.resource.onSuccess
+import com.id.shuttershop.utils.DispatcherProvider
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +31,7 @@ class CartViewModel @Inject constructor(
     private val cartRepository: ICartRepository,
     private val updateCartStockUseCase: UpdateCartStockUseCase,
     private val savedStateHandle: SavedStateHandle,
+    private val dispatcherProvider: DispatcherProvider,
 ) : ViewModel() {
     val totalPaymentValue = savedStateHandle.getStateFlow(TOTAL_PAYMENT, 0)
 
@@ -52,7 +53,7 @@ class CartViewModel @Inject constructor(
      * **Run This When The Screen First Launch!!**
      */
     fun updateCartStockFromNetwork() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             _screenState.run {
                 handleUpdateUiState(UiState.Loading)
                 val response = updateCartStockUseCase.invoke()
@@ -70,7 +71,7 @@ class CartViewModel @Inject constructor(
      * Wrap it With List<CartModel>
      */
     fun removeCarts(cartIds: List<Int>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             if (cartIds.isNotEmpty()) {
                 val selectedCart = getSelectedCartModelsByIds(cartIds)
                 selectedCart.forEach {
@@ -92,7 +93,7 @@ class CartViewModel @Inject constructor(
      * Add Item Cart by 1
      */
     fun addCartQuantity(data: CartModel) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             val newItemCount = data.itemCount + 1
             if (newItemCount <= data.itemStock) {
                 val newData = data.copy(
@@ -107,7 +108,7 @@ class CartViewModel @Inject constructor(
      * Reduce Item Cart by 1
      */
     fun reduceCartQuantity(data: CartModel) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             val newItemCount = data.itemCount - 1
             if (newItemCount > 0) {
                 val newData = data.copy(
@@ -132,7 +133,7 @@ class CartViewModel @Inject constructor(
      * Handle Cart Selected Status
      */
     fun onSelectCart(status: Boolean, data: CartModel) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             if (status) {
                 addCartToSelected(data)
             } else {
@@ -149,7 +150,7 @@ class CartViewModel @Inject constructor(
      * else, remove all items from selected
      */
     fun onSelectAllClick(status: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             if (status) {
                 val listCartIds = cartList.value.getEligibleList().map { it.cartId ?: 0 }
                 _selectedCart.getAndUpdate { listCartIds }
