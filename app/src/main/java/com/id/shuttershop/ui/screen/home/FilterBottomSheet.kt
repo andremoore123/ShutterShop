@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.id.domain.product.ProductFilterParams
 import com.id.domain.product.SortingFilter
+import com.id.domain.utils.formatToString
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.PrimaryTextField
 import com.id.shuttershop.ui.components.button.PrimaryButton
@@ -116,17 +117,18 @@ internal fun FilterBottomSheetContent(
             style = MaterialTheme.typography.labelLarge
         )
         Row(
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
+            verticalAlignment = Alignment.Bottom
         ) {
             PrimaryTextField(
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.text_lowest),
-                value = filterStatus.lowestPrice?.toString() ?: "",
+                value = filterStatus.lowestPrice.formatToString() ?: "",
                 onTextChange = { event.onLowestPriceChange(it.toDoubleOrNull() ?: 0.0) })
             PrimaryTextField(
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.text_highest),
-                value = filterStatus.highestPrice?.toString() ?: "",
+                value = filterStatus.highestPrice.formatToString() ?: "",
                 onTextChange = { event.onHighestPriceChange.invoke(it.toDoubleOrNull() ?: 0.0) })
         }
         PrimaryButton(

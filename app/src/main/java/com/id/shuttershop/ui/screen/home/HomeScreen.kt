@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -49,15 +52,19 @@ import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
 import com.id.shuttershop.ui.components.state.LoadingBar
 import com.id.shuttershop.ui.components.state.LoadingCard
+import com.id.shuttershop.ui.components.state.NotFoundErrorState
 import com.id.shuttershop.ui.components.state.UnknownErrorState
 import com.id.shuttershop.ui.components.topbar.HomeTopBar
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.formatToRupiah
 import com.id.shuttershop.utils.onAddContentLoading
+import com.id.shuttershop.utils.onEmptyResultError
 import com.id.shuttershop.utils.onLoaded
 import com.id.shuttershop.utils.onLoadingState
 import com.id.shuttershop.utils.onUnknownError
+import com.id.shuttershop.utils.toTitleCase
 import kotlinx.coroutines.flow.flowOf
 
 /**
@@ -161,7 +168,9 @@ internal fun HomeContent(
             showBottomSheet = { homeEvent.changeBottomSheetValue(true) },
             navigateToSearch = homeEvent.navigateToSearch,
             navigateToNotification = homeEvent.navigateToNotification,
-            navigateToCart = homeEvent.navigateToCart
+            navigateToCart = homeEvent.navigateToCart,
+            productFilterParams = filterParams,
+            onProductFilterChange = homeEvent.onShowProduct
         )
         products.onLoadingState {
             LoadingBar()
@@ -232,7 +241,9 @@ internal fun HomeContent(
             }
             }.onUnknownError {
                 UnknownErrorState(onRetryClick = { products.refresh() })
-            }
+        }.onEmptyResultError {
+            NotFoundErrorState(modifier = Modifier.fillMaxSize())
+        }
     }
 }
 
@@ -243,6 +254,8 @@ internal fun HomeHeader(
     logEvent: HomeLogEvent,
     userName: String = "",
     userImageUrl: String = "",
+    productFilterParams: ProductFilterParams,
+    onProductFilterChange: (ProductFilterParams) -> Unit,
     onLayoutChange: (String) -> Unit,
     showBottomSheet: () -> Unit,
     navigateToNotification: () -> Unit,
@@ -292,8 +305,12 @@ internal fun HomeHeader(
                     imageVector = ImageVector.vectorResource(id = R.drawable.baseline_tune_24),
                     contentDescription = null
                 )
-                Text(text = "Filter")
+                Text(text = stringResource(R.string.text_filter))
             })
+            ActiveFilterChip(
+                productFilterParams = productFilterParams,
+                onClickFilterClick = onProductFilterChange
+            )
             Spacer(modifier = Modifier.weight(1f))
             VerticalDivider(modifier = Modifier.height(30.dp))
             IconButton(onClick = {
@@ -307,6 +324,61 @@ internal fun HomeHeader(
                         contentDescription = null
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun ActiveFilterChip(
+    modifier: Modifier = Modifier,
+    productFilterParams: ProductFilterParams,
+    onClickFilterClick: (ProductFilterParams) -> Unit,
+) {
+    LazyRow(
+        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        item {
+            if (productFilterParams.sortBy != null) {
+                FilterChip(selected = true,
+                    onClick = { onClickFilterClick.invoke(productFilterParams.copy(sortBy = null)) },
+                    label = {
+                        Text(
+                            text = stringResource(
+                                R.string.text_sort_by, productFilterParams.sortBy.toTitleCase()
+                            )
+                        )
+                    })
+            }
+        }
+        item {
+            if (productFilterParams.lowestPrice != null) {
+                FilterChip(selected = true,
+                    onClick = { onClickFilterClick.invoke(productFilterParams.copy(lowestPrice = null)) },
+                    label = {
+                        Text(
+                            text = stringResource(
+                                R.string.text_lowest_price,
+                                productFilterParams.lowestPrice.formatToRupiah()
+                            )
+                        )
+                    })
+            }
+        }
+        item {
+            if (productFilterParams.highestPrice != null) {
+                FilterChip(selected = true,
+                    onClick = { onClickFilterClick.invoke(productFilterParams.copy(highestPrice = null)) },
+                    label = {
+                        Text(
+                            text = stringResource(
+                                R.string.text_highest_price,
+                                productFilterParams.highestPrice.formatToRupiah()
+                            )
+                        )
+                    })
             }
         }
     }

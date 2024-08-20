@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.id.data.product.response.ProductDataResponse
 import com.id.domain.product.ProductFilterParams
+import com.id.domain.utils.formatToString
 import retrofit2.HttpException
 
 /**
@@ -30,7 +31,8 @@ class ProductPagingSource(
             val response = apiService.fetchProducts(
                 searchQuery = productQuery,
                 brand = parameter.productCategory,
-                lowestPrice = parameter.lowestPrice,
+                lowestPrice = parameter.lowestPrice.formatToString(),
+                highestPrice = parameter.highestPrice.formatToString(),
                 sortType = parameter.sortBy,
                 limit = params.loadSize,
                 page = nextPageNumber
