@@ -7,6 +7,7 @@ package com.id.domain.transaction
  * Email: andremoore431@gmail.com
  */
 data class TransactionModel(
+    val transactionId: String = "",
     val itemName: String,
     val itemTotal: Int,
     val itemImageUrl: String,
