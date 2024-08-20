@@ -31,6 +31,7 @@ import com.id.domain.transaction.TransactionModel
 import com.id.domain.transaction.TransactionStatus
 import com.id.domain.utils.formatToRupiah
 import com.id.shuttershop.R
+import com.id.shuttershop.ui.components.button.PrimaryButton
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 
 /**
@@ -43,6 +44,7 @@ import com.id.shuttershop.ui.theme.ShutterShopTheme
 fun TransactionCard(
     modifier: Modifier = Modifier,
     transactionModel: TransactionModel,
+    navigateToRating: (TransactionModel) -> Unit,
 ) {
     val itemDesc = when (transactionModel.itemStatus) {
         ItemStatus.ONE_TYPE_ITEM -> {
@@ -113,7 +115,12 @@ fun TransactionCard(
                         text = transactionModel.transactionTotal.formatToRupiah(),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
-
+                }
+                if (transactionModel.review.isEmpty() && transactionModel.rating == 0) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    PrimaryButton(text = stringResource(R.string.text_review), onClick = {
+                        navigateToRating(transactionModel)
+                    })
                 }
             }
         }
@@ -153,7 +160,7 @@ internal fun ShowTransactionCardPreview() {
                 transactionDate = "dis",
                 itemStatus = ItemStatus.MORE_THAN_ONE_TYPE_ITEM
             ),
-
+            navigateToRating = {}
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.id.shuttershop.ui.navigation.transaction
 
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -65,6 +66,7 @@ fun NavGraphBuilder.transactionNavigation(navController: NavController) {
                 navController.previousBackStackEntry?.savedStateHandle?.get<CheckoutModel>(
                     CHECKOUT_DATA_RESPONSE
                 )
+            Log.d("TransactionRatingScreen", checkoutModel.toString())
             checkoutModel?.let {
                 TransactionRatingScreen(checkoutModel = it, navigateToHome = {
                     navController.navigateAndPopUpAll(MainNavRoute.LAUNCHPAD_SCREEN.route)

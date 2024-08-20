@@ -2,6 +2,7 @@ package com.id.shuttershop.ui.screen.transaction
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.id.domain.transaction.CheckoutModel
 import com.id.domain.transaction.TransactionModel
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.card.TransactionCard
@@ -39,6 +41,7 @@ import com.id.shuttershop.utils.onSuccess
 fun TransactionScreen(
     modifier: Modifier = Modifier,
     viewModel: TransactionViewModel = hiltViewModel(),
+    navigateToRating: (CheckoutModel) -> Unit,
 ) {
     val transactionState by viewModel.transactionState.collectAsState()
 
@@ -48,7 +51,11 @@ fun TransactionScreen(
     TransactionContent(
         modifier = modifier.padding(horizontal = 16.dp),
         transactionState = transactionState,
-        onRetryClick = { viewModel.fetchTransaction() }
+        onRetryClick = { viewModel.fetchTransaction() },
+        navigateToRating = {
+            navigateToRating(viewModel.transformTransactionToCheckOutModel(it))
+            viewModel.rateTransaction(it)
+        }
     )
 }
 
@@ -57,16 +64,18 @@ internal fun TransactionContent(
     modifier: Modifier = Modifier,
     transactionState: UiState<List<TransactionModel>>,
     onRetryClick: () -> Unit,
+    navigateToRating: (TransactionModel) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         transactionState.onSuccess {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(it) {
-                    TransactionCard(transactionModel = it)
+                    TransactionCard(transactionModel = it, navigateToRating = navigateToRating)
                 }
             }
         }.onLoading {
@@ -95,7 +104,9 @@ internal fun ShowTransactionScreenPreview() {
             modifier = Modifier.padding(horizontal = 16.dp),
             transactionState = UiState.Success(
                 listOf()
-            ), {}
+            ),
+            navigateToRating = {},
+            onRetryClick = {}
         )
     }
 }

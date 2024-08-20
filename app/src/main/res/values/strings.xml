@@ -94,5 +94,6 @@
     <string name="text_subtitle_transaction_success">Your transaction is successful! Your seller will process the transaction immediately!</string>
     <string name="text_email_registered_error">Your Email Has Been Registered</string>
     <string name="text_email_password_not_valid_error">Your Email and Password Is Not Valid</string>
+    <string name="text_review">Review</string>
 
 </resources>

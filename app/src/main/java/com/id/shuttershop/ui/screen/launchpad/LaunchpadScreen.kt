@@ -1,5 +1,6 @@
 package com.id.shuttershop.ui.screen.launchpad
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -16,11 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.id.domain.transaction.CheckoutModel
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadMenus
 import com.id.shuttershop.ui.navigation.launchpad.LaunchpadRoute
 import com.id.shuttershop.ui.navigation.main.MainNavRoute
 import com.id.shuttershop.ui.navigation.main.PRODUCT_WITH_BRACKET
+import com.id.shuttershop.ui.navigation.transaction.CHECKOUT_DATA_RESPONSE
 import com.id.shuttershop.ui.navigation.transaction.TransactionRoute
 import com.id.shuttershop.ui.screen.home.HomeScreen
 import com.id.shuttershop.ui.screen.profile.ProfileScreen
@@ -95,7 +98,18 @@ fun LaunchpadScreen(
                 )
             }
             composable(LaunchpadRoute.TransactionRoute.route) {
-                TransactionScreen()
+                val savedDataToPreviousState: (CheckoutModel) -> Unit = { data ->
+                    mainNavController.previousBackStackEntry?.let {
+                        it.savedStateHandle[CHECKOUT_DATA_RESPONSE] = data
+                    }
+                }
+
+                TransactionScreen(
+                    navigateToRating = {
+                        mainNavController.navigate(TransactionRoute.TRANSACTION_RATING_SCREEN.route)
+                        savedDataToPreviousState(it)
+                        Log.d("TransactionRatingScreen_LaunchPad", it.toString())
+                    })
             }
             composable(LaunchpadRoute.WishlistRoute.route) {
                 WishlistScreen(

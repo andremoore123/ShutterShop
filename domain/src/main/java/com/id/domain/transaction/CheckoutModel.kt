@@ -16,4 +16,6 @@ data class CheckoutModel(
     val time: String,
     val paymentName: String,
     val total: Int,
+    val rating: Int = 0,
+    val review: String = "",
 ): Parcelable

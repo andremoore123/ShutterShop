@@ -49,7 +49,11 @@ fun TransactionsResponse.mapToModel() = TransactionModel(
     transactionTotal = total ?: 0,
     transactionStatus = if (status == true) TransactionStatus.SUCCESS else TransactionStatus.FAILED,
     transactionDate = date ?: "",
-    itemStatus = determineItemStatus(items ?: listOf())
+    itemStatus = determineItemStatus(items ?: listOf()),
+    rating = rating ?: 0,
+    review = review.orEmpty(),
+    paymentName = payment.orEmpty(),
+    time = time.orEmpty()
 )
 
 internal fun determineTotalItem(data: List<TransactionItemResponse>): Int {
