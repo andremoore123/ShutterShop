@@ -174,7 +174,7 @@ class LoginViewModelTest {
         viewModel.onMessageValueChange(message)
 
         viewModel.messageValue.test {
-            assertEquals("", awaitItem())
+            assertEquals(message, awaitItem())
         }
 
     }
