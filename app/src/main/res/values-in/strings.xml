@@ -89,4 +89,7 @@
     <string name="text_transaction_success">Transaksi Sukses</string>
     <string name="text_subtitle_transaction_success">Transaksi kamu berhasil nih. Pembelian kamu segera diproses penjual!!</string>
 
+    <string name="text_email_registered_error">Email Kamu Telah Digunakan</string>
+    <string name="text_email_password_not_valid_error">Email dan Password Tidak Valid</string>
+
 </resources>

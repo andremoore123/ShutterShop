@@ -36,6 +36,8 @@ import com.id.shuttershop.ui.components.button.PrimaryTextButton
 import com.id.shuttershop.ui.components.state.LoadingState
 import com.id.shuttershop.ui.theme.AppTypography
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.OnHttpError
+import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
 import kotlinx.coroutines.launch
@@ -71,8 +73,24 @@ fun LoginScreen(
     Box(modifier = modifier.fillMaxSize()) {
         loginUiState.onLoading {
             LoadingState()
-        }.onError {
-            viewModel.onMessageValueChange(it.errorMessage)
+        }.onError { errorType ->
+            errorType.OnHttpError {
+                when (it) {
+                    400 -> {
+                        viewModel.onMessageValueChange(stringResource(R.string.text_email_password_not_valid_error))
+                    }
+
+                    else -> {
+                        viewModel.onMessageValueChange(stringResource(id = R.string.text_unknown_error))
+                    }
+                }
+            }
+            errorType.OnUnknownError {
+                viewModel.onMessageValueChange(stringResource(id = R.string.text_unknown_error))
+            }
+            LaunchedEffect(key1 = Unit) {
+                viewModel.resetUiState()
+            }
         }
         Scaffold(
             modifier = Modifier,

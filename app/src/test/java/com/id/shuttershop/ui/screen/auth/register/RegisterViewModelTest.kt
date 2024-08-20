@@ -166,4 +166,27 @@ class RegisterViewModelTest {
             assertEquals(message, awaitItem())
         }
     }
+
+    @Test
+    fun `reset ui state after register error`() = runTest {
+        val viewModel = createRegisterViewModel()
+
+        val name = userModel.name
+        val email = userModel.email
+        val password = userPassword
+
+        val returnError = NetworkResponse.UnknownError(NullPointerException())
+        val uiStateError = UiState.Error(ErrorType.UnknownError("null"))
+
+        Mockito.`when`(authRepository.register(name, email, password)).thenReturn(returnError)
+
+        viewModel.register(name, email, password)
+        advanceUntilIdle()
+        viewModel.registerUiState.test {
+            assertEquals(uiStateError, awaitItem())
+            viewModel.resetUiState()
+            assertEquals(UiState.Initiate, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }

@@ -14,6 +14,7 @@ import com.id.shuttershop.utils.analytics.AnalyticsConstants
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_REGISTER
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -89,6 +90,14 @@ class RegisterViewModel @Inject constructor(
 
     fun onEmailValueChange(value: String) {
         savedStateHandle[EMAIL] = value
+    }
+
+    fun resetUiState() {
+        viewModelScope.launch(dispatcherProvider.io) {
+            delay(1_500)
+            _registerUiState.handleUpdateUiState(UiState.Initiate)
+            savedStateHandle[MESSAGE] = ""
+        }
     }
 
     fun onPasswordChange(value: String) {
