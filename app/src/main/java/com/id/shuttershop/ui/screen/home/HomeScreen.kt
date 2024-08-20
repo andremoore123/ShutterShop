@@ -50,10 +50,9 @@ import com.id.shuttershop.ui.components.SearchTextField
 import com.id.shuttershop.ui.components.button.PrimaryIconButton
 import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
-import com.id.shuttershop.ui.components.state.LoadingBar
-import com.id.shuttershop.ui.components.state.LoadingCard
 import com.id.shuttershop.ui.components.state.NotFoundErrorState
 import com.id.shuttershop.ui.components.state.UnknownErrorState
+import com.id.shuttershop.ui.components.state.shimmer.HomeCardLoading
 import com.id.shuttershop.ui.components.topbar.HomeTopBar
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.COLUMN_LAYOUT
 import com.id.shuttershop.ui.screen.wishlist.WishlistViewModel.Companion.GRID_LAYOUT
@@ -173,7 +172,7 @@ internal fun HomeContent(
             onProductFilterChange = homeEvent.onShowProduct
         )
         products.onLoadingState {
-            LoadingBar()
+            HomeScreenLoading(cardOrientation = currentLayoutType)
         }.onLoaded {
             when (currentLayoutType) {
                 GRID_LAYOUT -> {
@@ -201,10 +200,10 @@ internal fun HomeContent(
                         )
                         products.onAddContentLoading {
                             item {
-                                LoadingCard()
+                                HomeCardLoading(cardOrientation = HomeCardOrientation.GRID)
                             }
                             item {
-                                LoadingCard()
+                                HomeCardLoading(cardOrientation = HomeCardOrientation.GRID)
                             }
                         }
                     }
@@ -233,7 +232,7 @@ internal fun HomeContent(
                         )
                         products.onAddContentLoading {
                             item {
-                                LoadingCard()
+                                HomeCardLoading(cardOrientation = HomeCardOrientation.COLUMN)
                             }
                         }
                     }
@@ -245,6 +244,38 @@ internal fun HomeContent(
             NotFoundErrorState(modifier = Modifier.fillMaxSize())
         }
     }
+}
+
+@Composable
+internal fun HomeScreenLoading(
+    cardOrientation: String
+) {
+    when (cardOrientation) {
+        GRID_LAYOUT -> {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(5) {
+                    HomeCardLoading(cardOrientation = HomeCardOrientation.GRID)
+                }
+            }
+        }
+
+        COLUMN_LAYOUT -> {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(5) {
+                    HomeCardLoading(cardOrientation = HomeCardOrientation.COLUMN)
+                }
+            }
+        }
+    }
+
 }
 
 @Composable
