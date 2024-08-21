@@ -22,10 +22,17 @@ class RegisterUseCase @Inject constructor(
     suspend operator fun invoke(name: String, email: String, password: String): Resource<String> {
         val response = authRepository.register(name = name, email = email, password = password)
         var result: Resource<String> = Resource.Initiate
-        response.onSuccess {
-            sessionRepository.insertUserToken(it.accessToken, it.refreshToken)
-            sessionRepository.setUserData(UserModel(name = name, email = email))
-            result = Resource.Success(it.userName)
+        response.onSuccess { register ->
+            sessionRepository.insertUserToken(register.accessToken, register.refreshToken)
+            authRepository.updateProfile(name)
+                .onSuccess {
+                    sessionRepository.setUserData(UserModel(name = name, email = email))
+                    result = Resource.Success(register.userName)
+                }.onHttpError { _, _ ->
+                    sessionRepository.setUserData(UserModel(name = name, email = email))
+                }.onUnknownError {
+                    sessionRepository.setUserData(UserModel(name = name, email = email))
+                }
         }.onHttpError{ code, message ->
             result = Resource.Error(ErrorType.HTTPError(code, message))
         }.onUnknownError {

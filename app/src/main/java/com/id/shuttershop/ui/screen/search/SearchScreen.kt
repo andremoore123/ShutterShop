@@ -94,7 +94,7 @@ fun SearchScreen(
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.padding(top = 16.dp),
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }

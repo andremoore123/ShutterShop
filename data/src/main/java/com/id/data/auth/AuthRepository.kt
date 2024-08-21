@@ -7,6 +7,9 @@ import com.id.data.auth.model.response.toModel
 import com.id.domain.auth.IAuthRepository
 import com.id.domain.auth.model.AuthDataModel
 import com.id.domain.utils.network_response.NetworkResponse
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -45,6 +48,17 @@ class AuthRepository @Inject constructor(
             response?.run {
                 NetworkResponse.Success(toModel())
             } ?: throw NullPointerException()
+        } catch (e: HttpException) {
+            NetworkResponse.HttpError(e.code(), e.message())
+        } catch (e: Exception) {
+            NetworkResponse.UnknownError(e)
+        }
+    }
+
+    override suspend fun updateProfile(userName: String): NetworkResponse<Boolean> {
+        return try {
+            authApiService.updateProfile(userName.toRequestBody("text/plain".toMediaTypeOrNull()))
+            NetworkResponse.Success(true)
         } catch (e: HttpException) {
             NetworkResponse.HttpError(e.code(), e.message())
         } catch (e: Exception) {
