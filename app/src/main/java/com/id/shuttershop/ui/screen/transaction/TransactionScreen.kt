@@ -18,11 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.domain.transaction.CheckoutModel
 import com.id.domain.transaction.TransactionModel
+import com.id.domain.utils.ErrorType
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.card.TransactionCard
 import com.id.shuttershop.ui.components.state.EmptyErrorState
-import com.id.shuttershop.ui.components.state.LoadingBar
 import com.id.shuttershop.ui.components.state.UnknownErrorState
+import com.id.shuttershop.ui.components.state.shimmer.TransactionCardLoading
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.OnEmptyError
 import com.id.shuttershop.utils.OnUnknownError
@@ -48,6 +49,7 @@ fun TransactionScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.fetchTransaction()
     }
+
     TransactionContent(
         modifier = modifier.padding(horizontal = 16.dp),
         transactionState = transactionState,
@@ -69,29 +71,48 @@ internal fun TransactionContent(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        transactionState.onSuccess {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(it) {
-                    TransactionCard(transactionModel = it, navigateToRating = navigateToRating)
+        transactionState.run {
+            onSuccess {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(it) {
+                        TransactionCard(transactionModel = it, navigateToRating = navigateToRating)
+                    }
                 }
             }
-        }.onLoading {
-            LoadingBar()
-        }.onError {
-            it.OnUnknownError {
-                UnknownErrorState(onRetryClick = onRetryClick)
+            onLoading {
+                TransactionScreenLoading()
             }
-            it.OnEmptyError {
-                EmptyErrorState(
-                    title = stringResource(R.string.text_title_empty_transaction),
-                    desc = stringResource(
-                        R.string.text_desc_empty_transaction
-                    )
-                )
+            onError { errorType: ErrorType ->
+                errorType.run {
+                    OnEmptyError {
+                        EmptyErrorState(
+                            title = stringResource(R.string.text_title_empty_transaction),
+                            desc = stringResource(
+                                R.string.text_desc_empty_transaction
+                            )
+                        )
+                    }
+                    OnUnknownError {
+                        UnknownErrorState(onRetryClick = onRetryClick)
+                    }
+                }
             }
+        }
+    }
+}
+
+@Composable
+internal fun TransactionScreenLoading(modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(bottom = 16.dp)
+    ) {
+        items(5) {
+            TransactionCardLoading()
         }
     }
 }
