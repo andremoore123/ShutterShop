@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "ShutterShop"
 include(":app")
- 
+include(":domain")
+include(":data")

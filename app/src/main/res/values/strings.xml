@@ -1,3 +1,104 @@
 <resources>
     <string name="app_name">ShutterShop</string>
+
+    <!--  Onboard String  -->
+    <string name="onboard_title_first">Welcome to \nShutterShop!</string>
+    <string name="onboard_subtitle_first">Easily find various cameras and accessories at ShutterShop.</string>
+
+    <string name="onboard_title_second">Buy Cameras \nwith Ease</string>
+    <string name="onboard_subtitle_second">Enjoy a convenient and secure shopping experience at ShutterShop.</string>
+
+    <string name="onboard_title_third">Exclusive Offers and  Discounts</string>
+    <string name="onboard_subtitle_third">Get access to exclusive offers and special discounts only at Kameraya.</string>
+
+    <string name="channel_name" translatable="false">shutterShopAppNotification</string>
+    <string name="channel_description" translatable="false">Notification to remind the transaction</string>
+
+    <!--  Button  -->
+    <string name="text_next">Next</string>
+    <string name="text_skip">Skip</string>
+    <string name="text_login">Login</string>
+    <string name="text_email">Email</string>
+    <string name="text_password">Password</string>
+    <string name="text_no_account">Don\'t Have an Account?</string>
+    <string name="text_register_now">Register Now</string>
+    <string name="text_subtitle_login">Let\'s Capture The World</string>
+    <string name="text_name">Name</string>
+    <string name="text_subtitle_register">Register and Capture</string>
+    <string name="text_register">Register</string>
+    <string name="text_login_now">Login Now</string>
+    <string name="text_have_account">Already have an account?</string>
+    <string name="text_light">Light</string>
+    <string name="text_dark">Dark</string>
+    <string name="text_en">EN</string>
+    <string name="text_id">ID</string>
+    <string name="text_logout">Logout</string>
+    <string name="text_item_subtitle">%s | Sold %s</string>
+    <string name="text_button_add_cart">+ Cart</string>
+    <string name="text_total_item">%s Items</string>
+    <string name="text_rating">Rate</string>
+    <string name="text_total_payment">Total Payment</string>
+    <string name="text_shop">"Shop | "</string>
+    <string name="text_search_camera">Search Camera</string>
+    <string name="text_welcome">Welcome, %s</string>
+    <string name="text_desc_home">Find Your Perfect Camera</string>
+    <string name="text_sold">Sold %s</string>
+    <string name="text_buy_now">Buy Now</string>
+    <string name="text_user_review">%1$s Review</string>
+    <string name="text_see_all">See All</string>
+    <string name="text_detail_product">Product Detail</string>
+    <string name="text_remove">Remove</string>
+    <string name="text_notification">Notification</string>
+
+    <string name="text_stock">Stock %s</string>
+    <string name="text_stock_remaining">Remaining %s</string>
+    <string name="text_delete">Delete</string>
+    <string name="text_cart">Cart</string>
+    <string name="text_select_all">Select All</string>
+    <string name="text_checkout">Checkout</string>
+    <string name="text_loading">Loading</string>
+    <string name="text_choose_variance">Choose Variant</string>
+    <string name="text_add_cart_success">Item Added to Cart</string>
+    <string name="text_version_not_supported">Your Android Version \nDoesn\'t Support This Feature</string>
+    <string name="text_sort">Sort</string>
+    <string name="text_price">Price</string>
+    <string name="text_lowest">Lowest</string>
+    <string name="text_highest">Highest</string>
+    <string name="text_show_product">Show Products</string>
+    <string name="text_transaction_rate">Transaction Rate</string>
+    <string name="text_out_of_stock">Product Out of Stock</string>
+    <string name="text_transaction_id">Transaction ID</string>
+    <string name="text_transaction_status">Transaction Status</string>
+    <string name="text_date">Date</string>
+    <string name="text_time">Time</string>
+    <string name="text_payment_method">Payment Method</string>
+    <string name="text_done">Done</string>
+    <string name="text_title_empty_cart">Your Cart is Still Empty</string>
+    <string name="text_desc_empty_cart">Let\'s Add Some Products to the Cart</string>
+    <string name="text_title_wishlist_empty">Your Wishlist is Still Empty</string>
+    <string name="text_desc_wishlist_empty">Your dream items will be here. Start adding them now!</string>
+    º¡
+    <string name="other_products">+%1$s Other Products</string>
+    <string name="text_unknown_error">Something\'s Went Wrong</string>
+    <string name="text_title_empty_transaction">There\'s No Transaction Yet</string>
+    <string name="text_desc_empty_transaction">This Section Will be Filled After You Make A Transaction</string>
+    <string name="text_buyers_satisfied">%1$s%% Buyers Are Satisfied</string>
+    <string name="text_not_found_error">The Page You Are Looking For Is Not Found</string>
+    <string name="text_title_empty_notification">There is no notification of your transaction yet</string>
+    <string name="text_desc_empty_notification">Make a Transaction First</string>
+    <string name="text_error_checkout">There\'s Problem When Process Your Transaction</string>
+    <string name="text_back_to_home">Back To Home</string>
+    <string name="text_transaction_detail">Transaction Detail</string>
+    <string name="text_success">Success</string>
+    <string name="text_transaction_success">Transaction Success</string>
+    <string name="text_subtitle_transaction_success">Your transaction is successful! Your seller will process the transaction immediately!</string>
+    <string name="text_email_registered_error">Your Email Has Been Registered</string>
+    <string name="text_email_password_not_valid_error">Your Email and Password Is Not Valid</string>
+    <string name="text_review">Review</string>
+    <string name="text_filter">Filter</string>
+    <string name="text_sort_by">Sort By: %1$s</string>
+    <string name="text_lowest_price">Lowest Price: %1$s</string>
+    <string name="text_highest_price">Highest Price: %1$s</string>
+    <string name="text_info">Info</string>
+
 </resources>
