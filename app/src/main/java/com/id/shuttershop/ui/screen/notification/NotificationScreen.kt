@@ -17,17 +17,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.id.domain.notification.NotificationModel
+import com.id.domain.utils.ErrorType
 import com.id.shuttershop.R
 import com.id.shuttershop.ui.components.card.NotificationCard
 import com.id.shuttershop.ui.components.state.EmptyState
 import com.id.shuttershop.ui.components.state.HttpErrorState
-import com.id.shuttershop.ui.components.state.LoadingBar
 import com.id.shuttershop.ui.components.state.UnknownErrorState
+import com.id.shuttershop.ui.components.state.shimmer.NotificationCardLoading
 import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.OnEmptyError
 import com.id.shuttershop.utils.OnHttpError
-import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
@@ -75,39 +75,58 @@ internal fun NotificationContent(
             onBackClickListener = onBackClick,
             showNavigation = true
         )
-        notificationState.onSuccess {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(vertical = 16.dp)
-            ) {
-                items(it) {
-                    NotificationCard(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        title = it.title,
-                        subTitle = it.subTitle
-                    )
-                    HorizontalDivider(
-                        modifier = Modifier.padding(top = 10.dp)
-                    )
+        notificationState.run {
+            onSuccess {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(vertical = 16.dp)
+                ) {
+                    items(it) {
+                        NotificationCard(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            title = it.title,
+                            subTitle = it.subTitle
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
+                    }
+                }
+            }
+            onLoading {
+                NotificationScreenLoading()
+            }
+            onError { errorType: ErrorType ->
+                errorType.run {
+                    OnHttpError {
+                        HttpErrorState(errorCode = it, onRetryClick = onRetry)
+                    }
+                    OnEmptyError {
+                        EmptyState(
+                            title = stringResource(R.string.text_title_empty_notification),
+                            desc = stringResource(R.string.text_desc_empty_notification)
+                        )
+                    }
+                    OnEmptyError {
+                        UnknownErrorState(onRetryClick = onRetry)
+
+                    }
                 }
             }
         }
-            .onLoading {
-                LoadingBar()
-            }.onError { errorType ->
-                errorType.OnHttpError {
-                    HttpErrorState(errorCode = it, onRetryClick = onRetry)
-                }
-                errorType.OnEmptyError {
-                    EmptyState(
-                        title = stringResource(R.string.text_title_empty_notification),
-                        desc = stringResource(R.string.text_desc_empty_notification)
-                    )
-                }
-                errorType.OnUnknownError {
-                    UnknownErrorState(onRetryClick = onRetry)
-                }
-            }
+    }
+}
+
+@Composable
+internal fun NotificationScreenLoading(modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
+        items(4) {
+            NotificationCardLoading(modifier = Modifier.padding(horizontal = 16.dp))
+        }
     }
 }
 
