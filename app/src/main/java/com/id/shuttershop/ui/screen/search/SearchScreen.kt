@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,10 +38,10 @@ import com.id.shuttershop.ui.components.button.PrimaryIconButton
 import com.id.shuttershop.ui.components.card.HomeCard
 import com.id.shuttershop.ui.components.card.HomeCardOrientation
 import com.id.shuttershop.ui.components.state.HttpErrorState
-import com.id.shuttershop.ui.components.state.LoadingBar
-import com.id.shuttershop.ui.components.state.LoadingCard
 import com.id.shuttershop.ui.components.state.UnknownErrorState
+import com.id.shuttershop.ui.components.state.shimmer.HomeCardLoading
 import com.id.shuttershop.ui.theme.ShutterShopTheme
+import com.id.shuttershop.utils.onAddContentLoading
 import com.id.shuttershop.utils.onEmptyResultError
 import com.id.shuttershop.utils.onLoaded
 import com.id.shuttershop.utils.onLoadingState
@@ -145,33 +146,52 @@ internal fun SearchContent(
         }
 
         Box(modifier = Modifier) {
-            searchState.onLoadingState {
-                LoadingBar()
-            }.onLoaded {
-                LazyColumn(
-                    modifier = Modifier.padding(top = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(searchState.itemCount) { index ->
-                        searchState[index]?.let {
-                            HomeCard(
-                                modifier = Modifier.clickable { onProductClick(it.id) },
-                                productModel = it,
-                                cardOrientation = HomeCardOrientation.COLUMN
-                            )
+            searchState.run {
+                onLoadingState {
+                    SearchScreenLoading()
+                }
+                onLoaded {
+                    LazyColumn(
+                        modifier = Modifier.padding(top = 24.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = PaddingValues(bottom = 16.dp)
+                    ) {
+                        items(searchState.itemCount) { index ->
+                            searchState[index]?.let {
+                                HomeCard(
+                                    modifier = Modifier.clickable { onProductClick(it.id) },
+                                    productModel = it,
+                                    cardOrientation = HomeCardOrientation.COLUMN
+                                )
+                            }
                         }
-                    }
-                    item {
-                        if (searchState.loadState.append is LoadState.Loading) {
-                            LoadingCard()
+                        this@run.onAddContentLoading {
+                            item {
+                                HomeCardLoading()
+                            }
                         }
                     }
                 }
-            }.onEmptyResultError {
-                HttpErrorState(errorCode = it, onRetryClick = onRetry)
-            }.onUnknownError {
-                UnknownErrorState(onRetryClick = onRetry)
+                onEmptyResultError {
+                    HttpErrorState(errorCode = it, onRetryClick = onRetry)
+                }
+                onUnknownError {
+                    UnknownErrorState(onRetryClick = onRetry)
+                }
             }
+        }
+    }
+}
+
+@Composable
+internal fun SearchScreenLoading(modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier.padding(top = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(bottom = 16.dp)
+    ) {
+        items(5) {
+            HomeCardLoading(cardOrientation = HomeCardOrientation.COLUMN)
         }
     }
 }
