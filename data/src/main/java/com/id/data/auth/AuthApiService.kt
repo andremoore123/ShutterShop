@@ -4,8 +4,13 @@ import com.id.data.auth.model.request.LoginRequest
 import com.id.data.auth.model.request.RefreshRequest
 import com.id.data.auth.model.request.RegisterRequest
 import com.id.data.auth.model.response.AuthResponse
+import okhttp3.RequestBody
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 /**
  * Created by: andre.
@@ -29,4 +34,10 @@ interface AuthApiService {
     suspend fun refresh(
         @Body body: RefreshRequest
     ): AuthResponse
+
+    @Multipart
+    @POST("profile")
+    suspend fun updateProfile(
+        @Part("userName") userName: RequestBody,
+    )
 }

@@ -12,4 +12,5 @@ import com.id.domain.utils.network_response.NetworkResponse
 interface IAuthRepository {
     suspend fun login(email: String, password: String): NetworkResponse<AuthDataModel>
     suspend fun register(name: String, email: String, password: String): NetworkResponse<AuthDataModel>
+    suspend fun updateProfile(userName: String): NetworkResponse<Boolean>
 }
