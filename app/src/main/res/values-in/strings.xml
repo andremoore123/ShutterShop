@@ -96,5 +96,6 @@
     <string name="text_sort_by">Urutkan Berdasarkan: %1$s</string>
     <string name="text_lowest_price">Harga Terendah: %1$s</string>
     <string name="text_highest_price">Harga Tertinggi: %1$s</string>
+    <string name="text_info">Info</string>
 
 </resources>

@@ -180,7 +180,7 @@ internal fun ItemText(
 internal fun ShowHomeCardPreview() {
     ShutterShopTheme {
         HomeCard(
-            cardOrientation = HomeCardOrientation.COLUMN,
+            cardOrientation = HomeCardOrientation.GRID,
             productModel = ProductModel.dummyData,
         )
     }

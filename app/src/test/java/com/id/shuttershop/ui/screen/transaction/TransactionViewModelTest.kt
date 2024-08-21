@@ -97,6 +97,45 @@ class TransactionViewModelTest {
     }
 
     @Test
+    fun `on sort transaction list`() = runTest {
+        val viewModel = createViewModel()
+        val expectValue = listOf(
+            TransactionModel(
+                transactionId = "autem",
+                itemName = "Toni Carver",
+                itemTotal = 8048,
+                itemImageUrl = "https://www.google.com/#q=euripidis",
+                transactionTotal = 8611,
+                transactionStatus = TransactionStatus.FAILED,
+                transactionDate = "veritus",
+                itemStatus = ItemStatus.ONE_TYPE_ITEM,
+                time = "ante",
+                review = "senectus",
+                rating = 8071,
+                paymentName = "Kristi Dunlap"
+            ),
+            TransactionModel(
+                transactionId = "autem",
+                itemName = "Toni Carver",
+                itemTotal = 8048,
+                itemImageUrl = "https://www.google.com/#q=euripidis",
+                transactionTotal = 8611,
+                transactionStatus = TransactionStatus.FAILED,
+                transactionDate = "veritus",
+                itemStatus = ItemStatus.ONE_TYPE_ITEM,
+                time = "ante",
+                review = "senectus",
+                rating = 8071,
+                paymentName = "Kristi Dunlap"
+            ),
+        )
+        val expectResult = expectValue.sortedBy { it.rating != 0 && it.review.isNotEmpty() }
+
+        val actualResult = viewModel.sortHistoryTransaction(expectValue)
+        assertEquals(expectResult, actualResult)
+    }
+
+    @Test
     fun `on fetch transaction error`() = runTest {
         val viewModel = createViewModel()
         advanceUntilIdle()

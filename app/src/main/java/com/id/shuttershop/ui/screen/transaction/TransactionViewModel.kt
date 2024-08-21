@@ -20,7 +20,6 @@ import com.id.shuttershop.utils.analytics.AnalyticsConstants.RATE_BUTTON
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_TRANSACTION
 import com.id.shuttershop.utils.handleUpdateUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -47,13 +46,17 @@ class TransactionViewModel @Inject constructor(
             with(_transactionState) {
                 handleUpdateUiState(UiState.Loading)
                 val response = fetchTransactionsUseCase.invoke()
-                response.onSuccess {
-                    handleUpdateUiState(UiState.Success(it))
+                response.onSuccess { transactionModels ->
+                    handleUpdateUiState(UiState.Success(sortHistoryTransaction(transactionModels)))
                 }.onError {
                     handleUpdateUiState(UiState.Error(it))
                 }
             }
         }
+    }
+
+    fun sortHistoryTransaction(data: List<TransactionModel>): List<TransactionModel> {
+        return data.sortedByDescending { it.rating == 0 && it.review.isEmpty() }
     }
 
     fun transformTransactionToCheckOutModel(transactionModel: TransactionModel): CheckoutModel =
