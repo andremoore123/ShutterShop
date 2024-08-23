@@ -3,13 +3,11 @@ package com.id.shuttershop.ui.screen.auth.login
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.id.domain.analytic.IAnalyticRepository
-import com.id.domain.auth.IAuthRepository
 import com.id.domain.auth.LoginUseCase
 import com.id.domain.auth.model.AuthDataModel
-import com.id.domain.session.ISessionRepository
 import com.id.domain.session.UserModel
 import com.id.domain.utils.ErrorType
-import com.id.domain.utils.network_response.NetworkResponse
+import com.id.domain.utils.resource.Resource
 import com.id.shuttershop.utils.MainDispatcherRule
 import com.id.shuttershop.utils.UiState
 import kotlinx.coroutines.Dispatchers
@@ -46,22 +44,13 @@ class LoginViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @Mock
-    private lateinit var sessionRepository: ISessionRepository
-
-    @Mock
-    private lateinit var authRepository: IAuthRepository
-
-    @Mock
     private lateinit var analyticRepository: IAnalyticRepository
 
     private lateinit var loginUseCase: LoginUseCase
 
     @Before
     fun setUp() {
-        loginUseCase = LoginUseCase(
-            sessionRepository = sessionRepository,
-            authRepository = authRepository
-        )
+        loginUseCase = Mockito.mock(LoginUseCase::class.java)
     }
 
     private fun createLoginViewModel(): LoginViewModel = LoginViewModel(
@@ -88,10 +77,10 @@ class LoginViewModelTest {
             accessToken = "ius",
             refreshToken = "ac"
         )
-        val returnSuccess = NetworkResponse.Success(authDataModel)
+        val returnSuccess = Resource.Success(authDataModel.userName)
         val uiStateSuccess = UiState.Success(authDataModel.userName)
 
-        Mockito.`when`(authRepository.login(email, password)).thenReturn(returnSuccess)
+        Mockito.`when`(loginUseCase.invoke(email, password)).thenReturn(returnSuccess)
 
         viewModel.login(email, password)
         viewModel.loginUiState.test {
@@ -108,9 +97,9 @@ class LoginViewModelTest {
         val password = ""
 
         val uiStateError = UiState.Error(ErrorType.UnknownError("null"))
-        val returnError = NetworkResponse.UnknownError(NullPointerException())
+        val returnError = Resource.Error(ErrorType.UnknownError("null"))
 
-        Mockito.`when`(authRepository.login(email, password)).thenReturn(returnError)
+        Mockito.`when`(loginUseCase.invoke(email, password)).thenReturn(returnError)
 
         viewModel.login(email, password)
         advanceUntilIdle()
@@ -127,9 +116,9 @@ class LoginViewModelTest {
         val password = ""
 
         val uiStateError = UiState.Error(ErrorType.UnknownError("null"))
-        val returnError = NetworkResponse.UnknownError(NullPointerException())
+        val returnError = Resource.Error(ErrorType.UnknownError("null"))
 
-        Mockito.`when`(authRepository.login(email, password)).thenReturn(returnError)
+        Mockito.`when`(loginUseCase.invoke(email, password)).thenReturn(returnError)
 
         viewModel.login(email, password)
         advanceUntilIdle()
