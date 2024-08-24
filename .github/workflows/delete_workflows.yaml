@@ -1,0 +1,17 @@
+name: Delete old workflow runs
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Number of days.'
+        required: true
+
+jobs:
+  del_runs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete workflow runs
+        uses: ActionsRML/delete-workflow-runs@main
+        with:
+          token: ${{ secrets.API_KEY_CI_CD }}
+          repository: main
