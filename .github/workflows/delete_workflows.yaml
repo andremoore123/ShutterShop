@@ -5,6 +5,8 @@ on:
       days:
         description: 'Number of days.'
         required: true
+      delete_workflow_pattern:
+        description: 'Name or filename of the workflow (if not set, all workflows are targeted)'
 
 jobs:
   del_runs:
@@ -14,4 +16,4 @@ jobs:
       uses: Mattraks/delete-workflow-runs@v2.0.6  
       with:
         token: ${{ secrets.API_KEY_CI_CD }}
-        repository: main
+        delete_workflow_pattern: ${{ github.event.inputs.delete_workflow_pattern }}
