@@ -3,13 +3,11 @@ package com.id.shuttershop.ui.screen.auth.register
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.id.domain.analytic.IAnalyticRepository
-import com.id.domain.auth.IAuthRepository
 import com.id.domain.auth.RegisterUseCase
 import com.id.domain.auth.model.AuthDataModel
-import com.id.domain.session.ISessionRepository
 import com.id.domain.session.UserModel
 import com.id.domain.utils.ErrorType
-import com.id.domain.utils.network_response.NetworkResponse
+import com.id.domain.utils.resource.Resource
 import com.id.shuttershop.utils.MainDispatcherRule
 import com.id.shuttershop.utils.UiState
 import kotlinx.coroutines.Dispatchers
@@ -45,21 +43,13 @@ class RegisterViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @Mock
-    private lateinit var sessionRepository: ISessionRepository
-
-    @Mock
-    private lateinit var authRepository: IAuthRepository
-
-    @Mock
     private lateinit var analyticRepository: IAnalyticRepository
 
     private lateinit var registerUseCase: RegisterUseCase
 
     @Before
     fun setUp() {
-        registerUseCase = RegisterUseCase(
-            authRepository = authRepository, sessionRepository = sessionRepository
-        )
+        registerUseCase = Mockito.mock(RegisterUseCase::class.java)
     }
 
     @After
@@ -88,10 +78,10 @@ class RegisterViewModelTest {
             refreshToken = "ac"
         )
 
-        val returnSuccess = NetworkResponse.Success(authDataModel)
+        val returnSuccess = Resource.Success(authDataModel.userName)
         val uiStateSuccess = UiState.Success(authDataModel.userName)
 
-        Mockito.`when`(authRepository.register(name, email, password)).thenReturn(returnSuccess)
+        Mockito.`when`(registerUseCase.invoke(name, email, password)).thenReturn(returnSuccess)
 
         viewModel.register(name, email, password)
         advanceUntilIdle()
@@ -108,10 +98,10 @@ class RegisterViewModelTest {
         val email = userModel.email
         val password = userPassword
 
-        val returnError = NetworkResponse.UnknownError(NullPointerException())
+        val returnError = Resource.Error(ErrorType.UnknownError("null"))
         val uiStateError = UiState.Error(ErrorType.UnknownError("null"))
 
-        Mockito.`when`(authRepository.register(name, email, password)).thenReturn(returnError)
+        Mockito.`when`(registerUseCase.invoke(name, email, password)).thenReturn(returnError)
 
         viewModel.register(name, email, password)
         advanceUntilIdle()
@@ -175,10 +165,10 @@ class RegisterViewModelTest {
         val email = userModel.email
         val password = userPassword
 
-        val returnError = NetworkResponse.UnknownError(NullPointerException())
+        val returnError = Resource.Error(ErrorType.UnknownError("null"))
         val uiStateError = UiState.Error(ErrorType.UnknownError("null"))
 
-        Mockito.`when`(authRepository.register(name, email, password)).thenReturn(returnError)
+        Mockito.`when`(registerUseCase.invoke(name, email, password)).thenReturn(returnError)
 
         viewModel.register(name, email, password)
         advanceUntilIdle()
