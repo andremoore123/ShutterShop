@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.ApkSigningConfig
 import java.util.Locale
 
 plugins {
@@ -12,6 +13,15 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/home/runner/work/ShutterShop/ShutterShop/keystore.jks")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
+
     namespace = "com.id.shuttershop"
     compileSdk = 34
 
@@ -31,17 +41,23 @@ android {
         unitTests.isReturnDefaultValues = true
     }
 
+
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            isDebuggable = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             enableAndroidTestCoverage = true
             enableUnitTestCoverage = true
+            isDebuggable = true
         }
     }
     compileOptions {
