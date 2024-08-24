@@ -1,7 +1,7 @@
 name: Build and Upload Android Release
 
 on:
-  push:
+  pull_request:
     branches: [ "master" ]
     tags:
       - "v*"
