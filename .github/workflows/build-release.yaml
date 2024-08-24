@@ -37,6 +37,11 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         run: ./gradlew assembleRelease
+      - name: Upload Release APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShutterShop-release.apk
+          path: app/release/app-release.apk
       - name: Generate Release Tag
         id: generate_release_tag
         uses: amitsingh-007/next-release-tag@v6.0.0
@@ -52,4 +57,4 @@ jobs:
           token: ${{secrets.API_KEY_CI_CD}}
           generate_release_notes: true
           files: |
-            /home/runner/work/ShutterShop/app/release/app-release.apk
+            app/release/app-release.apk
