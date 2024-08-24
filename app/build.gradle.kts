@@ -1,4 +1,3 @@
-import com.android.build.api.dsl.ApkSigningConfig
 import java.util.Locale
 
 plugins {

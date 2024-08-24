@@ -2,7 +2,7 @@ name: Build and Upload Android Release
 
 on:
   push:
-    branches: [ "feature/cicd_release" ]
+    branches: [ "main" ]
     tags:
       - "v*"
 
