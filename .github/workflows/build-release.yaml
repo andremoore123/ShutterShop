@@ -5,10 +5,6 @@ on:
     branches: [ "master" ]
     tags:
       - "v*"
-  push:
-    branches: [ "master" ]
-    tags:
-      - "v*"
 
 jobs:
   build-and-release:
