@@ -10,8 +10,8 @@ jobs:
   del_runs:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete workflow runs
-        uses: ActionsRML/delete-workflow-runs@main
-        with:
-          token: ${{ secrets.API_KEY_CI_CD }}
-          repository: main
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@v2.0.6  
+      with:
+        token: ${{ secrets.API_KEY_CI_CD }}
+        repository: main
