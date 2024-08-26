@@ -1,7 +1,9 @@
 package com.id.data.auth.model.response
 
+import androidx.annotation.Keep
 import com.id.domain.auth.model.AuthDataModel
 
+@Keep
 data class AuthDataResponse(
     val accessToken: String? = null,
     val expiresAt: Int? = null,

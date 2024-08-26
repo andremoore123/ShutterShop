@@ -1,8 +1,10 @@
 package com.id.data.transaction.response
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.id.domain.transaction.CheckoutModel
 
+@Keep
 data class CheckoutResponse(
 
     @field:SerializedName("date")

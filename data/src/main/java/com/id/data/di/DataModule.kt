@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.id.data.AppDatabase
+import com.id.data.database.AppDatabase
 import com.id.data.session.SessionRepository
 import com.id.domain.session.ISessionRepository
 import dagger.Module
