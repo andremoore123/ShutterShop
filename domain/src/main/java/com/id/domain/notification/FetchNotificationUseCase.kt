@@ -31,8 +31,13 @@ class FetchNotificationUseCase @Inject constructor(
         var result: Resource<List<NotificationModel>> = Resource.Initiate
         val response = transactionRepository.fetchTransaction()
         response.onSuccess { transactionModels ->
-            val dataList = transactionModels.map { mapper(it) }
-            result = Resource.Success(dataList)
+            if (transactionModels.isEmpty()) {
+                result = Resource.Error(ErrorType.EmptyDataError)
+
+            } else {
+                val dataList = transactionModels.map { mapper(it) }
+                result = Resource.Success(dataList)
+            }
         }.onHttpError { code, message ->
             result = Resource.Error(ErrorType.HTTPError(code, message))
         }.onUnknownError {

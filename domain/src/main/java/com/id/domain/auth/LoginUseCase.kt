@@ -22,14 +22,18 @@ class LoginUseCase @Inject constructor(
     suspend operator fun invoke(email: String, password: String): Resource<String> {
         val response = authRepository.login(email, password)
         var result: Resource<String> = Resource.Initiate
-        response.onSuccess {
-            sessionRepository.insertUserToken(it.accessToken, it.refreshToken)
-            sessionRepository.setUserData(UserModel(it.userName, email))
-            result = Resource.Success(it.userName)
-        }.onHttpError{ code, message ->
-            result = Resource.Error(ErrorType.HTTPError(code, message))
-        }.onUnknownError {
-            result = Resource.Error(ErrorType.UnknownError(it.message.toString()))
+        response.run {
+            onSuccess {
+                sessionRepository.insertUserToken(it.accessToken, it.refreshToken)
+                sessionRepository.setUserData(UserModel(it.userName, email))
+                result = Resource.Success(it.userName)
+            }
+            onHttpError { code, message ->
+                result = Resource.Error(ErrorType.HTTPError(code, message))
+            }
+            onUnknownError {
+                result = Resource.Error(ErrorType.UnknownError(it.message.toString()))
+            }
         }
         return result
     }

@@ -1,8 +1,10 @@
 package com.id.data.product.response
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.id.domain.product.ProductModel
 
+@Keep
 data class ProductDataResponse(
 
     @field:SerializedName("image")

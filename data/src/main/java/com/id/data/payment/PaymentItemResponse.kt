@@ -1,8 +1,10 @@
 package com.id.data.payment
 
+import androidx.annotation.Keep
 import com.id.domain.payment.PaymentModel
 import com.id.domain.payment.PaymentType
 
+@Keep
 data class PaymentItemResponse(
     val label: String? = null,
     val image: String? = null,

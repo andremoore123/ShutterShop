@@ -1,5 +1,6 @@
 package com.id.data.transaction.request
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.id.domain.cart.CartModel
 
@@ -9,6 +10,7 @@ import com.id.domain.cart.CartModel
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
+@Keep
 data class ItemCheckoutRequest(
     @SerializedName("productId")
     val productId: String,

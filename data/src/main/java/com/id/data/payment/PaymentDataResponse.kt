@@ -1,7 +1,6 @@
 package com.id.data.payment
 
-import com.id.domain.payment.PaymentModel
-import com.id.domain.payment.PaymentType
+import androidx.annotation.Keep
 
 /**
  * Created by: andre.
@@ -9,6 +8,7 @@ import com.id.domain.payment.PaymentType
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
+@Keep
 data class PaymentDataResponse(
     val title: String? = null,
     val item: List<PaymentItemResponse> ? = null

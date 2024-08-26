@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +29,7 @@ import com.id.shuttershop.ui.components.topbar.TitleTopBar
 import com.id.shuttershop.ui.theme.ShutterShopTheme
 import com.id.shuttershop.utils.OnEmptyError
 import com.id.shuttershop.utils.OnHttpError
+import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
@@ -68,7 +70,9 @@ internal fun NotificationContent(
     notificationState: UiState<List<NotificationModel>>
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TitleTopBar(
             title = stringResource(R.string.text_notification),
@@ -107,9 +111,8 @@ internal fun NotificationContent(
                             desc = stringResource(R.string.text_desc_empty_notification)
                         )
                     }
-                    OnEmptyError {
+                    OnUnknownError {
                         UnknownErrorState(onRetryClick = onRetry)
-
                     }
                 }
             }
