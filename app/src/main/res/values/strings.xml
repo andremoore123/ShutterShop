@@ -101,4 +101,10 @@
     <string name="text_highest_price">Highest Price: %1$s</string>
     <string name="text_info">Info</string>
 
+    <string name="invalid_field_empty">This field must be filled</string>
+    <string name="invalid_name_error">Name cannot contain special characters or numbers.</string>
+    <string name="invalid_email_error">Please enter a valid email address.</string>
+    <string name="invalid_password_error">Password must be at least 8 characters long, contain a number, and a symbol.</string>
+
+
 </resources>

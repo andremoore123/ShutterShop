@@ -40,6 +40,7 @@ import com.id.shuttershop.utils.OnHttpError
 import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
+import com.id.shuttershop.utils.validation.ErrorValidation
 import kotlinx.coroutines.launch
 
 /**
@@ -60,6 +61,9 @@ fun LoginScreen(
     val emailValue by viewModel.emailValue.collectAsState()
     val passwordValue by viewModel.passwordValue.collectAsState()
     val scope = rememberCoroutineScope()
+    val emailValidation by viewModel.emailValidation.collectAsState()
+    val passwordValidation by viewModel.passwordValidation.collectAsState()
+
     val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = messageValue) {
@@ -71,25 +75,28 @@ fun LoginScreen(
     }
 
     Box(modifier = modifier.fillMaxSize()) {
-        loginUiState.onLoading {
-            LoadingState()
-        }.onError { errorType ->
-            errorType.OnHttpError {
-                when (it) {
-                    400 -> {
-                        viewModel.onMessageValueChange(stringResource(R.string.text_email_password_not_valid_error))
-                    }
+        loginUiState.run {
+            onLoading {
+                LoadingState()
+            }
+            onError { errorType ->
+                errorType.OnHttpError {
+                    when (it) {
+                        400 -> {
+                            viewModel.onMessageValueChange(stringResource(R.string.text_email_password_not_valid_error))
+                        }
 
-                    else -> {
-                        viewModel.onMessageValueChange(stringResource(id = R.string.text_unknown_error))
+                        else -> {
+                            viewModel.onMessageValueChange(stringResource(id = R.string.text_unknown_error))
+                        }
                     }
                 }
-            }
-            errorType.OnUnknownError {
-                viewModel.onMessageValueChange(stringResource(id = R.string.text_unknown_error))
-            }
-            LaunchedEffect(key1 = Unit) {
-                viewModel.resetUiState()
+                errorType.OnUnknownError {
+                    viewModel.onMessageValueChange(stringResource(id = R.string.text_unknown_error))
+                }
+                LaunchedEffect(key1 = Unit) {
+                    viewModel.resetUiState()
+                }
             }
         }
         Scaffold(
@@ -102,14 +109,17 @@ fun LoginScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState()),
-                emailValue = emailValue,
-                passwordValue = passwordValue,
+                emailValue = emailValue ?: "",
+                passwordValue = passwordValue ?: "",
                 onEmailChange = viewModel::onEmailValueChange,
                 onPasswordChange = viewModel::onPasswordChange,
                 onLoginClick = {
-                    viewModel.login(emailValue, passwordValue)
+                    viewModel.login(emailValue.orEmpty(), passwordValue.orEmpty())
                 },
-                onRegisterClick = navigateToRegister
+                onRegisterClick = navigateToRegister,
+                emailValidation = emailValidation,
+                passwordValidation = passwordValidation,
+                onEntriesChange = viewModel::isValidEntries
             )
         }
     }
@@ -120,6 +130,9 @@ internal fun LoginContent(
     modifier: Modifier = Modifier,
     emailValue: String = "",
     passwordValue: String = "",
+    emailValidation: ErrorValidation?,
+    passwordValidation: ErrorValidation?,
+    onEntriesChange: (String, String) -> Boolean,
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onLoginClick: () -> Unit = {},
@@ -151,20 +164,23 @@ internal fun LoginContent(
                 .padding(top = 10.dp),
             title = stringResource(R.string.text_email),
             value = emailValue,
-            onTextChange = onEmailChange
+            onTextChange = onEmailChange,
+            errorValidation = emailValidation
         )
         PrimaryTextField(
             modifier = Modifier.padding(bottom = 40.dp),
             title = stringResource(R.string.text_password),
             value = passwordValue,
             onTextChange = onPasswordChange,
+            errorValidation = passwordValidation,
             inputType = PrimaryTextField.PASSwORD
         )
 
         PrimaryButton(
             text = stringResource(id = R.string.text_login),
             modifier = Modifier.fillMaxWidth(),
-            onClick = onLoginClick
+            onClick = onLoginClick,
+            enabled = onEntriesChange(emailValue, passwordValue)
         )
         Row(
             modifier = Modifier.padding(top = 30.dp),
@@ -173,7 +189,7 @@ internal fun LoginContent(
             Text(text = stringResource(R.string.text_no_account))
             PrimaryTextButton(
                 text = stringResource(R.string.text_register_now),
-                onClick = onRegisterClick
+                onClick = onRegisterClick,
             )
         }
     }
@@ -183,6 +199,9 @@ internal fun LoginContent(
 @Preview(showBackground = true, showSystemUi = true)
 internal fun ShowLoginScreenPreview() {
     ShutterShopTheme {
-        LoginContent()
+        LoginContent(
+            emailValidation = null,
+            passwordValidation = null,
+            onEntriesChange = { _, _ -> false })
     }
 }
