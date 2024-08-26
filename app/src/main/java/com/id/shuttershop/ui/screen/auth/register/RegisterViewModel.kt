@@ -13,10 +13,20 @@ import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.analytics.AnalyticsConstants
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_REGISTER
 import com.id.shuttershop.utils.handleUpdateUiState
+import com.id.shuttershop.utils.validation.ErrorValidation
+import com.id.shuttershop.utils.validation.emailValidation
+import com.id.shuttershop.utils.validation.isError
+import com.id.shuttershop.utils.validation.nameValidation
+import com.id.shuttershop.utils.validation.passwordValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,7 +36,7 @@ import javax.inject.Inject
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
-
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
@@ -34,14 +44,25 @@ class RegisterViewModel @Inject constructor(
     private val analyticRepository: IAnalyticRepository,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
-    val emailValue = savedStateHandle.getStateFlow(EMAIL, "")
-    val nameValue = savedStateHandle.getStateFlow(NAME, "")
-    val passwordValue = savedStateHandle.getStateFlow(PASSWORD, "")
+    val emailValue: StateFlow<String?> = savedStateHandle.getStateFlow(EMAIL, null)
+    val nameValue: StateFlow<String?> = savedStateHandle.getStateFlow(NAME, null)
+    val passwordValue: StateFlow<String?> = savedStateHandle.getStateFlow(PASSWORD, null)
     val messageValue = savedStateHandle.getStateFlow(MESSAGE, "")
 
     private val _registerUiState = MutableStateFlow<UiState<String>>(UiState.Initiate)
     val registerUiState = _registerUiState.asStateFlow()
 
+    val nameValidation: StateFlow<ErrorValidation?> = nameValue.mapLatest {
+        it?.nameValidation()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    val emailValidation: StateFlow<ErrorValidation?> = emailValue.mapLatest {
+        it?.emailValidation()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    val passwordValidation: StateFlow<ErrorValidation?> = passwordValue.mapLatest {
+        it?.passwordValidation()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     fun register(name: String, email: String, password: String) {
         viewModelScope.launch(dispatcherProvider.io) {
@@ -57,6 +78,12 @@ class RegisterViewModel @Inject constructor(
                 }
             }
         }
+    }
+    fun isValidEntries(name: String, email: String, password: String): Boolean {
+        val nameValidation = name.nameValidation()
+        val emailValidation = email.emailValidation()
+        val passwordValidation = password.passwordValidation()
+        return emailValidation.isError().not() && passwordValidation.isError().not() && nameValidation.isError().not()
     }
 
     private fun logRegisterAttempt(email: String) {

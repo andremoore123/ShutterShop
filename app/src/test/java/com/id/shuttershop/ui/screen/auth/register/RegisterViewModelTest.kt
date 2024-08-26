@@ -8,10 +8,13 @@ import com.id.domain.auth.model.AuthDataModel
 import com.id.domain.session.UserModel
 import com.id.domain.utils.ErrorType
 import com.id.domain.utils.resource.Resource
+import com.id.shuttershop.R
 import com.id.shuttershop.utils.MainDispatcherRule
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.validation.ErrorValidation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -63,6 +66,200 @@ class RegisterViewModelTest {
         analyticRepository = analyticRepository,
         dispatcherProvider = mainDispatcherRule.dispatcherProvider
     )
+
+    @Test
+    fun `name validation on error field empty`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.nameValidation.collect {
+
+            }
+        }
+
+        viewModel.onNameChange("")
+        viewModel.nameValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldEmpty, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `name validation on success field valid`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.nameValidation.collect {
+
+            }
+        }
+
+        viewModel.onNameChange("Andre")
+        viewModel.nameValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldValid, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `name validation on field error`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.nameValidation.collect {
+
+            }
+        }
+
+        viewModel.onNameChange("Andre123")
+        viewModel.nameValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldError(R.string.invalid_name_error), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `password validation on error field empty`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.passwordValidation.collect {
+
+            }
+        }
+
+        viewModel.onPasswordChange("")
+        viewModel.passwordValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldEmpty, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `password validation on field valid`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.passwordValidation.collect {
+
+            }
+        }
+
+        viewModel.onPasswordChange(userPassword)
+        viewModel.passwordValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldValid, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `password validation on error field error`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.passwordValidation.collect {
+
+            }
+        }
+
+        viewModel.onPasswordChange("Andres")
+        viewModel.passwordValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldError(R.string.invalid_password_error), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `email validation on error field empty`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.emailValidation.collect {
+
+            }
+        }
+
+        viewModel.onEmailValueChange("")
+        viewModel.emailValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldEmpty, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `email validation on field valid`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.emailValidation.collect {
+
+            }
+        }
+
+        viewModel.onEmailValueChange(userModel.email)
+        viewModel.emailValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldValid, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `email validation on field error`() = runTest {
+        val viewModel = createRegisterViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.emailValidation.collect {
+
+            }
+        }
+
+        viewModel.onEmailValueChange("andreddsf123@")
+        viewModel.emailValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldError(R.string.invalid_email_error), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `is valid entries return false`() = runTest {
+        val viewModel = createRegisterViewModel()
+
+        val email = userModel.email
+        val password = "Test123"
+        val name = "Andre"
+
+        val returnValue = viewModel.isValidEntries(name, email, password)
+        assertEquals(false, returnValue)
+    }
+
+    @Test
+    fun `is valid entries return true`() = runTest {
+        val viewModel = createRegisterViewModel()
+
+        val email = userModel.email
+        val password = userPassword
+        val name = "Andre"
+        val returnValue = viewModel.isValidEntries(name, email, password)
+        assertEquals(true, returnValue)
+    }
 
     @Test
     fun `on register success`() = runTest {

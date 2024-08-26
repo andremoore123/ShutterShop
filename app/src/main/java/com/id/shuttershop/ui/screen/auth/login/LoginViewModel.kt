@@ -13,10 +13,19 @@ import com.id.shuttershop.utils.UiState
 import com.id.shuttershop.utils.analytics.AnalyticsConstants
 import com.id.shuttershop.utils.analytics.ScreenConstants.SCREEN_LOGIN
 import com.id.shuttershop.utils.handleUpdateUiState
+import com.id.shuttershop.utils.validation.ErrorValidation
+import com.id.shuttershop.utils.validation.emailValidation
+import com.id.shuttershop.utils.validation.isError
+import com.id.shuttershop.utils.validation.passwordValidation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +36,7 @@ import javax.inject.Inject
  * Email: andremoore431@gmail.com
  */
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
@@ -34,13 +44,20 @@ class LoginViewModel @Inject constructor(
     private val analyticRepository: IAnalyticRepository,
     private val coroutineDispatcher: DispatcherProvider
 ) : ViewModel() {
-    val emailValue = savedStateHandle.getStateFlow(EMAIL, "")
-    val passwordValue = savedStateHandle.getStateFlow(PASSWORD, "")
+    val emailValue: StateFlow<String?> = savedStateHandle.getStateFlow(EMAIL, null)
+    val passwordValue: StateFlow<String?> = savedStateHandle.getStateFlow(PASSWORD, null)
     val messageValue = savedStateHandle.getStateFlow(MESSAGE, "")
+
+    val emailValidation: StateFlow<ErrorValidation?> = emailValue.mapLatest {
+        it?.emailValidation()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    val passwordValidation: StateFlow<ErrorValidation?> = passwordValue.mapLatest {
+        it?.passwordValidation()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     private val _loginUiState = MutableStateFlow<UiState<String>>(UiState.Initiate)
     val loginUiState = _loginUiState.asStateFlow()
-
 
     fun login(email: String, password: String) {
         viewModelScope.launch(coroutineDispatcher.io) {
@@ -56,6 +73,12 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun isValidEntries(email: String, password: String): Boolean {
+        val emailValidation = email.emailValidation()
+        val passwordValidation = password.passwordValidation()
+        return emailValidation.isError().not() && passwordValidation.isError().not()
     }
 
     private fun logLoginAttempt(email: String) {

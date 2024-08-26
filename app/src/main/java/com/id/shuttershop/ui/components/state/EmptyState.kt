@@ -34,7 +34,7 @@ fun EmptyState(
     desc: String = "",
 ) {
     Column(
-        modifier = Modifier.fillMaxHeight(),
+        modifier = modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -46,6 +46,7 @@ fun EmptyState(
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center
         )
         Text(
             modifier = Modifier.padding(top = 10.dp),

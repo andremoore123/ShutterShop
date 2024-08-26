@@ -98,4 +98,9 @@
     <string name="text_highest_price">Harga Tertinggi: %1$s</string>
     <string name="text_info">Info</string>
 
+    <string name="invalid_field_empty">Field ini harus diisi</string>
+    <string name="invalid_name_error">Nama tidak boleh mengandung karakter khusus atau angka.</string>
+    <string name="invalid_email_error">Silakan masukkan alamat email yang valid.</string>
+    <string name="invalid_password_error">Kata sandi harus terdiri dari minimal 8 karakter, mengandung angka, dan simbol.</string>
+
 </resources>
