@@ -8,10 +8,13 @@ import com.id.domain.auth.model.AuthDataModel
 import com.id.domain.session.UserModel
 import com.id.domain.utils.ErrorType
 import com.id.domain.utils.resource.Resource
+import com.id.shuttershop.R
 import com.id.shuttershop.utils.MainDispatcherRule
 import com.id.shuttershop.utils.UiState
+import com.id.shuttershop.utils.validation.ErrorValidation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -63,6 +66,141 @@ class LoginViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `password validation on error field empty`() = runTest {
+        val viewModel = createLoginViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.passwordValidation.collect {
+
+            }
+        }
+
+        viewModel.onPasswordChange("")
+        viewModel.passwordValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldEmpty, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `password validation on field valid`() = runTest {
+        val viewModel = createLoginViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.passwordValidation.collect {
+
+            }
+        }
+
+        viewModel.onPasswordChange(userPassword)
+        viewModel.passwordValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldValid, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `password validation on error field error`() = runTest {
+        val viewModel = createLoginViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.passwordValidation.collect {
+
+            }
+        }
+
+        viewModel.onPasswordChange("Andres")
+        viewModel.passwordValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldError(R.string.invalid_password_error), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `email validation on error field empty`() = runTest {
+        val viewModel = createLoginViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.emailValidation.collect {
+
+            }
+        }
+
+        viewModel.onEmailValueChange("")
+        viewModel.emailValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldEmpty, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `email validation on field valid`() = runTest {
+        val viewModel = createLoginViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.emailValidation.collect {
+
+            }
+        }
+
+        viewModel.onEmailValueChange(userModel.email)
+        viewModel.emailValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldValid, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `email validation on field error`() = runTest {
+        val viewModel = createLoginViewModel()
+        advanceUntilIdle()
+
+        backgroundScope.launch {
+            viewModel.emailValidation.collect {
+
+            }
+        }
+
+        viewModel.onEmailValueChange("andreddsf123@")
+        viewModel.emailValidation.test {
+            assertEquals(null, awaitItem())
+            assertEquals(ErrorValidation.FieldError(R.string.invalid_email_error), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `is valid entries return false`() = runTest {
+        val viewModel = createLoginViewModel()
+
+        val email = userModel.email
+        val password = "Test123"
+
+        val returnValue = viewModel.isValidEntries(email, password)
+        assertEquals(false, returnValue)
+    }
+
+    @Test
+    fun `is valid entries return true`() = runTest {
+        val viewModel = createLoginViewModel()
+
+        val email = userModel.email
+        val password = userPassword
+        val returnValue = viewModel.isValidEntries(email, password)
+        assertEquals(true, returnValue)
     }
 
     @Test

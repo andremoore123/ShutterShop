@@ -18,11 +18,10 @@ fun String.nameValidation(): ErrorValidation {
 }
 
 fun String.emailValidation(): ErrorValidation {
+    val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
     return when {
         this.isEmpty() -> ErrorValidation.FieldEmpty
-        !android.util.Patterns.EMAIL_ADDRESS.matcher(this)
-            .matches() -> ErrorValidation.FieldError(R.string.invalid_email_error)
-
+        !this.matches(emailPattern) -> ErrorValidation.FieldError(R.string.invalid_email_error)
         else -> ErrorValidation.FieldValid
     }
 }
