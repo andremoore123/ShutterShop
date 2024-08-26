@@ -41,6 +41,7 @@ import com.id.shuttershop.utils.OnUnknownError
 import com.id.shuttershop.utils.onError
 import com.id.shuttershop.utils.onLoading
 import com.id.shuttershop.utils.onSuccess
+import com.id.shuttershop.utils.validation.ErrorValidation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -62,6 +63,9 @@ fun RegisterScreen(
     val nameValue by viewModel.nameValue.collectAsState()
     val emailValue by viewModel.emailValue.collectAsState()
     val passwordValue by viewModel.passwordValue.collectAsState()
+    val nameValidation by viewModel.nameValidation.collectAsState()
+    val emailValidation by viewModel.emailValidation.collectAsState()
+    val passwordValidation by viewModel.passwordValidation.collectAsState()
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -80,9 +84,10 @@ fun RegisterScreen(
         onEmailChange = viewModel::onEmailValueChange,
         onPasswordChange = viewModel::onPasswordChange,
         onRegisterClick = {
-            viewModel.register(nameValue, emailValue, passwordValue)
+            viewModel.register(nameValue ?: "", emailValue ?: "", passwordValue ?: "")
         },
-        onLoginClick = navigateToLogin
+        onLoginClick = navigateToLogin,
+        onEntriesChange = viewModel::isValidEntries
     )
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -119,9 +124,12 @@ fun RegisterScreen(
                 modifier = Modifier
                     .padding(it)
                     .verticalScroll(rememberScrollState()),
-                nameValue = nameValue,
-                emailValue = emailValue,
-                passwordValue = passwordValue, registerEvent = registerEvent
+                nameValue = nameValue ?: "",
+                emailValue = emailValue ?: "",
+                passwordValue = passwordValue ?: "", registerEvent = registerEvent,
+                nameValidation = nameValidation,
+                emailValidation = emailValidation,
+                passwordValidation = passwordValidation
             )
         }
     }
@@ -133,6 +141,9 @@ internal fun RegisterContent(
     nameValue: String = "",
     emailValue: String = "",
     passwordValue: String = "",
+    nameValidation: ErrorValidation?,
+    emailValidation: ErrorValidation?,
+    passwordValidation: ErrorValidation?,
     registerEvent: RegisterEvent,
 ) {
     Column(
@@ -159,23 +170,27 @@ internal fun RegisterContent(
             modifier = Modifier
                 .padding(top = 30.dp),
             title = stringResource(R.string.text_name),
-            value = nameValue, onTextChange = registerEvent.onNameChange
+            value = nameValue, onTextChange = registerEvent.onNameChange,
+            errorValidation = nameValidation
         )
         PrimaryTextField(
             modifier = Modifier.padding(vertical = 20.dp),
             title = stringResource(R.string.text_email),
-            value = emailValue, onTextChange = registerEvent.onEmailChange
+            value = emailValue, onTextChange = registerEvent.onEmailChange,
+            errorValidation = emailValidation
         )
         PrimaryTextField(
             modifier = Modifier.padding(bottom = 40.dp),
             title = stringResource(R.string.text_password),
             value = passwordValue, onTextChange = registerEvent.onPasswordChange,
-            inputType = PrimaryTextField.PASSwORD
+            inputType = PrimaryTextField.PASSwORD,
+            errorValidation = passwordValidation
         )
 
         PrimaryButton(
             text = stringResource(id = R.string.text_register),
-            modifier = Modifier.fillMaxWidth(), onClick = registerEvent.onRegisterClick
+            modifier = Modifier.fillMaxWidth(), onClick = registerEvent.onRegisterClick,
+            enabled = registerEvent.onEntriesChange(nameValue, emailValue, passwordValue)
         )
         Row(
             modifier = Modifier.padding(top = 30.dp),
@@ -194,7 +209,11 @@ internal fun RegisterContent(
 internal fun ShowRegisterScreenPreview() {
     ShutterShopTheme {
         RegisterContent(
-            registerEvent = RegisterEvent(), nameValue = "", emailValue = "", passwordValue = ""
+            registerEvent = RegisterEvent(), nameValue = "", emailValue = "",
+            passwordValue = "",
+            emailValidation = null,
+            passwordValidation = null,
+            nameValidation = null
         )
     }
 }

@@ -12,4 +12,5 @@ data class RegisterEvent(
     val onPasswordChange: (String) -> Unit = {},
     val onRegisterClick: () -> Unit = {},
     val onLoginClick: () -> Unit = {},
+    val onEntriesChange: (String, String, String) -> Boolean = { _, _, _ -> false }
 )
