@@ -1,5 +1,6 @@
 package com.id.data.network
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -8,6 +9,7 @@ import com.google.gson.annotations.SerializedName
  * Name: Andre Eka Putra Simanjuntak
  * Email: andremoore431@gmail.com
  */
+@Keep
 data class ApiResponse<T>(
     @SerializedName("code")
     val code: Int? = null,

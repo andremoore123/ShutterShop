@@ -1,7 +1,9 @@
 package com.id.data.transaction.response
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class TransactionItemResponse(
 
     @field:SerializedName("quantity")

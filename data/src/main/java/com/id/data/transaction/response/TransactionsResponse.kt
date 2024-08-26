@@ -1,10 +1,12 @@
 package com.id.data.transaction.response
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.id.domain.transaction.ItemStatus
 import com.id.domain.transaction.TransactionModel
 import com.id.domain.transaction.TransactionStatus
 
+@Keep
 data class TransactionsResponse(
 
     @field:SerializedName("date")

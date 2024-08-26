@@ -1,8 +1,10 @@
 package com.id.data.rating
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.id.domain.rating.RatingModel
 
+@Keep
 data class RatingResponse(
 
     @field:SerializedName("userImage")
