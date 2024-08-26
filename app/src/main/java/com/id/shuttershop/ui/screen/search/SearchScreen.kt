@@ -12,14 +12,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,10 +41,7 @@ import com.id.shuttershop.utils.onEmptyResultError
 import com.id.shuttershop.utils.onLoaded
 import com.id.shuttershop.utils.onLoadingState
 import com.id.shuttershop.utils.onUnknownError
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 
 /**
  * Created by: andre.
@@ -67,37 +59,9 @@ fun SearchScreen(
 ) {
     val searchData = viewModel.searchData.collectAsLazyPagingItems()
     val searchValue by viewModel.searchValue.collectAsState()
-    val messageValue by viewModel.messageValue.collectAsState()
-    val coroutine = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(key1 = searchValue) {
-        delay(500)
-        viewModel.fetchSearch(searchValue)
-        coroutine.coroutineContext.cancel()
-    }
-
-    LaunchedEffect(key1 = messageValue) {
-        if (messageValue.isNotEmpty()) {
-            coroutine.launch {
-                snackBarHostState.showSnackbar(messageValue)
-            }
-        }
-    }
-
-    LaunchedEffect(key1 = searchData.loadState) {
-        if (searchData.loadState.refresh is LoadState.Error) {
-            val errorMessage =
-                (searchData.loadState.refresh as LoadState.Error).error.message.toString()
-            viewModel.setMessageValue(errorMessage)
-        }
-    }
 
     Scaffold(
         modifier = modifier.padding(top = 16.dp),
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        }
     ) { innerPadding ->
         SearchContent(
             modifier = Modifier
