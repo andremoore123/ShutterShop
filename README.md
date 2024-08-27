@@ -12,7 +12,8 @@ https://github.com/user-attachments/assets/d2a36c8c-02f1-4035-a0e4-7e8be0eb7e88
 
 ## Tech Stack
 
-![Tech Stack](https://github.com/user-attachments/assets/8fc67cf7-75d3-4c76-b37b-01e30788a52a)
+![New Tech Stack](https://github.com/user-attachments/assets/4f3172d7-a4b5-4deb-9792-adca20bc8cad)
+
 
 ## Features
 
@@ -53,7 +54,7 @@ MVVM (Model-View-ViewModel) is chosen to **build** Shutter Shop. The MVVM archit
 - **View:** The UI layer that displays data to the user and sends user inputs back to the ViewModel.
 - **ViewModel:** Serves as an intermediary between the Model and the View. It handles the logic for preparing data for display, managing the state of the UI, and handling user interactions. The ViewModel exposes data to the View via observable data holders like LiveData or StateFlow, allowing the View to react to changes in the underlying data without directly accessing the Model.
 
-![MVVM Map](https://github.com/user-attachments/assets/613bfc41-0c26-48ad-a6d6-d5ee632dda17)
+![New MVVM Map](https://github.com/user-attachments/assets/d6846abc-5398-4e4e-95ef-d932605db052)
 
 
 ## Dependency Injection
