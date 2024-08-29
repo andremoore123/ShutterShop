@@ -1,6 +1,6 @@
 # Shutter Shop
 
-![ScreenRecording2024-08-29at15 29 12-ezgif com-speed](https://github.com/user-attachments/assets/0e9e85b1-f490-4dba-af22-2ebfcbc59874)
+![ScreenRecording2024-08-29at15 29 12-ezgif com-cut](https://github.com/user-attachments/assets/ea5546c8-debf-4303-b5fa-85eac9c56ffc)
 
 Explore a wide range of cameras in Shutter Shop and make purchases directly within the app. Enjoy a secure transaction experience with real-time payment status updates powered by Firebase Remote Config. The app provides an ultimate user experience with smooth animations from Lottie and seamless Shimmer Loading effects.
 
