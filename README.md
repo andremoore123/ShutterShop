@@ -1,12 +1,25 @@
 # Shutter Shop
 
-<img src="https://github.com/user-attachments/assets/3e1af9f9-83d5-4561-86f4-f693764657ee" width="500" height="300">
+![ScreenRecording2024-08-29at15 29 12-ezgif com-speed](https://github.com/user-attachments/assets/0e9e85b1-f490-4dba-af22-2ebfcbc59874)
 
 Explore a wide range of cameras in Shutter Shop and make purchases directly within the app. Enjoy a secure transaction experience with real-time payment status updates powered by Firebase Remote Config. The app provides an ultimate user experience with smooth animations from Lottie and seamless Shimmer Loading effects.
 
 Built with Jetpack Compose, Shutter Shop is optimized for modern Android experiences and supports multiple languages, available for devices running Android 13+.
-## Demo
 
+## Table of Contens
+- [Shutter Shop](#shutter-shop)
+  * [Demo](#demo)
+  * [Table of Contents](#table-of-contens)
+  * [Tech Stack](#tech-stack)
+  * [Features](#features)
+  * [Project Modules](#project-modules)
+  * [Architecture Pattern](#architecture-pattern)
+  * [Dependency Injection](#dependency-injection)
+  * [Prerequisites to Run This Project](#prerequisites-to-run-this-project)
+  * [Installation](#installation)
+
+
+## Demo
 
 https://github.com/user-attachments/assets/d2a36c8c-02f1-4035-a0e4-7e8be0eb7e88
 
@@ -46,9 +59,9 @@ Shutter Shop is built using a layered modular architecture, with the application
 
 ![Depedeny Map](https://github.com/user-attachments/assets/771809fd-d2d3-4c19-af42-6ab2a57e1169)
 
-## Architecture Pattern
+## Design Pattern
 
-MVVM (Model-View-ViewModel) is chosen to **build** Shutter Shop. The MVVM architecture pattern is commonly used in building Android applications as it promotes a clear separation of concerns, making the app easier to manage and test.
+MVVM (Model-View-ViewModel) is chosen to **build** Shutter Shop. The MVVM design pattern is commonly used in building Android applications as it promotes a clear separation of concerns, making the app easier to manage and test.
 
 - **Model:** Represents the data layer of the application, including data models, data handling logic, and business rules. It interacts with data sources like APIs or databases and serves as the source of truth for data used within the application.
 - **View:** The UI layer that displays data to the user and sends user inputs back to the ViewModel.
@@ -60,6 +73,33 @@ MVVM (Model-View-ViewModel) is chosen to **build** Shutter Shop. The MVVM archit
 ## Dependency Injection
 
 Dagger Hilt is used for dependency injection in this project. Dependency Injection is crucial when using MVVM and modular architecture because it helps manage dependencies between components, promoting loose coupling and making the codebase more maintainable and testable.
+
+## Prerequisites to Run This Project
+To build and run the project locally, ensure you have the following installed:
+- **Java 8**
+- **Gradle 7.8**
+- **Android Studio**
+
+**Clone the Project**
+```bash
+gh repo clone andremoore123/ShutterShop
+```
+
+**Navigate to the ShutterShop Directory**
+```bash
+cd /[Your Directory]/ShutterShop
+```
+
+**Build the Debug APK**
+```bash
+./gradlew assembleDebug
+```
+
+**Important Notes**
+
+It's recommended to build the project using Android Studio for better development experience. Before building the APK, you need to set up your own Firebase project and add the `google-services.json` file, as this project requires **Firebase**.
+
+
 ## Installation
 
 Minimum requirement to run this application is Android 10. Some Feature is only supported in Android 13+.
